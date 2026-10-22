@@ -6,14 +6,14 @@ Fontes: `prompt.md`, `figma.md`, `.AI/standards/*`, `docs/figma/{file.json,frame
 ## Decisões do usuário (respondidas em /plan-create)
 | Tema | Decisão |
 |---|---|
-| Baselines | **Linux via Docker** é o gate canônico (`mcr.microsoft.com/playwright:v<versão instalada>-noble`). Exige Docker Desktop. |
+| Baselines | ~~Linux via Docker~~ (substituído pelo ADR-15: Docker proibido; execução local, baselines por plataforma, validação final). |
 | Ícones | **SVGs exportados do Figma** (API `/v1/images?format=svg`) viram componentes locais. Licença Iconly não verificada: conferir antes de versionar. |
 | Contraste | **Corrigir ambos**: texto de erro em `--color-text-coral` (fill real #F0805F; a description do estilo dizia #EA6B4F, 6,15:1; reconferir no T18); borda de input em `--color-secondary` (6,72:1). Desvios visuais registrados em ARCHITECTURE.md. |
 | Git/deps | Repositório git **já existe** (`.git/HEAD` verificado); preservar histórico. Autorizado: `.gitattributes` e instalar as dependências do plano, validando versões e compatibilidade. Rotina sem consulta; consultar só em bloqueio real ou mudança relevante de escopo. |
 
 ### Demais lacunas: assumidas com a recomendação do architect (cobertas pela delegação do usuário; reverter exige novo plano)
 Q2 versões fixas exatas revalidadas no registro; Q3 Playwright auto-hospedado (sem Chromatic/Argos, prompt.md:285); Q6 shadcn por cópia manual do registro oficial, sem CLI; Q7 `apps/web` mínimo (Vite+React+Tailwind, `<main/>`, 1 smoke); Q10 estados derivados só com tokens existentes (hover=primary-light, active=primary-dark, foco=outline 2px `--color-focus` offset 2px, disabled=fundo `border-soft` + texto `secondary`); Q11 `Text/Primary` extraído de nó que use o estilo `70548:1724` (senão não usar o token); Q12 Roboto Mono em woff2 do repositório oficial googlefonts/RobotoMono (OFL); Q13 imagens das stories exportadas do Figma para `src/stories/assets`; Q14 golden em 390, medidas mobile lidas do frame de 414 sem conversão; Q15 `--spacing: 1px`; Q18 sem Toast agora (`LiveRegion` + `Alert`); Q19 line-height do Figma, exceto se cortar/sobrepor (então `normal` + desvio); Q20 não replicar defeitos do Figma (registrar); Q21 Checkbox com indicador circular.
-**Q1 pendente de verificação (passo 0):** `node -v; pnpm -v; docker -v` — não verificados. Se Docker ausente = bloqueio real, consultar o usuário.
+**Q1 pendente de verificação (passo 0):** `node -v; pnpm -v; docker -v` — não verificados. Se Docker ausente = bloqueio real, consultar o usuário. _(obsoleto: ADR-15, Docker proibido pela regra do CLAUDE.md)_
 
 ---
 
@@ -80,7 +80,7 @@ Componentes burros: sem regra de negócio, rede, router, cache. Dinheiro chega p
 - **ADR-04 Tokens: Tailwind 4 CSS-first (`@theme`) como fonte única.** `tokens.css` zera os padrões (`--color-*: initial; --radius-*: initial; --shadow-*: initial; --font-*: initial; --text-*: initial`) e declara só valores do Figma, cada um com `/* figma:<nodeId|styleId> */` conferido por teste. Aliases semânticos só via `var()`. `--spacing: 1px`. Descartados: JSON de tokens + geração (duas fontes); spacing 4px com valores arbitrários.
 - **ADR-05 shadcn/ui por cópia manual** (sem CLI/`components.json`), cabeçalho com URL e data do registro, reestilizado com tokens; `@radix-ui/react-<x>` individual, `cva`, `tailwind-merge`, `clsx`, `data-slot`. Classes como `h-9` são reescritas (intencional).
 - **ADR-06 Testes em 3 camadas, tudo em Chromium real**: (1) Vitest browser mode (`@vitest/browser-playwright`, `vitest-browser-react`, `page.getByRole`, `userEvent`, `expect.element`) + axe-core em `src/test/axe.ts`; (2) Storybook 10 (`@storybook/react-vite`, addon-docs, addon-a11y com `parameters.a11y.test: 'error'`, addon-vitest que roda cada story e as `play`); (3) golden Playwright `toHaveScreenshot` sobre `storybook-static`. Descartados: jsdom + jest-axe (sem layout/`:focus-visible`/contraste/fontes); test-runner do Storybook (exige servidor).
-- **ADR-07 Regressão visual auto-hospedada, baseline canônica Linux/Docker.** Projects `desktop-1440` (1440×900), `tablet-768` (768×1024), `mobile-390` (390×844), só Chromium. `snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}'`; `expect.toHaveScreenshot: { animations:'disabled', caret:'hide', scale:'css', threshold:0.2, maxDiffPixelRatio:0.002 }`; `use.reducedMotion:'reduce'`; `updateSnapshots:'none'`; `forbidOnly:true`. Scripts `test:visual:docker` (gate) e `test:visual:update` (só com revisão).
+- **ADR-07 Regressão visual auto-hospedada, baseline canônica Linux/Docker (ajustado pelo ADR-15: sem Docker).** Projects `desktop-1440` (1440×900), `tablet-768` (768×1024), `mobile-390` (390×844), só Chromium. `snapshotPathTemplate: '{testDir}/__screenshots__/{platform}/{projectName}/{arg}{ext}'`; `expect.toHaveScreenshot: { animations:'disabled', caret:'hide', scale:'css', threshold:0.2, maxDiffPixelRatio:0.002 }`; `use.reducedMotion:'reduce'`; `updateSnapshots:'none'`; `forbidOnly:true`. Scripts `test:visual:docker` (gate) e `test:visual:update` (só com revisão).
 - **ADR-08 Fidelidade ao Figma por medida, não por pixel do PNG** (rasterizadores diferentes). Cada componente tem testes de medida (`getBoundingClientRect`/`getComputedStyle`) com valor lido do nó, citando `file.json:linha`. PNG do Figma é referência de revisão visual da baseline, não gate.
 - **ADR-09 Fontes locais Roboto Mono 400/500/700** (`@font-face`, `font-display: swap`, URL relativa, sem rede). Descartado: Google Fonts CDN.
 - **ADR-10 Stories golden sem `play`.** Tags `golden`, `golden-hover`, `golden-focus`, `golden-page` (overlays: página inteira). Hover/foco produzidos pelo spec Playwright. `play` só no projeto `storybook` do Vitest.
@@ -102,7 +102,7 @@ Componentes burros: sem regra de negócio, rede, router, cache. Dinheiro chega p
 | storybook:build | `turbo run storybook:build` | `storybook build -o storybook-static` | – |
 | test:visual | `turbo run test:visual` | `playwright test` (estático em 6007 via `tools/serve-static.mjs`) | – |
 | test:visual:update | – | `playwright test --update-snapshots=changed` (só com revisão) | – |
-| test:visual:docker | – | `docker run … playwright:v<ver>-noble …` | – |
+| test:visual:docker | – | (removido pelo ADR-15: Docker proibido) | – |
 | verify | `turbo run lint typecheck test build storybook:build test:visual` | – | – |
 
 ## 3. Contratos
@@ -155,7 +155,7 @@ NftCard { title; priceLabel; image:{src,alt}; badge?; action?; link? }, NftCardS
 | A8 | foco por teclado visível em todo interativo | sub-itens `foco` |
 | A9 | axe sem violações A/AA em toda story e teste `axe` | projeto `storybook` + unitários |
 | A10 | shimmer anima com `no-preference`, para com `reduce` | C4.5, C4.6 |
-| A11 | baselines dos 3 viewports versionadas e verdes no ambiente canônico (Linux/Docker) | `golden.spec.ts` |
+| A11 | baselines dos 3 viewports versionadas e verdes no ambiente local da plataforma, na validação final (ajustado pelo ADR-15) | `golden.spec.ts` |
 | A12 | medidas batem com os nós do Figma | sub-itens `medida` |
 | A13 | app renderiza Button do DS com cor/fonte dos tokens | I1 |
 | A14 | nenhum componente faz rede nem importa router/query/axios/msw | T2–T4 + revisão |
@@ -164,10 +164,10 @@ NftCard { title; priceLabel; image:{src,alt}; badge?; action?; link? }, NftCardS
 Gates por componente: unitários + medida + axe verdes; projeto `storybook` verde; golden verde nos 3 viewports; lint e typecheck verdes.
 
 ## 5. Testes RED
-**Ciclo TDD por componente (estrito):** (1) unitário RED→GREEN→refactor, um comportamento por vez, saída vermelha colada; (2) medida é teste unitário RED com valor do nó citando `file.json:linha`; nó sem o valor = Lacuna → volta ao architect; (3) stories escritas após o verde unitário e devem passar de primeira (falha de `play` = bug → novo RED unitário); (4) golden RED: IDs em tags `golden`/`golden-hover`/`golden-focus`/`golden-page` lidas de `storybook-static/index.json` (`golden/stories.ts`; manifest.ts removido no GATE-INFRA) → falha "story ausente"/"baseline inexistente"; (5) golden GREEN: `test:visual:update -g "<id>"` **no Docker**, comparar PNG gerado com o PNG do frame do Figma e registrar a revisão no log antes de versionar; (6) proibido: vários testes antes do código, `--update-snapshots` sem revisão, editar teste para passar.
+**Ciclo TDD por componente (estrito):** (1) unitário RED→GREEN→refactor, um comportamento por vez, saída vermelha colada; (2) medida é teste unitário RED com valor do nó citando `file.json:linha`; nó sem o valor = Lacuna → volta ao architect; (3) stories escritas após o verde unitário e devem passar de primeira (falha de `play` = bug → novo RED unitário); (4) golden RED: IDs em tags `golden`/`golden-hover`/`golden-focus`/`golden-page` lidas de `storybook-static/index.json` (`golden/stories.ts`; manifest.ts removido no GATE-INFRA) → falha "story ausente"/"baseline inexistente"; (5) golden GREEN: `test:visual:update -g "<id>"` **no Docker**, comparar PNG gerado com o PNG do frame do Figma e registrar a revisão no log antes de versionar; (6) proibido: vários testes antes do código, `--update-snapshots` sem revisão, editar teste para passar. _(obsoleto: ADR-15, Docker proibido pela regra do CLAUDE.md)_
 Unitários browser rodam em 1440×900; casos responsivos trocam o viewport (confirmar API em `vitest/browser`).
 
-**Passo 0 (setup, sem teste):** verificar Node/pnpm/Docker (Q1); `package.json` raiz, `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.base.json`, ESLint e Prettier, `package.json` dos dois pacotes, `.gitattributes`; instalar dependências aprovadas — raiz: `turbo typescript eslint @eslint/js typescript-eslint eslint-plugin-react-hooks eslint-plugin-storybook prettier` (+ opcionais `prettier-plugin-tailwindcss`, `eslint-plugin-jsx-a11y`); DS: `react react-dom @radix-ui/react-{slot,separator,checkbox,radio-group,tabs,select,slider,dialog,avatar,label} class-variance-authority clsx tailwind-merge tailwindcss @tailwindcss/vite vite vitest @vitest/browser-playwright vitest-browser-react axe-core storybook @storybook/react-vite @storybook/addon-docs @storybook/addon-a11y @storybook/addon-vitest @playwright/test`; app: `react react-dom vite @vitejs/plugin-react tailwindcss @tailwindcss/vite vitest @vitest/browser-playwright vitest-browser-react`. Preservar histórico git; commits só quando o usuário pedir.
+**Passo 0 (setup, sem teste):** verificar Node/pnpm/Docker (Q1); `package.json` raiz, `pnpm-workspace.yaml`, `turbo.json`, `tsconfig.base.json`, ESLint e Prettier, `package.json` dos dois pacotes, `.gitattributes`; instalar dependências aprovadas — raiz: `turbo typescript eslint @eslint/js typescript-eslint eslint-plugin-react-hooks eslint-plugin-storybook prettier` (+ opcionais `prettier-plugin-tailwindcss`, `eslint-plugin-jsx-a11y`); DS: `react react-dom @radix-ui/react-{slot,separator,checkbox,radio-group,tabs,select,slider,dialog,avatar,label} class-variance-authority clsx tailwind-merge tailwindcss @tailwindcss/vite vite vitest @vitest/browser-playwright vitest-browser-react axe-core storybook @storybook/react-vite @storybook/addon-docs @storybook/addon-a11y @storybook/addon-vitest @playwright/test`; app: `react react-dom vite @vitejs/plugin-react tailwindcss @tailwindcss/vite vitest @vitest/browser-playwright vitest-browser-react`. Preservar histórico git; commits só quando o usuário pedir. _(obsoleto: ADR-15, Docker proibido pela regra do CLAUDE.md)_
 
 ### Fundação
 | # | Nome | Arquivo | Tipo | VP |
@@ -230,7 +230,7 @@ Formato `N.k` = sub-item (tipo). Arquivos: `src/<camada>/<nome>/<Nome>.test.tsx`
 - `@import` do CSS do DS e `@source "../"` dependem de resolução por `exports` (provado por I1).
 - Medidas divergentes do "mesmo" componente → variante nomeada com nó citado, ou Lacuna; nunca média.
 - Tablet 768 não tem frame: comportamento derivado, golden registra o estado.
-- Docker Desktop ausente = bloqueio real (consultar usuário).
+- Docker Desktop ausente = bloqueio real (consultar usuário). _(obsoleto: ADR-15, Docker proibido pela regra do CLAUDE.md)_
 
 ## 7. Fora do escopo
 Telas, rotas, TanStack Router/Query, Axios, MSW, Socket.IO, sessão, carrinho, formatação/aritmética de ETH; widgets do app (Header/Footer, painel Filters, menu do perfil, bottom nav, tabelas, carrossel, newsletter); Toast visual, Spinner, Tooltip, DropdownMenu, Switch, tema claro; deploy, Lighthouse, README da solução, ARCHITECTURE.md completo (só entradas ADR-01..12), E2E de telas do §9; comparação por pixel com PNG do Figma; publicação em registry.
