@@ -1,4 +1,5 @@
 import { Alert, Button, LiveRegion, NftCardSkeleton } from '@jg/design-system';
+import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { NftCardView, type CatalogQueryResult } from '../../../entities/nft';
@@ -45,6 +46,9 @@ export function CatalogResults({ query }: { query: CatalogQueryResult }) {
         <div>
           <h2>{t('empty.title')}</h2>
           <p>{t('empty.text')}</p>
+          <Link to="/" search={{}}>
+            {t('empty.clear')}
+          </Link>
         </div>
       ) : (
         <ul aria-label={t('listLabel')} className={GRID}>

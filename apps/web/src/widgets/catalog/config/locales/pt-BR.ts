@@ -5,7 +5,7 @@ export const ptBR = {
   count_one: '{{count}} NFT',
   count_other: '{{count}} NFTs',
   loading: 'Carregando NFTs',
-  empty: { title: 'Nenhum NFT encontrado', text: 'Tente ajustar a busca ou os filtros.' },
+  empty: { title: 'Nenhum NFT encontrado', text: 'Tente ajustar a busca ou os filtros.', clear: 'Limpar filtros' },
   error: {
     toneLabel: 'Erro',
     title: 'Não foi possível carregar os NFTs',

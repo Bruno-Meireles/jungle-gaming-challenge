@@ -399,10 +399,10 @@ M4
 - [x] 29 fora de ordem E2E: verde com 25/26 (`7810968`)
 
 M5
-- [ ] 30 skeleton E2E
-- [ ] 31 vazio E2E
-- [ ] 32 erro e retry E2E
-- [ ] 33 atualização em segundo plano E2E
+- [x] 30 skeleton E2E (regressão: já passava no RED)
+- [x] 31 vazio E2E: RED cfb8243, GREEN (link "Limpar filtros" no estado vazio, i18n pt-BR/en; spec 18/18; typecheck, lint e node 400/400 limpos)
+- [x] 32 erro e retry E2E (regressão: já passava no RED)
+- [x] 33 atualização em segundo plano E2E (regressão: já passava no RED)
 - [x] 34 destaques E2E: RED `c6c3187`, GREEN (spec 24/24; suíte E2E 62/62; node+browser 378/378; typecheck e lint limpos). Ver Execução
 
 M6
@@ -497,3 +497,5 @@ Desvios do Figma observados nas capturas (M4):
 - Busca: ícone no header (Figma tem o ícone sem campo); campo de 240 px quando aberto (largura derivada); mobile com campo 45 px e botão de filtros 45 px com gradiente primary (Figma: 15:5313, medida do botão não extraída).
 - Preço extremo "0,000000000000000001 ETH" quebra em duas linhas no card de 390 (já listado no item 34).
 - Seletor de idioma do header aparece junto da busca no 1440; abaixo disso segue sem seletor (rodapé pendente, Q8).
+
+Item 31 (GREEN): em CatalogResults.tsx o estado vazio ganhou `<Link to="/" search={{}}>` com a chave `empty.clear` ("Limpar filtros"/"Clear filters") nos locales do widget catalog. Itens 30, 32 e 33 passaram sem mudança (regressão). Nota de execução: com o outro agente rodando E2E em paralelo, a execução com `test-results` compartilhado deu ENOENT e o servidor dev compartilhado deu ERR_CONNECTION_REFUSED; reexecução com `--workers=1 --output` próprio: 18/18.

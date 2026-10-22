@@ -7,7 +7,7 @@ export const en = {
   count_one: '{{count}} NFT',
   count_other: '{{count}} NFTs',
   loading: 'Loading NFTs',
-  empty: { title: 'No NFTs found', text: 'Try adjusting the search or the filters.' },
+  empty: { title: 'No NFTs found', text: 'Try adjusting the search or the filters.', clear: 'Clear filters' },
   error: {
     toneLabel: 'Error',
     title: 'Could not load the NFTs',
