@@ -94,7 +94,9 @@ describe('Breadcrumb - medidas', () => {
   it('separador "/" decorativo: mesma tipografia, gap de 8px e oculto no ultimo item', async () => {
     await render(<Trail />);
     await expect.element(page.getByRole('link', { name: 'Início' })).toBeInTheDocument();
-    const separators = Array.from(document.querySelectorAll<HTMLElement>('[data-slot="breadcrumb-separator"]'));
+    const separators = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-slot="breadcrumb-separator"]'),
+    );
     expect(separators).toHaveLength(3);
     expect(separators[0]?.getAttribute('aria-hidden')).toBe('true');
     const cs = getComputedStyle(separators[0] as HTMLElement);

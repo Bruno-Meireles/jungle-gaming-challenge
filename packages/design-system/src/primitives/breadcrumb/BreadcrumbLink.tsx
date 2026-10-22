@@ -7,5 +7,11 @@ export type BreadcrumbLinkProps = React.ComponentProps<'a'> & {
 
 export function BreadcrumbLink({ className, asChild = false, ...props }: BreadcrumbLinkProps) {
   const Comp = asChild ? Slot : 'a';
-  return <Comp data-slot="breadcrumb-link" className={cn(className)} {...props} />;
+  return (
+    <Comp
+      data-slot="breadcrumb-link"
+      className={cn('hover:text-text-accent', className)}
+      {...props}
+    />
+  );
 }
