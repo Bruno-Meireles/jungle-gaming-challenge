@@ -85,6 +85,42 @@ describe('RangeSlider - comportamento', () => {
   });
 });
 
+describe('RangeSlider - getValueText (aria-valuetext)', () => {
+  const WithValueText = () => {
+    const [value, setValue] = useState<[number, number]>([20, 80]);
+    return (
+      <div style={{ width: '258px' }}>
+        <RangeSlider
+          value={value}
+          min={0}
+          max={100}
+          step={5}
+          onValueChange={setValue}
+          thumbLabels={['Minimum price', 'Maximum price']}
+          getValueText={(v) => `${v} credits`}
+        />
+      </div>
+    );
+  };
+  const lo = () => page.getByRole('slider', { name: 'Minimum price' });
+  const hi = () => page.getByRole('slider', { name: 'Maximum price' });
+
+  it('cada thumb expoe aria-valuetext com o texto devolvido por getValueText', async () => {
+    await render(<WithValueText />);
+    await expect.element(lo()).toHaveAttribute('aria-valuetext', '20 credits');
+    await expect.element(hi()).toHaveAttribute('aria-valuetext', '80 credits');
+  });
+
+  it('aria-valuetext acompanha o valor ao mover por teclado', async () => {
+    await render(<WithValueText />);
+    await expect.element(lo()).toBeInTheDocument();
+    lo().element().focus();
+    await userEvent.keyboard('{ArrowRight}');
+    await expect.element(lo()).toHaveAttribute('aria-valuetext', '25 credits');
+    await expect.element(hi()).toHaveAttribute('aria-valuetext', '80 credits');
+  });
+});
+
 describe('RangeSlider - medidas', () => {
   it('raiz 258x21; trilho 4px; faixa primary; thumbs 15x15 primary com borda 3px ink', async () => {
     await render(<Controlled />);
