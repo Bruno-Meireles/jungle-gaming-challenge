@@ -1,3 +1,4 @@
+/* global process */
 // Extrai de docs/figma/file.json apenas os nos usados pelos testes de medida (*.measure.test.tsx) e grava measures.json.
 // Uso (na pasta apps/web): node tests/figma/extract-measures.mjs
 // Cada entrada guarda valor, id do no e a linha de docs/figma/file.json (citacao arquivo:linha).

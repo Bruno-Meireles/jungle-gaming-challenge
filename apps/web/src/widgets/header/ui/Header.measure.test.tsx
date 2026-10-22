@@ -57,7 +57,7 @@ describe('Header @1440 (Figma 2:2)', () => {
     const s = getComputedStyle(el('Início'));
     expectPx(px(s.fontSize), 'header.navActive.fs');
     expectExact(Number(s.fontWeight), 'header.navActive.fw');
-    expectPx(px(s.lineHeight), 'header.navActive.lh');
+    expectPx(s.lineHeight, 'header.navActive.lh');
     expectColor(s.color, 'header.navActive.fill');
   });
 
@@ -71,7 +71,7 @@ describe('Header @1440 (Figma 2:2)', () => {
     const s = getComputedStyle(el('Criadores'));
     expectPx(px(s.fontSize), 'header.navInactive.fs');
     expectExact(Number(s.fontWeight), 'header.navInactive.fw');
-    expectPx(px(s.lineHeight), 'header.navInactive.lh');
+    expectPx(s.lineHeight, 'header.navInactive.lh');
     expectColor(s.color, 'header.navInactive.fill');
   });
 

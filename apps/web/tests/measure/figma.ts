@@ -12,10 +12,11 @@ export function figma<T = number>(key: string): { value: T; cite: string } {
 }
 
 /** Compara medida em px com tolerancia (arredondamento de fonte/subpixel). Divergencia real falha com esperado x observado. */
-export function expectPx(actual: number, key: string, scale = 1, tolerance = 0.6): void {
+export function expectPx(actual: number | string, key: string, scale = 1, tolerance = 0.6): void {
   const { value, cite } = figma(key);
   const expected = value * scale;
-  const ok = Math.abs(actual - expected) <= tolerance;
+  const n = typeof actual === 'string' ? Number.parseFloat(actual) : actual;
+  const ok = Math.abs(n - expected) <= tolerance;
   expect.soft(ok ? expected : actual, `${cite} (esperado ${expected}px)`).toBe(expected);
 }
 
