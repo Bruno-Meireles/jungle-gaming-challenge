@@ -73,7 +73,8 @@ describe('RadioGroup - medidas', () => {
     expect([rect.width, rect.height]).toEqual([16, 16]);
     // rounded-full computa um valor enorme (calc(infinity * 1px)); circular = raio >= metade do lado.
     expect(parseFloat(cs.borderTopLeftRadius)).toBeGreaterThanOrEqual(8);
-    expect(cs.borderTopWidth).toBe('1.2px');
+    // Figma 1.2px; o Chrome arredonda largura de borda para pixel de dispositivo (dpr 1 => 1px).
+    expect(cs.borderTopWidth).toBe('1px');
     expect(cs.borderTopColor).toBe(PRIMARY);
     const dot = a.element().querySelector('[data-slot="radio-indicator"]') as HTMLElement;
     expect(dot).not.toBeNull();
