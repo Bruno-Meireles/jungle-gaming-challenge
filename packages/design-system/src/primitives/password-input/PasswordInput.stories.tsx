@@ -13,7 +13,12 @@ const meta = {
       </div>
     ),
   ],
-  args: { 'aria-label': 'Senha', defaultValue: 'segredo123' },
+  args: {
+    'aria-label': 'Senha',
+    defaultValue: 'segredo123',
+    showLabel: 'Mostrar senha',
+    hideLabel: 'Ocultar senha',
+  },
 } satisfies Meta<typeof PasswordInput>;
 
 export default meta;

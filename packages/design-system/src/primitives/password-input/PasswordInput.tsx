@@ -7,8 +7,8 @@ import { useState } from 'react';
 import { Input } from '../input';
 
 export type PasswordInputProps = Omit<React.ComponentProps<'input'>, 'type'> & {
-  showLabel?: string;
-  hideLabel?: string;
+  showLabel: string;
+  hideLabel: string;
 };
 
 function EyeIcon({ crossed }: { crossed: boolean }) {
@@ -31,11 +31,7 @@ function EyeIcon({ crossed }: { crossed: boolean }) {
   );
 }
 
-export function PasswordInput({
-  showLabel = 'Mostrar senha',
-  hideLabel = 'Ocultar senha',
-  ...props
-}: PasswordInputProps) {
+export function PasswordInput({ showLabel, hideLabel, ...props }: PasswordInputProps) {
   const [visible, setVisible] = useState(false);
   return (
     <Input

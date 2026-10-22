@@ -9,13 +9,13 @@ const field = () => page.getByLabelText('Senha');
 
 describe('PasswordInput - comportamento', () => {
   it('renderiza type=password por padrao', async () => {
-    await render(<PasswordInput aria-label="Senha" />);
+    await render(<PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" />);
     await expect.element(field()).toBeInTheDocument();
     expect(field().element().getAttribute('type')).toBe('password');
   });
 
   it('botao "Mostrar senha" com aria-pressed=false alterna o tipo para text e de volta', async () => {
-    await render(<PasswordInput aria-label="Senha" defaultValue="segredo" />);
+    await render(<PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" defaultValue="segredo" />);
     const toggle = page.getByRole('button', { name: 'Mostrar senha' });
     await expect.element(toggle).toHaveAttribute('aria-pressed', 'false');
     await toggle.click();
@@ -33,7 +33,7 @@ describe('PasswordInput - comportamento', () => {
   });
 
   it('o foco permanece no botao apos alternar', async () => {
-    await render(<PasswordInput aria-label="Senha" />);
+    await render(<PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" />);
     const toggle = page.getByRole('button', { name: 'Mostrar senha' });
     await expect.element(toggle).toBeInTheDocument();
     toggle.element().focus();
@@ -44,7 +44,7 @@ describe('PasswordInput - comportamento', () => {
   });
 
   it('aria-invalid="true" troca a borda para a cor de erro', async () => {
-    await render(<PasswordInput aria-label="Senha" aria-invalid="true" />);
+    await render(<PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" aria-invalid="true" />);
     await expect.element(field()).toBeInTheDocument();
     const box = field().element().closest('[data-slot="input"]') as HTMLElement;
     expect(getComputedStyle(box).borderTopColor).toBe('rgb(237, 27, 46)');
@@ -60,7 +60,7 @@ describe('PasswordInput - medidas e a11y', () => {
   it('mede 340x40 com raio 5 e borda 1px', async () => {
     await render(
       <div style={{ width: '340px' }}>
-        <PasswordInput aria-label="Senha" />
+        <PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" />
       </div>,
     );
     await expect.element(field()).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('PasswordInput - medidas e a11y', () => {
   });
 
   it('icone do botao e decorativo (aria-hidden) e mede 20x20', async () => {
-    await render(<PasswordInput aria-label="Senha" />);
+    await render(<PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" />);
     const toggle = page.getByRole('button', { name: 'Mostrar senha' });
     await expect.element(toggle).toBeInTheDocument();
     const svg = toggle.element().querySelector('svg') as SVGElement;
@@ -83,7 +83,7 @@ describe('PasswordInput - medidas e a11y', () => {
   });
 
   it('nao tem violacoes de acessibilidade (axe), oculto e visivel', async () => {
-    const { container } = await render(<PasswordInput aria-label="Senha" />);
+    const { container } = await render(<PasswordInput aria-label="Senha" showLabel="Mostrar senha" hideLabel="Ocultar senha" />);
     await expectNoA11yViolations(container);
     await page.getByRole('button', { name: 'Mostrar senha' }).click();
     await expectNoA11yViolations(container);
