@@ -97,7 +97,8 @@ describe('Input - medidas e foco', () => {
     const ph = getComputedStyle(el.element(), '::placeholder');
     expect(ph.color).toBe(SECONDARY);
     expect(ph.fontSize).toBe('14px');
-    expect(ph.lineHeight).toBe('16px');
+    // Chrome fixa line-height do ::placeholder de input em 'normal' (nao estilizavel): a altura de linha 16 vem do input.
+    expect(getComputedStyle(el.element()).lineHeight).toBe('16px');
     expect(ph.fontWeight).toBe('400');
   });
 

@@ -16,7 +16,8 @@ export type InputProps = React.ComponentProps<'input'> & {
 
 const box = cva(
   [
-    'flex h-10 w-full items-center gap-2 rounded-5 border border-input-border px-4 py-3',
+    // --spacing = 1px (tokens.css): h-40 = 40px, px-16 = 16px, py-12 = 12px, gap-8 = 8px.
+    'flex h-40 w-full items-center gap-8 rounded-5 border border-input-border px-16 py-12',
     'has-[input:focus]:border-primary has-[input:focus-visible]:outline-2',
     'has-[input:focus-visible]:outline-offset-2 has-[input:focus-visible]:outline-focus',
     'has-[input[aria-invalid=true]]:border-destructive',
