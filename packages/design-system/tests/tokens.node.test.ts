@@ -145,11 +145,16 @@ describe('aliases semanticos de cor (T11)', () => {
   });
 });
 
-// Tipografia (T12): tokens `--text-*` entram sob demanda. Convencao Tailwind 4:
-// `--text-<n>` (font-size) + `--text-<n>--line-height|--font-weight|--letter-spacing`.
-const TEXT_TOKENS: [token: string, styleId: string, styleName: string][] = [
-  ['--text-body-14-bold-lh-16', '70321:354', 'Body/14 Bold · lh 16'],
-];
+/// Tipografia (T12, generalizado no GATE-TOKENS): UM token `--text-<slug do estilo>` para CADA estilo TEXT do file.json.
+// Convencao Tailwind 4: `--text-<n>` (font-size) + `--text-<n>--line-height|--font-weight|--letter-spacing`.
+// `Body/14 Bold · lh 16` -> `--text-body-14-bold-lh-16`; `ls 0%` -> `ls-0`.
+function textSlug(styleName: string): string {
+  return `--text-${styleName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+}
+
+const TEXT_STYLES: [token: string, styleId: string, styleName: string][] = Object.entries(loadFigmaFile().styles)
+  .filter(([, s]) => s.styleType === 'TEXT')
+  .map(([id, s]) => [textSlug(s.name), id, s.name]);
 
 type TextMetrics = { fontSize: number; fontWeight: number; lineHeightPx: number; lineHeightUnit: string; letterSpacing: number };
 
@@ -178,6 +183,22 @@ function nodeTextMetrics(root: unknown): Map<string, Map<string, TextMetrics>> {
   return map;
 }
 
+// Estilo sem uso em nos: metricas da description `combo:<size>|<peso>|<lh>px|<ls>%` (lh auto -> INTRINSIC_%).
+const WEIGHTS: Record<string, number> = { Thin: 100, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700 };
+function descriptionMetrics(style: FigmaStyle): TextMetrics | undefined {
+  const m = style.description?.match(/^combo:(\d+(?:\.\d+)?)\|(\w+)\|(auto|\d+(?:\.\d+)?px)\|(-?[\d.]+)%/);
+  if (!m || WEIGHTS[m[2]!] === undefined) return undefined;
+  const size = Number(m[1]);
+  const px = m[3]!.endsWith('px');
+  return {
+    fontSize: size,
+    fontWeight: WEIGHTS[m[2]!]!,
+    lineHeightPx: px ? Number.parseFloat(m[3]!) : 0,
+    lineHeightUnit: px ? 'PIXELS' : 'INTRINSIC_%',
+    letterSpacing: (Number(m[4]) / 100) * size,
+  };
+}
+
 // Figma -> CSS: 'lh auto' (INTRINSIC_%) vira `normal`; letter-spacing 0 vira `0`, senao em.
 function expectedCss(m: TextMetrics) {
   const em = (m.letterSpacing / m.fontSize).toFixed(4).replace(/\.?0+$/, '');
@@ -189,20 +210,25 @@ function expectedCss(m: TextMetrics) {
   };
 }
 
-describe('tokens de tipografia (T12)', () => {
+describe('tokens de tipografia (T12, todos os estilos TEXT)', () => {
   const file = loadFigmaFile();
   const used = nodeTextMetrics(file.document);
+  const metricsOf = (id: string): TextMetrics | undefined => [...(used.get(id)?.values() ?? [])][0] ?? descriptionMetrics(file.styles[id]!);
 
-  it.each(TEXT_TOKENS)('%s: estilo %s (%s) existe como TEXT e seus nos nao divergem', (_token, styleId, styleName) => {
-    expect(file.styles[styleId]?.styleType).toBe('TEXT');
-    expect(file.styles[styleId]?.name).toBe(styleName);
-    expect(used.get(styleId)?.size ?? 0, 'nos que usam o estilo').toBeGreaterThan(0);
-    expect([...(used.get(styleId)?.values() ?? [])]).toHaveLength(1);
+  it('o file.json tem 59 estilos TEXT e os nomes de token nao colidem', () => {
+    expect(TEXT_STYLES).toHaveLength(59);
+    const tokens = TEXT_STYLES.map(([t]) => t);
+    expect(new Set(tokens).size).toBe(tokens.length);
   });
 
-  it.each(TEXT_TOKENS)('tokens.css declara %s (%s) com tamanho, line-height, peso e letter-spacing do Figma', (token, styleId) => {
-    const m = [...(used.get(styleId)?.values() ?? [])][0];
-    expect(m, `nos de ${styleId} no file.json`).toBeDefined();
+  it.each(TEXT_STYLES)('%s: estilo %s (%s) tem metricas consistentes (nos nao divergem; sem uso: description)', (_token, styleId) => {
+    expect(used.get(styleId)?.size ?? 0, 'metricas distintas entre os nos').toBeLessThanOrEqual(1);
+    expect(metricsOf(styleId), `metricas de ${styleId}`).toBeDefined();
+  });
+
+  it.each(TEXT_STYLES)('tokens.css declara %s (%s) com tamanho, line-height, peso e letter-spacing do Figma', (token, styleId) => {
+    const m = metricsOf(styleId);
+    expect(m, `metricas de ${styleId}`).toBeDefined();
     const want = expectedCss(m as TextMetrics);
     const decls = parseDeclarations(readTokens());
     const val = (n: string) => decls.find((d) => d.name === n)?.value;
@@ -214,8 +240,20 @@ describe('tokens de tipografia (T12)', () => {
     }).toEqual(want);
   });
 
+  it.each(TEXT_STYLES)('%s declara /* figma:%s */', (token, styleId) => {
+    expect(parseDeclarations(readTokens()).find((d) => d.name === token)?.figma).toBe(styleId);
+  });
+
+  it('inventario: o conjunto de --text-* base == os estilos TEXT (nenhum faltando, nenhum inventado)', () => {
+    const base = parseDeclarations(readTokens())
+      .filter((d) => d.name.startsWith('--text-') && !d.name.slice(2).includes('--') && d.value !== 'initial')
+      .map((d) => d.name)
+      .sort();
+    expect(base).toEqual(TEXT_STYLES.map(([t]) => t).sort());
+  });
+
   it('todo --text-* base declarado tem /* figma:<styleId> */ de um estilo TEXT existente', () => {
-    const base = parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--text-') && !d.name.slice(2).includes('--'));
+    const base = parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--text-') && !d.name.slice(2).includes('--') && d.value !== 'initial');
     expect(base.length, 'ao menos um --text-* declarado').toBeGreaterThan(0);
     const bad = base.filter((d) => !d.figma || file.styles[d.figma]?.styleType !== 'TEXT').map((d) => d.name);
     expect(bad).toEqual([]);
