@@ -4,17 +4,19 @@ import { useTranslation } from 'react-i18next';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
-import type { Resources } from '../i18n/resources';
+import { sharedLocales } from '../../shared/config';
+import { resources as realResources, type Resources } from '../i18n/resources';
 import { AppProviders } from './AppProviders';
 
+// Sobrescreve uma chave de namespace REAL (shared.skipLink) com textos distintos por idioma.
 const resources: Resources = {
-  'pt-BR': { demo: { greeting: 'Olá' } },
-  en: { demo: { greeting: 'Hello' } },
+  'pt-BR': { ...realResources['pt-BR'], shared: { ...sharedLocales['pt-BR'], skipLink: 'Olá' } },
+  en: { ...realResources.en, shared: { ...sharedLocales.en, skipLink: 'Hello' } },
 };
 
 function Greeting() {
-  const { t } = useTranslation('demo');
-  return <p data-testid="greeting">{t('greeting')}</p>;
+  const { t } = useTranslation('shared');
+  return <p data-testid="greeting">{t('skipLink')}</p>;
 }
 
 function Switcher() {

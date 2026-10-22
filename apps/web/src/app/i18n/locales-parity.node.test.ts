@@ -49,7 +49,12 @@ describe('paridade dos recursos de traducao', () => {
     expect(Object.keys(resources.en).sort()).toEqual(Object.keys(resources['pt-BR']).sort());
   });
 
-  it.each(Object.keys(resources['pt-BR']))('namespace %s tem as mesmas chaves e placeholders nos dois idiomas', (ns) => {
-    expect(findParityIssues(resources['pt-BR'][ns] ?? {}, resources.en[ns] ?? {})).toEqual([]);
-  });
+  const enByNamespace = new Map(Object.entries(resources.en));
+
+  it.each(Object.entries(resources['pt-BR']))(
+    'namespace %s tem as mesmas chaves e placeholders nos dois idiomas',
+    (namespace, ptBRMessages) => {
+      expect(findParityIssues(ptBRMessages, enByNamespace.get(namespace) ?? {})).toEqual([]);
+    },
+  );
 });
