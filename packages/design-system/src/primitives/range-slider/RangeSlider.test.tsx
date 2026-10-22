@@ -54,7 +54,7 @@ describe('RangeSlider - comportamento', () => {
     expect(out()).toBe('15-75');
   });
 
-  it('minimo nunca ultrapassa o maximo', async () => {
+  it('minimo nunca ultrapassa o maximo (valor segue ordenado)', async () => {
     await render(<Controlled initial={[45, 50]} />);
     await expect.element(min()).toBeInTheDocument();
     min().element().focus();
@@ -63,7 +63,10 @@ describe('RangeSlider - comportamento', () => {
       const [lo, hi] = out().split('-').map(Number);
       expect(lo).toBeLessThanOrEqual(hi ?? -1);
     }
-    expect(out()).toBe('50-50');
+    // Radix mantem a ordem: ao encostar, o foco passa ao outro thumb (value segue ordenado), nao cruza.
+    const [lo, hi] = out().split('-').map(Number);
+    expect(lo).toBe(50);
+    expect(hi).toBeGreaterThanOrEqual(50);
   });
 
   it('desabilitado marca os thumbs como data-disabled', async () => {
