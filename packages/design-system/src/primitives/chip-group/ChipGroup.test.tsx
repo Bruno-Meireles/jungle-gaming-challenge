@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { afterEach, describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { pressArrow } from '../../test/keyboard';
 import { render } from 'vitest-browser-react';
 import '../../test/entry.css';
 import { expectNoA11yViolations } from '../../test/axe';
@@ -63,10 +64,10 @@ describe('ChipGroup - comportamento', () => {
     await expect.element(page.getByRole('radio', { name: '1/50' })).toBeInTheDocument();
     await userEvent.tab();
     expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/50' }).element());
-    await userEvent.keyboard('{ArrowRight}');
+    await pressArrow('ArrowRight');
     await expect.element(page.getByRole('radio', { name: '1/10' })).toBeChecked();
     expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/10' }).element());
-    await userEvent.keyboard('{ArrowLeft}');
+    await pressArrow('ArrowLeft');
     await expect.element(page.getByRole('radio', { name: '1/50' })).toBeChecked();
   });
 
@@ -79,7 +80,7 @@ describe('ChipGroup - comportamento', () => {
     await expect.element(second).not.toBeChecked();
     page.getByRole('radio', { name: '1/50' }).element().focus();
     expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/50' }).element());
-    await userEvent.keyboard('{ArrowRight}');
+    await pressArrow('ArrowRight');
     expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/1' }).element());
     await expect.element(page.getByRole('radio', { name: '1/1' })).toBeChecked();
     expect(calls).toEqual(['3']);

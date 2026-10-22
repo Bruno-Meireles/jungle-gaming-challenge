@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
+import { pressArrow } from '../../test/keyboard';
 import { render } from 'vitest-browser-react';
 import '../../test/entry.css';
 import { expectNoA11yViolations } from '../../test/axe';
@@ -30,10 +31,10 @@ describe('RadioGroup - comportamento', () => {
     const b = page.getByRole('radio', { name: 'Coinbase Wallet' });
     await expect.element(a).toBeChecked();
     a.element().focus();
-    await userEvent.keyboard('{ArrowDown}');
+    await pressArrow('ArrowDown');
     await expect.element(b).toBeChecked();
     expect(document.activeElement).toBe(b.element());
-    await userEvent.keyboard('{ArrowUp}');
+    await pressArrow('ArrowUp');
     await expect.element(a).toBeChecked();
   });
 

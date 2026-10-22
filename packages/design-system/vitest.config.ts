@@ -30,6 +30,7 @@ export default defineConfig({
           name: 'unit',
           include: ['src/**/*.test.{ts,tsx}'],
           exclude: ['src/**/*.stories.{ts,tsx}'],
+          setupFiles: ['src/test/setup.ts'],
           browser: {
             enabled: true,
             headless: true,
