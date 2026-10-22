@@ -15,3 +15,4 @@ Branch: `worktree-agent-afcb3caf59e125fb9`. Commits: test(red), feat(green) (inc
 - `-g` do golden usa o id com hifen (`primitives-rating`); sem hifen nao encontra testes.
 - Stories foram commitadas junto do commit green (um `git add -A`), nao em commit separado.
 - O texto "19 avaliacoes" do card fica fora do componente (NftCard).
+- Lacuna (revisao): `Math.round` faz `value` fracionario arredondar para a estrela inteira mais proxima (ex.: 4,5 exibe 5 estrelas, 4,4 exibe 4); nao ha meia estrela. O Figma nao tem estado de meia estrela e a decisao de arredondar ou truncar nao foi tomada com o produto. Quem exibe media de avaliacoes deve ter isso em mente (a prop `label` pode carregar o valor exato).
