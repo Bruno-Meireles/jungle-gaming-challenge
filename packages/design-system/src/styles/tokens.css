@@ -44,6 +44,16 @@
   --color-input-border: var(--color-secondary);
   --color-destructive-text: var(--color-text-coral);
   --color-destructive: var(--color-error);
+  --color-surface: var(--color-surface-card);
+  --color-text: var(--color-foreground);
+  --color-text-muted: var(--color-text-secondary);
+  --color-accent: var(--color-primary);
+  --color-primary-hover: var(--color-primary-light);
+  --color-primary-active: var(--color-primary-dark);
+  --color-disabled-bg: var(--color-border-soft);
+  --color-disabled-text: var(--color-secondary);
+  --color-link: var(--color-text-accent);
+  /* Lacuna: --color-overlay (o Figma nao tem fill translucido; ver docs/design-tokens.md) */
 
   /* tipografia: 1 token por estilo TEXT do Figma (59) */
   --text-body-14-bold-lh-auto: 14px; /* figma:70321:344 */
