@@ -56,6 +56,20 @@ Não usamos a CLI do shadcn nem `components.json`. Quando um componente parte do
 - `primitives` não importam `patterns`. Valores em ETH chegam como string pronta (`priceLabel`), nunca como número.
 - Estados, textos e dados vêm por props; o design system não conhece rotas nem cache.
 
+## Textos e i18n
+
+O design system é **agnóstico de idioma**: só recebe por props os textos e valores a exibir, inclusive os rótulos acessíveis. Toda a internacionalização fica no app.
+
+| O DS recebe por props | Fica só no app |
+|---|---|
+| Textos visíveis (`title`, `children`, rótulos de campo) | Biblioteca de i18n, providers e dicionários |
+| Rótulos acessíveis, **obrigatórios e sem default**: `label`, `<ação>Label` (`closeLabel`, `showLabel`/`hideLabel`, `decrementLabel`/`incrementLabel`, `nextLabel`), `toneLabel`, `thumbLabels`; `aria-label` e `alt` nativos | Seleção e persistência de idioma, `<html lang>` |
+| Valores já formatados como `string` (ETH, moeda, datas, plurais), ex.: `NftCard.priceLabel="1,19 ETH"` | Formatação com `Intl`, tradução de códigos de erro, wrappers `shared/ui` com `t()` |
+
+`number` só entra como valor de controle (`value`, `min`, `max`, `page`, `pageCount`). Inteiros de controle são renderizados crus (exceção registrada no ADR-14).
+
+Guardas automáticas: o `src` não pode ter texto de interface literal (`tests/ui-text-literals.node.test.ts`) nem usar `Intl`, `toLocale*`, `localeCompare`, `navigator.language` ou `documentElement.lang` (`tests/locale-apis.node.test.ts`); o `package.json` não declara lib de i18n (`tests/package-boundary.node.test.ts`) e o ESLint barra o import dessas libs; omitir uma prop de rótulo falha no `tsc` (`tests/ui-text-props.typetest.tsx`).
+
 ## Lacunas conhecidas
 
 Medidas sem fonte no Figma (Alert, Textarea, Sheet, estados disabled e hover, overlay do Dialog) são derivadas do design system e estão marcadas como Lacuna no arquivo de evidência de cada componente.
