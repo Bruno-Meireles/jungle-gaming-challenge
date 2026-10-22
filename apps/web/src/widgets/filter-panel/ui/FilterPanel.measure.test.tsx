@@ -33,8 +33,8 @@ describe('Sidebar de filtros @1440 (Figma 2:2, 70485:382)', () => {
     expectColor(style(aside).backgroundColor, 'side.fill');
   });
 
-  it('sem cantos arredondados: o no nao define raio (70485:382)', () => {
-    expectPx(px(style(aside).borderTopLeftRadius), 'side.radius');
+  it('desvio documentado: raio 8 (o no 70485:382 nao define raio; 0 so inferido, side.radius)', () => {
+    expect.soft(px(style(aside).borderTopLeftRadius), 'desvio documentado: raio 8 mantido (.AI/plans/home.md, item 39)').toBe(8);
   });
 
   it('grupos separados por 40 (Frame 140, 70485:317)', () => {

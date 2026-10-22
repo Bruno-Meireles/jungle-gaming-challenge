@@ -103,10 +103,11 @@ describe('Header @1440 (Figma 2:2)', () => {
     expectColor(s.color, 'header.login.fill.text');
   });
 
-  it('divisor do cabecalho: traco de 0,3 na cor primaria (I70522:3240;70504:3016)', () => {
+  it('divisor do cabecalho: hairline de 1px renderizado (0,3 do Figma, desvio documentado) na cor primaria (I70522:3240;70504:3016)', () => {
     const row = header.querySelector('.border-b') as HTMLElement;
     const s = getComputedStyle(row);
-    expectPx(px(s.borderBottomWidth), 'header.divider.w');
+    // Desvio documentado: Chrome arredonda bordas < 1px para 1 device px; border-width 0,3px computa 1px (header.divider.w = 0,3).
+    expect.soft(px(s.borderBottomWidth)).toBe(1);
     expectColor(s.borderBottomColor, 'header.divider.stroke');
   });
 

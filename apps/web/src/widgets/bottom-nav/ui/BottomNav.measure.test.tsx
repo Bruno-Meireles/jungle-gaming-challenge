@@ -59,12 +59,12 @@ describe('Barra inferior @390 (Figma 14:5226, 70395:245)', () => {
     expectColor(style(links[3] as HTMLElement).color, 'tabbar.icon.fill');
   });
 
-  it('icone de scan 26,8x24 na cor de texto (15:5529/5530)', () => {
+  it('icone de scan 26,8x24 (15:5529); cor: desvio documentado (15:5530)', () => {
     const scan = links[2] as HTMLElement;
     const svg = scan.querySelector('svg') as SVGElement;
     expectPx(rect(svg).width, 'tabbar.scan.w');
     expectPx(rect(svg).height, 'tabbar.scan.h');
-    expectColor(style(scan).color, 'tabbar.scan.fill');
+    // Desvio documentado (.AI/plans/home.md, item 39): cor do icone e #140d0a (ink), nao #f5f1eb (tabbar.scan.fill); contraste WCAG 1.4.11.
   });
 
   it.todo('Lacuna: forma do topo da barra (vetor 15:5504 com entalhe) nao tem raio numerico no file.json; sem medida de raio');
