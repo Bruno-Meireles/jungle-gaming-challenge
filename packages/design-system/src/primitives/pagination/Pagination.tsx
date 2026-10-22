@@ -1,6 +1,8 @@
 import { PaginationLink } from './PaginationLink';
 
-export type PaginationProps = React.ComponentProps<'nav'> & {
+export type PaginationProps = Omit<React.ComponentProps<'nav'>, 'aria-label'> & {
+  label: string;
+  nextLabel: string;
   page: number;
   pageCount: number;
   getItemProps?: (page: number) => React.ComponentProps<'a'>;
@@ -12,11 +14,11 @@ const NextIcon = () => (
   </svg>
 );
 
-export function Pagination({ page, pageCount, getItemProps, ...props }: PaginationProps) {
+export function Pagination({ label, nextLabel, page, pageCount, getItemProps, ...props }: PaginationProps) {
   const pages = Array.from({ length: pageCount }, (_, i) => i + 1);
   const isLast = page >= pageCount;
   return (
-    <nav aria-label="Paginação" data-slot="pagination" {...props}>
+    <nav aria-label={label} data-slot="pagination" {...props}>
       <ul className="m-0 flex list-none items-center gap-8 p-0">
         {pages.map((n) => (
           <li key={n}>
@@ -27,11 +29,11 @@ export function Pagination({ page, pageCount, getItemProps, ...props }: Paginati
         ))}
         <li>
           {isLast ? (
-            <PaginationLink role="link" aria-label="Próxima" aria-disabled="true">
+            <PaginationLink role="link" aria-label={nextLabel} aria-disabled="true">
               <NextIcon />
             </PaginationLink>
           ) : (
-            <PaginationLink {...getItemProps?.(page + 1)} aria-label="Próxima">
+            <PaginationLink {...getItemProps?.(page + 1)} aria-label={nextLabel}>
               <NextIcon />
             </PaginationLink>
           )}

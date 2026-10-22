@@ -7,6 +7,8 @@ const meta = {
   component: Pagination,
   tags: ['autodocs'],
   args: {
+    label: 'Paginação',
+    nextLabel: 'Próxima',
     page: 1,
     pageCount: 4,
     getItemProps: (n: number) => ({ href: `#pagina-${n}` }),

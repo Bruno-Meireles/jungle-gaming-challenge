@@ -15,7 +15,7 @@ const getItemProps = (n: number) => ({ href: `#pagina-${n}` });
 
 describe('Pagination - comportamento', () => {
   it('renderiza um <nav> com nome "Paginação" e um link por pagina', async () => {
-    await render(<Pagination page={2} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={2} pageCount={4} getItemProps={getItemProps} />);
     const nav = screen.getByRole('navigation', { name: 'Paginação' });
     await expect.element(nav).toBeInTheDocument();
     expect(nav.element().tagName).toBe('NAV');
@@ -25,7 +25,7 @@ describe('Pagination - comportamento', () => {
   });
 
   it('marca somente a pagina atual com aria-current="page"', async () => {
-    await render(<Pagination page={2} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={2} pageCount={4} getItemProps={getItemProps} />);
     await expect.element(screen.getByRole('link', { name: '2', exact: true })).toHaveAttribute('aria-current', 'page');
     for (const n of [1, 3, 4]) {
       await expect.element(screen.getByRole('link', { name: String(n), exact: true })).not.toHaveAttribute('aria-current');
@@ -33,12 +33,12 @@ describe('Pagination - comportamento', () => {
   });
 
   it('"Próxima" tem nome acessivel e aponta para a pagina seguinte', async () => {
-    await render(<Pagination page={2} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={2} pageCount={4} getItemProps={getItemProps} />);
     await expect.element(screen.getByRole('link', { name: 'Próxima' })).toHaveAttribute('href', '#pagina-3');
   });
 
   it('na ultima pagina "Próxima" fica desabilitada e nao navega', async () => {
-    await render(<Pagination page={4} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={4} pageCount={4} getItemProps={getItemProps} />);
     /* <a> sem href tem papel generico e proibe aria-label (axe aria-prohibited-attr): o desabilitado usa role="link" + aria-disabled. */
     const next = screen.getByRole('link', { name: 'Próxima' });
     await expect.element(next).toHaveAttribute('aria-disabled', 'true');
@@ -52,23 +52,20 @@ describe('Pagination - comportamento', () => {
   });
 
   it('repassa className e props ao <nav>', async () => {
-    await render(<Pagination page={1} pageCount={2} getItemProps={getItemProps} className="extra" data-testid="pg" />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={1} pageCount={2} getItemProps={getItemProps} className="extra" data-testid="pg" />);
     await expect.element(screen.getByTestId('pg')).toHaveClass('extra');
   });
 });
 
 describe('Pagination - nomes recebidos por props', () => {
-  /* As props label/nextLabel ainda nao existem no tipo: objeto frouxo so aqui; o T6 troca por uso direto. */
-  const extra = { label: 'Pagination', nextLabel: 'Next' } as Record<string, string>;
-
   it('expoe label e nextLabel recebidos em pagina intermediaria', async () => {
-    await render(<Pagination page={2} pageCount={4} getItemProps={getItemProps} {...extra} />);
+    await render(<Pagination label="Pagination" nextLabel="Next" page={2} pageCount={4} getItemProps={getItemProps} />);
     await expect.element(screen.getByRole('navigation', { name: 'Pagination' })).toBeInTheDocument();
     await expect.element(screen.getByRole('link', { name: 'Next' })).toHaveAttribute('href', '#pagina-3');
   });
 
   it('na ultima pagina "Next" continua exposto com aria-disabled="true"', async () => {
-    await render(<Pagination page={4} pageCount={4} getItemProps={getItemProps} {...extra} />);
+    await render(<Pagination label="Pagination" nextLabel="Next" page={4} pageCount={4} getItemProps={getItemProps} />);
     await expect.element(screen.getByRole('link', { name: 'Next' })).toHaveAttribute('aria-disabled', 'true');
   });
 });
@@ -116,7 +113,7 @@ const TRANSPARENT = 'rgba(0, 0, 0, 0)';
 
 describe('Pagination - medidas', () => {
   it('pagina atual: 35x35, raio 4, fundo primary, texto ink 18/16 peso 700', async () => {
-    await render(<Pagination page={1} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={1} pageCount={4} getItemProps={getItemProps} />);
     const el = screen.getByRole('link', { name: '1', exact: true });
     await expect.element(el).toBeInTheDocument();
     const cs = getComputedStyle(el.element());
@@ -131,7 +128,7 @@ describe('Pagination - medidas', () => {
   });
 
   it('pagina comum: 35x35, raio 4, sem fundo, borda 1px border, texto foreground 18/16 peso 400', async () => {
-    await render(<Pagination page={1} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={1} pageCount={4} getItemProps={getItemProps} />);
     const el = screen.getByRole('link', { name: '2', exact: true });
     await expect.element(el).toBeInTheDocument();
     const cs = getComputedStyle(el.element());
@@ -148,7 +145,7 @@ describe('Pagination - medidas', () => {
   });
 
   it('"Próxima": 35x35 como os demais; itens separados por 8px', async () => {
-    await render(<Pagination page={1} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={1} pageCount={4} getItemProps={getItemProps} />);
     const first = screen.getByRole('link', { name: '1', exact: true });
     const second = screen.getByRole('link', { name: '2', exact: true });
     const next = screen.getByRole('link', { name: 'Próxima' });
@@ -161,14 +158,14 @@ describe('Pagination - medidas', () => {
   });
 
   it('"Próxima" desabilitada usa o texto de disabled', async () => {
-    await render(<Pagination page={4} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={4} pageCount={4} getItemProps={getItemProps} />);
     const next = screen.getByLabelText('Próxima');
     await expect.element(next).toBeInTheDocument();
     expect(getComputedStyle(next.element()).color).toBe(DISABLED_TEXT);
   });
 
   it('foco por teclado: outline 2px solid primary com offset 2px', async () => {
-    await render(<Pagination page={1} pageCount={4} getItemProps={getItemProps} />);
+    await render(<Pagination label="Paginação" nextLabel="Próxima" page={1} pageCount={4} getItemProps={getItemProps} />);
     await userEvent.tab();
     const el = screen.getByRole('link', { name: '1', exact: true });
     await expect.element(el).toHaveFocus();
@@ -183,7 +180,7 @@ describe('Pagination - medidas', () => {
 describe('Pagination - acessibilidade (axe)', () => {
   it('sem violacoes na primeira, no meio e na ultima pagina', async () => {
     for (const p of [1, 2, 4]) {
-      const { container, unmount } = await render(<Pagination page={p} pageCount={4} getItemProps={getItemProps} />);
+      const { container, unmount } = await render(<Pagination label="Paginação" nextLabel="Próxima" page={p} pageCount={4} getItemProps={getItemProps} />);
       await expectNoA11yViolations(container);
       await unmount();
     }
