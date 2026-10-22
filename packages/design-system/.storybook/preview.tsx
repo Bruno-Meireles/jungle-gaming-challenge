@@ -6,7 +6,11 @@ const preview: Preview = {
   initialGlobals: { viewport: { value: 'desktop1440', isRotated: false } },
   parameters: {
     layout: 'padded',
-    a11y: { test: 'error' },
+    a11y: {
+      test: 'error',
+      // Mesmas tags do helper dos testes (src/test/axe.ts); nenhuma regra desligada.
+      options: { runOnly: { type: 'tag', values: ['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa', 'wcag22aa', 'best-practice'] } },
+    },
     backgrounds: { disable: true },
     viewport: {
       options: {
