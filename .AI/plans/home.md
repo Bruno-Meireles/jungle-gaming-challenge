@@ -363,7 +363,7 @@ M1
 - [x] 2 paridade pt-BR/en: RED `adb28bb` (6 falhas por asserção), GREEN (8/8; node 32/32; typecheck e lint limpos)
 - [x] 3 lint FSD: RED `97489b9` (40 falhas por asserção), GREEN (91/91 node do app; lint do DS e lint-boundary 21/21; typecheck e lint limpos). Limitação: regras casam só imports relativos e profundidade até 5 pastas; estender se o app adotar alias
 - [x] 4 lint i18n: RED `f840e7d` (10 falhas por asserção), GREEN (node 114/114; lint do DS e lint-boundary/test-hygiene 57/57; typecheck e lint limpos)
-- [ ] 5 lint de qualidade
+- [x] 5 lint de qualidade: RED `35461f3` (10 falhas por asserção) + correção do teste (off-by-one em `functionOfLines`; caso `switch-exhaustiveness-check` retirado por ser type-aware e inviável com `lintText` de arquivos virtuais: exaustividade fica por `assertNever` + `tsc`, desvio do ADR-21), GREEN (node 133/133; typecheck, lint do app e do DS limpos; lint-boundary/test-hygiene 57/57)
 - [ ] 6 `AppProviders` e idioma
 - [ ] 7 shell E2E
 - [ ] 8 rotas stub, 404 e `/unavailable` E2E

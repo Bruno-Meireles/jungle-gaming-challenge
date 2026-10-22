@@ -132,30 +132,57 @@ const webBootstrapBlock = webBlock([`${WEB_SRC}/app/bootstrap/**/*.${WEB_EXT}`],
 // no-restricted-syntax não faz merge entre blocos `files`: este bloco não alcança arquivos de teste
 // (ignores), que mantêm o bloco de testes (.only/.skip) declarado logo depois.
 const I18N_ATTRS = '/^(aria-label|aria-description|alt|title|placeholder|label)$/';
+const webI18nSelectors = [
+  {
+    selector: 'JSXText[value=/\\p{L}/u]',
+    message: 'Texto hardcoded em JSX: use uma chave de i18n (t(...)).',
+  },
+  {
+    selector: `JSXAttribute[name.name=${I18N_ATTRS}] > Literal[value=/\\p{L}/u]`,
+    message: 'Texto hardcoded em atributo acessível/visível: use uma chave de i18n (t(...)).',
+  },
+  {
+    selector: `JSXAttribute[name.name=${I18N_ATTRS}] > JSXExpressionContainer > Literal[value=/\\p{L}/u]`,
+    message: 'Texto hardcoded em atributo acessível/visível: use uma chave de i18n (t(...)).',
+  },
+  {
+    selector: 'JSXExpressionContainer > TemplateLiteral',
+    message: 'Template literal em JSX: monte o texto por chave de i18n com interpolação (t(...)).',
+  },
+];
+
+// ---- apps/web: qualidade de código (ADR-21) ----
+const webAssertionSelector = {
+  selector: "TSAsExpression:not([typeAnnotation.type='TSTypeReference'][typeAnnotation.typeName.name='const'])",
+  message: 'Asserção de tipo `as X` proibida (exceto `as const`): use type guard ou validação.',
+};
+const webTestGlobs = ['**/*.test.{ts,tsx}', 'apps/web/e2e/**', 'apps/web/tests/**'];
+const webLimit = { skipBlankLines: true, skipComments: true };
+
+const webQualityBlock = {
+  files: [`${WEB_SRC}/**/*.${WEB_EXT}`],
+  ignores: webTestGlobs,
+  rules: {
+    complexity: ['error', 10],
+    'max-depth': ['error', 3],
+    'max-params': ['error', 3],
+    'max-nested-callbacks': ['error', 3],
+    'max-lines': ['error', { max: 200, ...webLimit }],
+    'max-lines-per-function': ['error', { max: 80, ...webLimit }],
+    'no-restricted-syntax': ['error', webAssertionSelector],
+  },
+};
+
+// Declarado depois do webQualityBlock: no-restricted-syntax não faz merge, então compõe i18n + asserção.
 const webI18nBlock = {
   files: [`${WEB_SRC}/**/*.tsx`],
   ignores: ['**/*.test.{ts,tsx}', 'apps/web/e2e/**', `${WEB_SRC}/mocks/**`],
-  rules: {
-    'no-restricted-syntax': [
-      'error',
-      {
-        selector: 'JSXText[value=/\\p{L}/u]',
-        message: 'Texto hardcoded em JSX: use uma chave de i18n (t(...)).',
-      },
-      {
-        selector: `JSXAttribute[name.name=${I18N_ATTRS}] > Literal[value=/\\p{L}/u]`,
-        message: 'Texto hardcoded em atributo acessível/visível: use uma chave de i18n (t(...)).',
-      },
-      {
-        selector: `JSXAttribute[name.name=${I18N_ATTRS}] > JSXExpressionContainer > Literal[value=/\\p{L}/u]`,
-        message: 'Texto hardcoded em atributo acessível/visível: use uma chave de i18n (t(...)).',
-      },
-      {
-        selector: 'JSXExpressionContainer > TemplateLiteral',
-        message: 'Template literal em JSX: monte o texto por chave de i18n com interpolação (t(...)).',
-      },
-    ],
-  },
+  rules: { 'no-restricted-syntax': ['error', ...webI18nSelectors, webAssertionSelector] },
+};
+
+const webTestQualityBlock = {
+  files: ['apps/web/**/*.test.{ts,tsx}', 'apps/web/e2e/**/*.{ts,tsx}', 'apps/web/tests/**/*.{ts,tsx}'],
+  rules: { 'max-lines': ['error', { max: 400, ...webLimit }] },
 };
 
 export default tseslint.config(
@@ -163,6 +190,7 @@ export default tseslint.config(
   js.configs.recommended,
   ...tseslint.configs.recommended,
   { files: ['**/*.{ts,tsx}'], plugins: { 'react-hooks': reactHooks }, rules: reactHooks.configs.recommended.rules },
+  webQualityBlock,
   webI18nBlock,
   {
     files: ['**/*.{test,spec}.{ts,tsx}', '**/tests/**/*.{ts,tsx}', '**/golden/**/*.ts'],
@@ -237,4 +265,5 @@ export default tseslint.config(
   ...webLayerBlocks,
   ...webDomainBlocks,
   webBootstrapBlock,
+  webTestQualityBlock,
 );
