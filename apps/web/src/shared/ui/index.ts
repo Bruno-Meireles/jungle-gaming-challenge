@@ -4,3 +4,7 @@ export { CartIcon } from './icons/CartIcon';
 export { LoginIcon } from './icons/LoginIcon';
 export { FiltersIcon } from './icons/FiltersIcon';
 export { SearchIcon } from './icons/SearchIcon';
+export { HomeIcon } from './icons/HomeIcon';
+export { HeartIcon } from './icons/HeartIcon';
+export { ScanIcon } from './icons/ScanIcon';
+export { UserIcon } from './icons/UserIcon';

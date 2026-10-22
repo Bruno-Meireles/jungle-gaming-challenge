@@ -5,6 +5,7 @@ declare module 'i18next' {
     defaultNS: readonly [
       'shared',
       'header',
+      'bottomNav',
       'nft',
       'catalog',
       'footer',

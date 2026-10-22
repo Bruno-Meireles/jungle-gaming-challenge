@@ -18,7 +18,7 @@ export function HomePage() {
   return (
     <PageContainer className="pt-16 pb-24 tablet:pt-32 tablet:pb-32">
       <div className="mb-16 flex items-center gap-8 desktop:hidden">
-        <SearchField value={search.q} onSubmit={(q) => update({ q })} className="flex-1 tablet:hidden" />
+        <SearchField value={search.q} onSubmit={(q) => update({ q })} className="min-w-0 flex-1 tablet:hidden" />
         <FilterSheet className="ml-auto" />
       </div>
       <Hero exploreTargetId={CATALOG_ID} />

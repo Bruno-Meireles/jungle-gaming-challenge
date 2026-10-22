@@ -1,6 +1,7 @@
 import { Outlet } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { Footer } from '../../widgets/footer';
+import { BottomNav } from '../../widgets/bottom-nav';
 import { Header } from '../../widgets/header';
 import { SkipLink } from '../../shared/ui';
 
@@ -14,6 +15,7 @@ export function RootLayout() {
         <Outlet />
       </main>
       <Footer />
+      <BottomNav />
     </>
   );
 }

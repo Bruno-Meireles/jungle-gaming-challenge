@@ -13,6 +13,7 @@ import { catalogLocales } from '../../widgets/catalog';
 import { featuredLocales } from '../../widgets/featured-nft';
 import { heroLocales } from '../../widgets/hero';
 import { footerLocales } from '../../widgets/footer';
+import { bottomNavLocales } from '../../widgets/bottom-nav';
 import { headerLocales } from '../../widgets/header';
 
 export type Resources = { 'pt-BR': Record<string, Messages>; en: Record<string, Messages> };
@@ -20,6 +21,7 @@ export type Resources = { 'pt-BR': Record<string, Messages>; en: Record<string, 
 export const ptBRResources = {
   shared: sharedLocales['pt-BR'],
   header: headerLocales['pt-BR'],
+  bottomNav: bottomNavLocales['pt-BR'],
   nft: nftLocales['pt-BR'],
   catalog: catalogLocales['pt-BR'],
   footer: footerLocales['pt-BR'],
@@ -38,6 +40,7 @@ export const ptBRResources = {
 const enResources = {
   shared: sharedLocales.en,
   header: headerLocales.en,
+  bottomNav: bottomNavLocales.en,
   nft: nftLocales.en,
   catalog: catalogLocales.en,
   footer: footerLocales.en,
