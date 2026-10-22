@@ -75,7 +75,7 @@ describe('ChipGroup - comportamento', () => {
     await render(<Editions disabledSecond onChange={(v) => calls.push(v)} />);
     const second = page.getByRole('radio', { name: '1/10' });
     await expect.element(second).toBeDisabled();
-    await second.click({ force: true });
+    (second.element() as HTMLElement).click(); // clique nativo: o click forcado do Playwright em item desabilitado trava (flake de 15s)
     await expect.element(second).not.toBeChecked();
     page.getByRole('radio', { name: '1/50' }).element().focus();
     expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/50' }).element());
