@@ -165,17 +165,23 @@ Biblioteca de i18n, providers, chaves e locales, seletor de idioma, `<html lang>
 
 ## 8. Decisões para ARCHITECTURE.md
 
-**ADR-14 Design system sem texto de interface.** Contexto: requisito de i18n desde o momento zero; o DS tinha rótulos e defaults em pt-BR. Decisão: todo texto de interface entra por prop **obrigatória no tipo**, sem default; padrão de nome (`label`, `<ação>Label`, `toneLabel`, plural em tupla, atributos nativos onde o componente é o elemento nativo); guarda node por AST reprova literal em `src`; testes de tipo provam a obrigatoriedade; exceções: glifos sem letra com `aria-hidden`. Descartado: props opcionais sem default (só o axe pegaria), defaults em inglês (troca um idioma fixo por outro), `jsx-no-literals` no DS (dependência nova e não cobre defaults/mapas), biblioteca de i18n no DS (o DS é agnóstico). Consequência: mudança de contrato em relação a `design-system.md` §3; todo consumidor passa o texto traduzido e o compilador acusa a falta; fixtures do DS em pt-BR com repasse em inglês; baselines inalteradas; fecha a pendência de i18n do DS.
+**ADR-14 Design system agnóstico de idioma; i18n só no app.** Contexto: requisito de i18n desde o momento zero (pt-BR e en); o DS tinha rótulos e defaults em pt-BR; o usuário decidiu em 2026-10-22 que o DS só recebe por props os textos e valores a exibir e que toda a i18n pertence ao app. Decisão: (1) todo texto visível ou acessível entra por prop **obrigatória no tipo, sem default**, com padrão de nome (`label` para a raiz de um contêiner; `<ação>Label` para controles de ação; `toneLabel` para rótulo sr-only auxiliar; plural em tupla `thumbLabels`; `aria-label`/`alt` nativos quando o componente é o elemento nativo); (2) valores exibidos (ETH, moeda, datas, plurais, contagens) chegam como `string` já formatada (`NftCard.priceLabel`), `number` só como valor de controle; (3) o app é dono de lib de i18n, dicionários, seleção e persistência de idioma, `<html lang>`, formatação `Intl`, tradução de códigos de erro e wrappers `shared/ui` com `t()`; (4) guardas: G1 (AST, sem literal em `src`), T1–T6 (obrigatoriedade por tipo), G2.a (`package.json` sem lib de i18n), G2.b (sem `Intl`/`toLocale*`/`localeCompare`/`navigator.language(s)`/`documentElement.lang` em `src`), G2.c (ESLint barra import de i18n); (5) exceções: glifos sem letra com `aria-hidden` e inteiros de controle renderizados crus (página e quantidade). Descartado: props opcionais sem default (só o axe pegaria), defaults em inglês (troca um idioma fixo por outro), `jsx-no-literals` no DS (dependência nova, não cobre defaults/mapas), lib de i18n ou `Intl` no DS com prop `locale` (acopla o DS a idioma e duplica a formatação do app). Consequência: muda o contrato de `design-system.md` §3; todo consumidor passa texto traduzido e valor formatado e o compilador acusa a falta; fixtures do DS em pt-BR com repasse em inglês; baselines inalteradas; fecha a pendência de i18n do DS.
 
 ## Progresso
 
-- [ ] G1 guarda de literais (RED: falha nos 6 arquivos)
-- [ ] T1 DialogClose/SheetClose
-- [ ] T2 PasswordInput
-- [ ] T3 QuantityStepper
-- [ ] T4.r + T4 Alert
-- [ ] T5.r + T5 Breadcrumb
-- [ ] T6.r + T6 Pagination
-- [ ] G1 verde + mutação G1.m
-- [ ] Docs: README (seção Textos e i18n), design-system.md §3, ADR-14 e design.md
+- [x] G1 guarda de literais: RED `af3baf4`; verde com T6 (`b225086`, 83 testes)
+- [x] T1 DialogClose/SheetClose: RED `fc29f7b`, GREEN `64f154e`
+- [x] T2 PasswordInput: RED `d2704a9`, GREEN `290563d`
+- [x] T3 QuantityStepper: RED `d785bb2`, GREEN `4ab63c2`
+- [x] T4.r + T4 Alert: RED `8c2b93a`, `29aa5f9`; GREEN `5e237dc`
+- [x] T5.r + T5 Breadcrumb: RED `e003d18`, `45e5438`; GREEN `4d716b2`
+- [x] T6.r + T6 Pagination: RED `cba4835`, `0ec1b49`; GREEN `b225086`
+- [ ] G2.a package.json sem lib de i18n
+- [ ] G2.b src sem APIs de locale
+- [ ] G2.c lint barra import de i18n
+- [ ] G1.m e G2.m mutações
+- [ ] R1: grep em Radix (dialog, select, slider) colado no log
+- [ ] Docs: D1 README (Textos e i18n), D2 design-system.md §3, D3 ADR-14 em ARCHITECTURE.md, D4 design.md, D5 i18n-quality.md
 - [ ] V `pnpm verify` e diff de baselines vazio
+
+Regra de execução (pedido do usuário): um commit semântico por etapa (RED, GREEN, docs separados), no padrão do histórico.
