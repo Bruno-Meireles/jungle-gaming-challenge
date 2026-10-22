@@ -1,13 +1,17 @@
-import { Tabs, TabsList, TabsTrigger } from '@jg/design-system';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@jg/design-system';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { VIEW_IDS, type ViewId } from '../../../shared/api/contracts/ids';
 
-type CatalogViewTabsProps = { value: ViewId; onChange: (view: ViewId) => void };
+type CatalogViewTabsProps = { value: ViewId; onChange: (view: ViewId) => void; children: ReactNode };
 
-// Abas sem painel: sao um filtro de subconjunto (Q4); as setas ativam a aba (Radix, ativacao automatica).
-export function CatalogViewTabs({ value, onChange }: CatalogViewTabsProps) {
-  const { t } = useTranslation('viewTabs');
+/**
+ * Raiz das abas de visao. O Radix liga cada aba a um tabpanel por `aria-controls`; por isso o conteudo da aba
+ * ativa (`children`, em geral resultados e paginacao) fica dentro do `CatalogViewPanel` do mesmo `Tabs`.
+ * O conteudo e o mesmo para toda visao (o servidor filtra por `view`), entao so a aba ativa monta o painel.
+ */
+export function CatalogViewTabs({ value, onChange, children }: CatalogViewTabsProps) {
   return (
     <Tabs
       value={value}
@@ -16,13 +20,30 @@ export function CatalogViewTabs({ value, onChange }: CatalogViewTabsProps) {
         if (view !== undefined) onChange(view);
       }}
     >
-      <TabsList aria-label={t('label')} className="gap-20">
-        {VIEW_IDS.map((id) => (
-          <TabsTrigger key={id} value={id}>
-            {t(`options.${id}`)}
-          </TabsTrigger>
-        ))}
-      </TabsList>
+      {children}
     </Tabs>
+  );
+}
+
+/** Lista de abas (as setas ativam a aba, Radix com ativacao automatica). Deve estar dentro de `CatalogViewTabs`. */
+export function CatalogViewTabsList() {
+  const { t } = useTranslation('viewTabs');
+  return (
+    <TabsList aria-label={t('label')} className="gap-20">
+      {VIEW_IDS.map((id) => (
+        <TabsTrigger key={id} value={id}>
+          {t(`options.${id}`)}
+        </TabsTrigger>
+      ))}
+    </TabsList>
+  );
+}
+
+/** Painel da aba ativa. `tabIndex={-1}`: o painel nao entra na ordem de Tab (o conteudo ja e focavel). */
+export function CatalogViewPanel({ value, children }: { value: ViewId; children: ReactNode }) {
+  return (
+    <TabsContent value={value} tabIndex={-1} className="outline-none">
+      {children}
+    </TabsContent>
   );
 }

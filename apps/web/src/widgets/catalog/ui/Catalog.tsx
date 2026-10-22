@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useCanonicalSearchUrl, useCatalogQuery, useCatalogSearch } from '../../../entities/nft';
+import { CatalogViewPanel, CatalogViewTabs } from '../../../features/catalog-view-tabs';
 import { CatalogPagination } from './CatalogPagination';
 import { CatalogResults } from './CatalogResults';
 import { CatalogToolbar } from './CatalogToolbar';
@@ -14,6 +15,8 @@ export function Catalog() {
   const { data, isPlaceholderData } = query;
   useCanonicalSearchUrl();
   const headingRef = useRef<HTMLHeadingElement>(null);
+
+  const view = search.tab ?? 'all';
 
   const requested = search.page;
   const served = data?.page;
@@ -28,17 +31,21 @@ export function Catalog() {
       <h2 id="catalog-title" ref={headingRef} tabIndex={-1} className="sr-only outline-none">
         {t('title')}
       </h2>
-      <CatalogToolbar />
-      <CatalogResults query={query} />
-      <CatalogPagination
-        page={data?.page ?? search.page ?? 1}
-        pageCount={data?.totalPages ?? 0}
-        getHref={(page) => hrefFor({ page })}
-        onPageChange={(page) => {
-          update({ page });
-          headingRef.current?.focus();
-        }}
-      />
+      <CatalogViewTabs value={view} onChange={(tab) => update({ tab })}>
+        <CatalogToolbar />
+        <CatalogViewPanel value={view}>
+          <CatalogResults query={query} />
+          <CatalogPagination
+            page={data?.page ?? search.page ?? 1}
+            pageCount={data?.totalPages ?? 0}
+            getHref={(page) => hrefFor({ page })}
+            onPageChange={(page) => {
+              update({ page });
+              headingRef.current?.focus();
+            }}
+          />
+        </CatalogViewPanel>
+      </CatalogViewTabs>
     </section>
   );
 }

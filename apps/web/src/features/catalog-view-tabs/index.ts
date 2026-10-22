@@ -1,2 +1,2 @@
-export { CatalogViewTabs } from './ui/CatalogViewTabs';
+export { CatalogViewTabs, CatalogViewTabsList, CatalogViewPanel } from './ui/CatalogViewTabs';
 export { locales as viewTabsLocales } from './config/locales';

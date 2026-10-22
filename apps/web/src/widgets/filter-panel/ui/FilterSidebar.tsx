@@ -14,6 +14,7 @@ export function FilterSidebar() {
       aria-label={t('label')}
       className="hidden w-310 shrink-0 self-start rounded-8 bg-surface-card p-20 desktop:block"
     >
+      <h2 className="sr-only">{t('label')}</h2>
       <SidebarBody key={priceKey} facets={data?.facets} />
     </aside>
   );

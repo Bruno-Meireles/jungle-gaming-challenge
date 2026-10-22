@@ -406,10 +406,10 @@ M5
 - [x] 34 destaques E2E: RED `c6c3187`, GREEN (spec 24/24; suíte E2E 62/62; node+browser 378/378; typecheck e lint limpos). Ver Execução
 
 M6
-- [ ] 35 i18n E2E
-- [ ] 36 teclado e foco E2E
-- [ ] 37 layout responsivo E2E
-- [ ] 38 axe E2E
+- [x] 35 i18n E2E (regressão: já passava)
+- [x] 36 teclado e foco E2E
+- [x] 37 layout responsivo E2E
+- [x] 38 axe E2E
 - [ ] 39 medidas do Figma
 - [ ] 40 inspeção por captura do CLI (relatório de desvios)
 
@@ -499,3 +499,13 @@ Desvios do Figma observados nas capturas (M4):
 - Seletor de idioma do header aparece junto da busca no 1440; abaixo disso segue sem seletor (rodapé pendente, Q8).
 
 Item 31 (GREEN): em CatalogResults.tsx o estado vazio ganhou `<Link to="/" search={{}}>` com a chave `empty.clear` ("Limpar filtros"/"Clear filters") nos locales do widget catalog. Itens 30, 32 e 33 passaram sem mudança (regressão). Nota de execução: com o outro agente rodando E2E em paralelo, a execução com `test-results` compartilhado deu ENOENT e o servidor dev compartilhado deu ERR_CONNECTION_REFUSED; reexecução com `--workers=1 --output` próprio: 18/18.
+
+### M6: GREEN dos itens 36, 37 e 38
+
+Itens 35 (regressão), 36, 37 e 38 verdes em desktop-1440, tablet-768 e mobile-390. Capturas (Playwright CLI) em `scratchpad/home4-{1440,768,390,320}.png`.
+
+Mudanças e desvios:
+- **Foco visível (36):** o link do título do `NftCard` (DS) trocou `focus-visible:outline-none` por `outline-transparent`: o anel visível continua no `::after` (card inteiro), e o link mantém um contorno próprio `solid` transparente (aparece em modo de alto contraste). O `Input` do DS trocou `outline-none` do `<input>` por `outline-transparent` (o anel visível segue no wrapper). O teste do DS `NftCard.test.tsx` (C25.1) agora espera `solid` + `rgba(0, 0, 0, 0)` no link em vez de `none`. O app consome `dist` do DS: rebuild (`pnpm --filter @jg/design-system build`) necessário para o E2E enxergar o DS.
+- **Barra inferior (37):** novo `widgets/bottom-nav` (`navigation` "Navegação inferior"/"Bottom navigation", só < 768, fixa, com espaçador). Itens do Figma 14:5226 (Tab Bar 70395:245): Início `/`, Favoritos e Escanear (central, 65 px elevado) em `/unavailable?feature=...`, Compras `/cart`, Perfil `/login`. Rótulo "Compras"/"Shop" (e não "Carrinho") para não duplicar o nome do link do cabeçalho (o spec 36 usa `getByRole('link', { name: 'Carrinho' })`). Sem rótulos visíveis (Figma só tem ícones; nome por `aria-label`). Entalhe do vetor 15:5504 não replicado (topo arredondado). Ícones novos em `shared/ui/icons` desenhados à mão (vetores do Figma não extraídos). Namespace `bottomNav` com paridade pt-BR/en.
+- **320 px (37):** `min-w-0` no campo de busca e a lista de abas dentro de contêiner com `overflow-x-auto` (rola na horizontal dentro da toolbar, sem esconder conteúdo).
+- **axe (38):** `CatalogViewTabs` virou raiz do `Tabs` com `CatalogViewTabsList` e `CatalogViewPanel` (`TabsContent`, `tabIndex={-1}`), e o `Catalog` põe resultados e paginação no painel: o `aria-controls` da aba ativa aponta para um `tabpanel` real (o Radix 1.x sempre emite `aria-controls`). Headings: sidebar ganhou `h2` sr-only "Filtros"; o título do estado vazio passou de `h2` para `h3`.

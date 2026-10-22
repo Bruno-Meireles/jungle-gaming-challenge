@@ -44,7 +44,7 @@ export function CatalogResults({ query }: { query: CatalogQueryResult }) {
       <LiveRegion>{t('count', { count: data.totalItems })}</LiveRegion>
       {data.items.length === 0 ? (
         <div>
-          <h2>{t('empty.title')}</h2>
+          <h3>{t('empty.title')}</h3>
           <p>{t('empty.text')}</p>
           <Link to="/" search={{}}>
             {t('empty.clear')}
