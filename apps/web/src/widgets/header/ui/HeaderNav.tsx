@@ -1,8 +1,10 @@
 import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
-const ITEM = 'flex h-45 items-start text-body-large-16-regular-lh-16 text-foreground hover:text-text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
-const ACTIVE = 'relative text-body-large-16-bold-lh-16 text-text-accent after:absolute after:inset-x-0 after:bottom-0 after:h-2 after:bg-primary';
+/* Line-height 21,1 px: Figma I70522:3240;70504:3015;70486:513/515 (docs/figma/file.json:321, 584). */
+const ITEM = 'flex h-45 items-start leading-[21.1015625px] hover:text-text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus';
+const INACTIVE = 'text-body-large-16-regular-lh-auto text-foreground';
+const ACTIVE = 'relative text-body-large-16-bold-lh-auto text-text-accent after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:bg-primary';
 
 export function HeaderNav() {
   const { t } = useTranslation('header');
@@ -10,22 +12,32 @@ export function HeaderNav() {
     <nav aria-label={t('nav.label')} className="hidden tablet:block">
       <ul className="flex items-start gap-24 desktop:gap-40">
         <li>
-          <Link to="/" className={ITEM} activeProps={{ className: ACTIVE }} activeOptions={{ exact: true }}>
+          <Link
+            to="/"
+            className={ITEM}
+            activeProps={{ className: `${ITEM} ${ACTIVE}` }}
+            inactiveProps={{ className: `${ITEM} ${INACTIVE}` }}
+            activeOptions={{ exact: true }}
+          >
             {t('nav.home')}
           </Link>
         </li>
         <li>
-          <Link to="/" className={ITEM} activeProps={{ className: ITEM }}>
+          <Link
+            to="/"
+            className={`${ITEM} ${INACTIVE}`}
+            activeProps={{ className: `${ITEM} ${INACTIVE}` }}
+          >
             {t('nav.market')}
           </Link>
         </li>
         <li>
-          <Link to="/unavailable" search={{ feature: 'creators' }} className={ITEM}>
+          <Link to="/unavailable" search={{ feature: 'creators' }} className={`${ITEM} ${INACTIVE}`}>
             {t('nav.creators')}
           </Link>
         </li>
         <li>
-          <Link to="/unavailable" search={{ feature: 'learn' }} className={ITEM}>
+          <Link to="/unavailable" search={{ feature: 'learn' }} className={`${ITEM} ${INACTIVE}`}>
             {t('nav.learn')}
           </Link>
         </li>

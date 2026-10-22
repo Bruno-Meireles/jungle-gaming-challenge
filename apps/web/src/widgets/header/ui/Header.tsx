@@ -14,7 +14,7 @@ export function Header() {
   return (
     <header aria-label={t('header:label')} className="pt-16 tablet:pt-24">
       <PageContainer>
-        <div className="flex items-start justify-between gap-16 border-b border-border pb-0">
+        <div className="flex items-start justify-between gap-16 border-b border-primary pb-0">
           <Link
             to="/"
             className="flex h-34 w-48 items-start text-body-14-bold-lh-auto uppercase text-foreground tablet:w-160"
