@@ -1,13 +1,7 @@
-import type { ReactNode } from 'react';
+import * as SelectPrimitive from '@radix-ui/react-select';
 
-export type SelectProps = {
-  value?: string;
-  defaultValue?: string;
-  onValueChange?: (value: string) => void;
-  children?: ReactNode;
-};
+export type SelectProps = React.ComponentProps<typeof SelectPrimitive.Root>;
 
 export function Select(props: SelectProps) {
-  void props;
-  return null;
+  return <SelectPrimitive.Root {...props} />;
 }
