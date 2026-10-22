@@ -2,12 +2,15 @@ import { Button } from '@jg/design-system';
 import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
+import { useCatalogSearch } from '../../../entities/nft';
+import { SearchToggle } from '../../../features/catalog-search';
 import { LanguageSwitch } from '../../../features/language-switch';
 import { CartIcon, LoginIcon, PageContainer } from '../../../shared/ui';
 import { HeaderNav } from './HeaderNav';
 
 export function Header() {
   const { t } = useTranslation(['header', 'shared']);
+  const { search, update } = useCatalogSearch();
   return (
     <header aria-label={t('header:label')} className="pt-16 tablet:pt-24">
       <PageContainer>
@@ -20,6 +23,7 @@ export function Header() {
           </Link>
           <HeaderNav />
           <div className="flex items-start gap-16 pb-8 desktop:gap-28">
+            <SearchToggle value={search.q} onSubmit={(q) => update({ q })} />
             <div className="hidden desktop:block">
               <LanguageSwitch />
             </div>

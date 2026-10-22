@@ -12,3 +12,4 @@ storybook-static/
 .vitest/
 __screenshots__/**/*.diff.png
 .claude/worktrees/
+logs/

@@ -13,6 +13,7 @@ declare module 'i18next' {
       'language',
       'filters',
       'sort',
+      'search',
       'viewTabs',
       'pageHome',
       'pageUnavailable',
