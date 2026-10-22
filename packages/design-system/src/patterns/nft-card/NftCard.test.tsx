@@ -55,6 +55,29 @@ describe('NftCard - titulo como link e card clicavel (C25.1)', () => {
   });
 });
 
+describe('NftCard - foco visivel do card clicavel (C25.1)', () => {
+  it('o foco do link por teclado desenha o contorno 2px primary sobre o card inteiro (::after), nao so sobre o titulo', async () => {
+    await render(
+      <div style={{ width: 258 }}>
+        <NftCard {...base} link={<a href="#/nft/42" />} />
+      </div>,
+    );
+    await userEvent.tab();
+    const link = document.activeElement as HTMLElement;
+    expect(link.tagName).toBe('A');
+    expect(getComputedStyle(link).outlineStyle).toBe('none');
+    const after = getComputedStyle(link, '::after');
+    expect([after.outlineStyle, after.outlineWidth, after.outlineColor]).toEqual([
+      'solid',
+      '2px',
+      'rgb(210, 138, 76)',
+    ]);
+    const card = document.querySelector('[data-slot="nft-card"]') as HTMLElement;
+    expect(after.position).toBe('absolute');
+    expect(card.getBoundingClientRect().height).toBe(350);
+  });
+});
+
 describe('NftCard - imagem com alt obrigatorio (C25.2)', () => {
   it('renderiza a imagem com o alt informado', async () => {
     await render(<NftCard {...base} />);
