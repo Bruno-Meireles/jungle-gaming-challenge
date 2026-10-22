@@ -128,16 +128,16 @@ Button: ButtonHTMLAttributes & { variant?: 'primary'|'outline'|'ghost'|'icon'; s
 Badge: { variant: 'count'|'label'; children: ReactNode }
 Skeleton: HTMLAttributes<HTMLDivElement>   // aria-hidden; tamanho do consumidor
 LiveRegion: { politeness?: 'polite'|'assertive'; children?: ReactNode }
-Label, Input (+startSlot/endSlot), Textarea, PasswordInput { showLabel?; hideLabel? }
+Label, Input (+startSlot/endSlot), Textarea, PasswordInput { showLabel; hideLabel }  // (alterado por design-system-i18n, ADR-14)
 FormField: { label; required?; hint?; error?; children: ReactElement }  // injeta id, aria-describedby, aria-invalid
 Checkbox, RadioGroup/RadioGroupItem (variant 'default'|'card'), ChipGroup/ChipGroupItem
-QuantityStepper: { value; min; max; onValueChange(n); label; decrementLabel?; incrementLabel? }  // inteiro
+QuantityStepper: { value; min; max; onValueChange(n); label; decrementLabel; incrementLabel }  // inteiro (alterado por design-system-i18n, ADR-14)
 Avatar: { src?; alt; fallback }
-Breadcrumb/BreadcrumbItem/BreadcrumbLink(asChild)/BreadcrumbPage(aria-current)
-Tabs*, Pagination { page; pageCount; getItemProps? } + PaginationLink(asChild), Rating { value; max:5; label } (role=img)
+Breadcrumb { label }/BreadcrumbItem/BreadcrumbLink(asChild)/BreadcrumbPage(aria-current)
+Tabs*, Pagination { page; pageCount; getItemProps?; label; nextLabel } (alterado por design-system-i18n, ADR-14) + PaginationLink(asChild), Rating { value; max:5; label } (role=img)
 Select* (Radix), RangeSlider { value:[n,n]; min; max; step; onValueChange; thumbLabels:[s,s] }
-Alert { tone:'info'|'error'|'success'; title?; children; action? }
-Dialog*/DialogClose(closeLabel="Fechar"), Sheet (side 'bottom'|'left'|'right')
+Alert { tone:'info'|'error'|'success'; toneLabel; title?; children; action? }
+Dialog*/DialogClose(closeLabel obrigatória, sem default; alterado por design-system-i18n, ADR-14), Sheet (side 'bottom'|'left'|'right')
 NftCard { title; priceLabel; image:{src,alt}; badge?; action?; link? }, NftCardSkeleton (mesmas dimensões)
 ```
 **Stories:** `title: 'Primitives/<Nome>'|'Patterns/<Nome>'`, CSF3, `tags:['autodocs']`; IDs padrão listados em tags `golden`/`golden-hover`/`golden-focus`/`golden-page` lidas de `storybook-static/index.json` (`golden/stories.ts`; manifest.ts removido no GATE-INFRA). `preview.tsx`: `a11y.test='error'`, viewports mobile390/tablet768/desktop1440, `backgrounds` desligado.
@@ -207,21 +207,21 @@ Formato `N.k` = sub-item (tipo). Arquivos: `src/<camada>/<nome>/<Nome>.test.tsx`
 **C6 Label** (9:1670, 11:2862): 1 `htmlFor` (getByLabelText); 2 `required` asterisco `text-coral` aria-hidden + `required` no campo; 3 medida fonte/cor; 4 stories; 5 golden.
 **C7 Input** (70381:242; perfil 9:1238): 1 textbox com nome via label; 2 medida (40, raio 5, 16/12, borda 1px **secondary**, placeholder secondary 14/16); 3 medida variante perfil/pagamento (se divergir: variante nomeada); 4 foco → borda primary + outline; 5 `aria-invalid` → borda `--color-error`; 6 `startSlot` (busca 14:5226) não focável; 7 `disabled`; 8 axe; 9 stories Default/Placeholder/Filled/Invalid/Disabled/WithIcon; 10 golden + foco.
 **C8 FormField:** 1 gera id e liga label→controle; 2 `hint` via `aria-describedby`; 3 `error` → `aria-invalid` + mensagem ligada e anunciada (`role=alert` só na mudança); 4 texto de erro em `text-coral`; 5 axe com erro; 6 stories Default/WithHint/WithError/Required; 7 golden.
-**C9 PasswordInput** (70504:2973; ícones 9:964, 9:1592): 1 `type=password` default; 2 botão "Mostrar/Ocultar senha" com `aria-pressed` alterna tipo; 3 foco permanece no botão; 4 medida; 5 axe; 6 stories Hidden/Visible/Invalid + play Toggle; 7 golden.
+**C9 PasswordInput** (70504:2973; ícones 9:964, 9:1592): 1 `type=password` default; 2 botão nomeado por `showLabel`/`hideLabel` (obrigatórias) com `aria-pressed` alterna tipo; 3 foco permanece no botão; 4 medida; 5 axe; 6 stories Hidden/Visible/Invalid + play Toggle; 7 golden.
 **C10 Textarea** (11:2862): 1 label + medida; 2 `aria-invalid`; 3 axe; 4 stories; 5 golden.
 **C11 Checkbox** (Filters 70485:381; "Igual à carteira principal" 9:1670, "Usar outra carteira?" 11:2862): 1 `role=checkbox`, Space alterna; 2 controlado; 3 medida do indicador; 4 foco visível; 5 estado não só por cor (forma); 6 axe; 7 stories Unchecked/Checked/Disabled/WithCount; 8 golden + foco.
 **C12 RadioGroup** (carteira/rede 11:2862): 1 radiogroup com setas (roving); 2 Tab entra no selecionado; 3 medida default e card; 4 card selecionado: borda primary + indicador preenchido; 5 axe; 6 stories Default/Card/CardSelected/Disabled + play ArrowKeys; 7 golden + foco.
 **C13 ChipGroup** (edições, 10:244): 1 seleção única radiogroup + setas; 2 item disabled não selecionável e anunciado; 3 medida normal/selecionado; 4 axe; 5 stories; 6 golden + foco.
-**C14 QuantityStepper** (10:244, 11:1278): 1 grupo com nome; "Diminuir"/"Aumentar" com nomes; 2 aumentar → `onValueChange(value+1)`; 3 diminuir no `min` desabilitado; 4 aumentar no `max` desabilitado; 5 valor em `<output aria-live=polite>`; 6 medida; 7 axe; 8 stories Default/AtMin/AtMax + play Increment; 9 golden.
+**C14 QuantityStepper** (10:244, 11:1278): 1 grupo com nome; botões com nomes vindos de `decrementLabel`/`incrementLabel` (props obrigatórias); 2 aumentar → `onValueChange(value+1)`; 3 diminuir no `min` desabilitado; 4 aumentar no `max` desabilitado; 5 valor em `<output aria-live=polite>`; 6 medida; 7 axe; 8 stories Default/AtMin/AtMax + play Increment; 9 golden.
 **C15 Avatar** (9:1238): 1 `img` com alt; 2 sem src/erro → fallback (ícone 9:1550); 3 medida; 4 stories Image/Fallback; 5 golden.
-**C16 Breadcrumb:** 1 `nav aria-label="Trilha"` lista ordenada; 2 atual com `aria-current=page`; 3 `BreadcrumbLink asChild`; 4 medida + separador decorativo; 5 axe; 6 story; 7 golden.
+**C16 Breadcrumb:** 1 `nav` com nome vindo de `label` (obrigatória), lista ordenada; 2 atual com `aria-current=page`; 3 `BreadcrumbLink asChild`; 4 medida + separador decorativo; 5 axe; 6 story; 7 golden.
 **C17 Tabs** (2:2; 10:244): 1 tablist/tab/tabpanel, setas; 2 `aria-selected` + sublinhado primary; 3 medida; 4 axe; 5 stories + play ArrowRight; 6 golden.
-**C18 Pagination** (file.json:18915): 1 `nav aria-label="Paginação"`, atual `aria-current=page`; 2 "Próxima" com nome, desabilitada na última; 3 `asChild`; 4 medida item/ativo/raio; 5 axe; 6 stories First/Middle/Last; 7 golden + foco.
+**C18 Pagination** (file.json:18915): 1 `nav` com nome vindo de `label` (obrigatória), atual `aria-current=page`; 2 link "next" com nome vindo de `nextLabel` (obrigatória), desabilitado na última; 3 `asChild`; 4 medida item/ativo/raio; 5 axe; 6 stories First/Middle/Last; 7 golden + foco.
 **C19 Rating** (10:244): 1 `role=img` + label por prop; 2 medida (Star 11:1192); 3 story; 4 golden.
 **C20 Select** (9:1670/11:2862; "Ordenar por" 2:2): 1 `combobox` com nome; 2 Enter abre, setas, Enter seleciona, foco volta ao trigger; 3 Esc fecha sem alterar; 4 medida trigger/chevron (9:1589); 5 `aria-invalid`; 6 axe aberto; 7 stories Placeholder/Selected/Open(`golden-page`)/Invalid; 8 golden.
 **C21 RangeSlider** (Filters 70485:381): 1 dois `slider` com nomes e `aria-valuenow`; 2 setas por `step`, mínimo não ultrapassa máximo; 3 medida; 4 axe; 5 story + play Keyboard; 6 golden + foco.
 **C22 Alert:** 1 error→`role=alert`, info/success→`status`; 2 slot `action` focável; 3 tom não só por cor; 4 axe; 5 stories; 6 golden.
-**C23 Dialog** (9:115, 9:1022, 11:4385; X 9:947): 1 foco entra, `role=dialog`, `aria-modal`, `aria-labelledby`; 2 Tab circula (trap); 3 Esc fecha e devolve foco; 4 fechar nomeado "Fechar"; 5 medida (largura, surface-card, overlay, sombra); 6 em 390 sem overflow horizontal (390); 7 axe aberto; 8 stories Open(`golden-page`) + play EscReturnsFocus; 9 golden.
+**C23 Dialog** (9:115, 9:1022, 11:4385; X 9:947): 1 foco entra, `role=dialog`, `aria-modal`, `aria-labelledby`; 2 Tab circula (trap); 3 Esc fecha e devolve foco; 4 fechar nomeado pelo `closeLabel` recebido; 5 medida (largura, surface-card, overlay, sombra); 6 em 390 sem overflow horizontal (390); 7 axe aberto; 8 stories Open(`golden-page`) + play EscReturnsFocus; 9 golden.
 **C24 Sheet** (botão filtro mobile 15:5313, derivado): 1 foco como C23.1–4; 2 `side=bottom` ancorado em 390; 3 animação some com reduced motion (motion.spec.ts, 390); 4 axe; 5 stories Bottom/Left; 6 golden.
 **C25 NftCard + NftCardSkeleton** (2:2, 10:244, 14:5226): 1 título como link (Slot), card clicável sem link aninhado; 2 `image.alt` obrigatório e renderizado; 3 `priceLabel` literal (nenhum `Number()`); 4 slots `badge`/`action` e `action` focável à parte; 5 medida desktop (1440); 6 medida mobile (390, frame 414); 7 Skeleton com bounding box igual ao NftCard (1440 e 390); 8 axe; 9 stories Default/WithBadge/WithFavorite/Skeleton/Grid; 10 golden.
 
