@@ -463,3 +463,26 @@ describe('tokens de raio, sombra e spacing (T13)', () => {
     expect({ value: decl?.value, figma: decl?.figma }).toEqual({ value: '1px', figma: undefined });
   });
 });
+
+// Breakpoints (prompt.md §8): larguras de avaliacao 390 (mobile, base sem prefixo), 768 (tablet) e 1440 (desktop).
+// Sem origem no Figma (nao ha figma:); Figma mobile = 414 (desvio Q14).
+describe('breakpoints (prompt.md §8)', () => {
+  const decls = () => parseDeclarations(readTokens());
+
+  it('zera os breakpoints padrao do Tailwind (--breakpoint-*: initial)', () => {
+    expect(decls().find((d) => d.name === '--breakpoint-*')?.value).toBe('initial');
+  });
+
+  it.each([
+    ['--breakpoint-tablet', '768px'],
+    ['--breakpoint-desktop', '1440px'],
+  ])('%s: %s sem comentario figma', (name, value) => {
+    const decl = decls().find((d) => d.name === name);
+    expect({ value: decl?.value, figma: decl?.figma }).toEqual({ value, figma: undefined });
+  });
+
+  it('so existem os breakpoints tablet e desktop', () => {
+    const names = decls().filter((d) => d.name.startsWith('--breakpoint-') && d.name !== '--breakpoint-*').map((d) => d.name);
+    expect(names.sort()).toEqual(['--breakpoint-desktop', '--breakpoint-tablet']);
+  });
+});
