@@ -374,7 +374,7 @@ M2
 - [x] 9 `parseEth`/`compareEth`/`toWei`: RED `89c970d` (29 falhas por asserção), GREEN (node 195/195; typecheck e lint limpos; sem Number/parseFloat/toFixed)
 - [x] 10 `formatEthAmount`: RED `e94d650` (21 falhas por asserção com o item 11), GREEN (node 226/226; typecheck e lint limpos)
 - [x] 11 `ethToSteps`/`stepsToEth`: RED `e94d650`, GREEN (junto do 10)
-- [ ] 12 schemas zod
+- [x] 12 schemas zod: RED `4b3c810` (21 falhas por asserção), GREEN (node 252/252; typecheck e lint limpos). Desvios: ids de coleção/rede em `shared/api/contracts/ids.ts` (shared não importa de entities); `hero` inferido como array (`.length(3)`), não tupla
 - [ ] 13 `httpClient`
 - [ ] 14 `queryCatalog`
 - [ ] 15 invariantes das fixtures (inclui imagens, Q13)

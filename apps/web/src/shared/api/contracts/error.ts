@@ -1,9 +1,8 @@
 import { z } from 'zod';
 
-// Esqueleto RED: permissivo de proposito, o GREEN o restringe.
-export const apiErrorBodySchema = z.unknown();
+export const apiErrorBodySchema = z.object({
+  code: z.enum(['validation_failed', 'service_unavailable', 'internal_error']),
+  fieldErrors: z.record(z.string(), z.literal('invalid')).optional(),
+});
 
-export type ApiErrorBody = {
-  code: 'validation_failed' | 'service_unavailable' | 'internal_error';
-  fieldErrors?: Record<string, 'invalid'>;
-};
+export type ApiErrorBody = z.infer<typeof apiErrorBodySchema>;
