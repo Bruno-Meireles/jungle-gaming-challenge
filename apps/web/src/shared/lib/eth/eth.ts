@@ -1,23 +1,38 @@
 export type EthAmount = string & { readonly __brand: 'EthAmount' };
 
-// Esqueleto RED: comportamento real vem na fase GREEN.
+const ETH_DECIMAL = /^\d+(\.\d{1,18})?$/;
+const DECIMALS = 18;
+
 export function isEthDecimal(value: string): boolean {
-  return value.length < 0;
+  return ETH_DECIMAL.test(value);
 }
 
 function isBranded(value: string): value is EthAmount {
-  return value.length >= 0;
+  return isEthDecimal(value);
+}
+
+function canonicalize(value: string): string {
+  const [integer = '', fraction = ''] = value.split('.');
+  const intPart = integer.replace(/^0+(?=\d)/, '');
+  const fracPart = fraction.replace(/0+$/, '');
+  return fracPart === '' ? intPart : `${intPart}.${fracPart}`;
 }
 
 export function parseEth(value: string): EthAmount {
-  if (isBranded(value)) return value;
+  if (!isEthDecimal(value)) throw new Error('invalid_eth');
+  const canonical = canonicalize(value);
+  if (isBranded(canonical)) return canonical;
   throw new Error('invalid_eth');
 }
 
 export function toWei(value: EthAmount): bigint {
-  return BigInt(value.length) * 0n;
+  const [integer = '0', fraction = ''] = value.split('.');
+  return BigInt(integer) * 10n ** BigInt(DECIMALS) + BigInt(fraction.padEnd(DECIMALS, '0'));
 }
 
 export function compareEth(a: EthAmount, b: EthAmount): -1 | 0 | 1 {
-  return a.length < 0 && b.length < 0 ? 1 : 0;
+  const wa = toWei(a);
+  const wb = toWei(b);
+  if (wa === wb) return 0;
+  return wa < wb ? -1 : 1;
 }

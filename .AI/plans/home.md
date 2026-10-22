@@ -371,7 +371,7 @@ M1
 - [x] Docs M1: `design.md` §10 corrigido; ADR-16 (parcial, completa no M2), ADR-17 e ADR-21 em `ARCHITECTURE.md`; dependências do M1 instaladas (commit `361cd07`)
 
 M2
-- [ ] 9 `parseEth`/`compareEth`
+- [x] 9 `parseEth`/`compareEth`/`toWei`: RED `89c970d` (29 falhas por asserção), GREEN (node 195/195; typecheck e lint limpos; sem Number/parseFloat/toFixed)
 - [ ] 10 `formatEthAmount`
 - [ ] 11 `ethToSteps`/`stepsToEth`
 - [ ] 12 schemas zod
