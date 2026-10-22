@@ -3,6 +3,7 @@ import { HomePage, homeSearchSchema } from '../../pages/home';
 import { NotFoundPage } from '../../pages/not-found';
 import { UnavailablePage, unavailableSearchSchema } from '../../pages/unavailable';
 import { RootLayout } from '../layouts/RootLayout';
+import { parseSearch, stringifySearch } from './search-serialization';
 
 const rootRoute = createRootRoute({ component: RootLayout, notFoundComponent: NotFoundPage });
 const homeRoute = createRoute({ getParentRoute: () => rootRoute, path: '/',
@@ -35,7 +36,7 @@ const routeTree = rootRoute.addChildren([
   stubRoute('/nfts/$nftId', 'nft-detail'),
 ]);
 
-export const router = createRouter({ routeTree });
+export const router = createRouter({ routeTree, parseSearch, stringifySearch });
 
 declare module '@tanstack/react-router' {
   interface Register {
