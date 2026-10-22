@@ -63,3 +63,49 @@ describe('Breadcrumb - comportamento', () => {
     expect(child.className).toBe(normal.className);
   });
 });
+
+/*
+ * Medida (ADR-08) - trilha "Início / Mercado" (texto 10:290, docs/figma/file.json:42042; variantes
+ * "Início / Mercado / Carrinho" 76356 e "/ Pagamento" 107123): um unico TEXT, Roboto Mono 700 15px,
+ * lineHeightPx 16 (= --text-body-15-bold-lh-16), fill #F5F1EB (= --color-foreground, variavel 70320:308).
+ * O Figma nao desenha item ativo vs link: link e pagina atual usam o mesmo estilo (DERIVADO: separado em
+ * itens; "/" decorativo com gap de 8px, valor derivado - os espacos do texto nao tem medida propria).
+ */
+const FOREGROUND = 'rgb(245, 241, 235)';
+
+describe('Breadcrumb - medidas', () => {
+  it('link e pagina atual: Roboto Mono 700 15/16 na cor foreground', async () => {
+    await render(<Trail />);
+    await expect.element(page.getByRole('link', { name: 'Início' })).toBeInTheDocument();
+    for (const el of [
+      page.getByRole('link', { name: 'Início' }).element(),
+      page.getByText('Pagamento').element(),
+    ]) {
+      const cs = getComputedStyle(el);
+      expect(cs.fontFamily).toContain('Roboto Mono');
+      expect(cs.fontSize).toBe('15px');
+      expect(cs.fontWeight).toBe('700');
+      expect(cs.lineHeight).toBe('16px');
+      expect(cs.color).toBe(FOREGROUND);
+      expect(cs.textDecorationLine).toBe('none');
+    }
+  });
+
+  it('separador "/" decorativo: mesma tipografia, gap de 8px e oculto no ultimo item', async () => {
+    await render(<Trail />);
+    await expect.element(page.getByRole('link', { name: 'Início' })).toBeInTheDocument();
+    const separators = Array.from(document.querySelectorAll<HTMLElement>('[data-slot="breadcrumb-separator"]'));
+    expect(separators).toHaveLength(3);
+    expect(separators[0]?.getAttribute('aria-hidden')).toBe('true');
+    const cs = getComputedStyle(separators[0] as HTMLElement);
+    expect(cs.fontSize).toBe('15px');
+    expect(cs.fontWeight).toBe('700');
+    expect(cs.color).toBe(FOREGROUND);
+    const item = separators[0]?.parentElement as HTMLElement;
+    expect(getComputedStyle(item).columnGap).toBe('8px');
+    expect(getComputedStyle(separators[2] as HTMLElement).display).toBe('none');
+    const list = document.querySelector('[data-slot="breadcrumb-list"]') as HTMLElement;
+    expect(getComputedStyle(list).display).toBe('flex');
+    expect(getComputedStyle(list).columnGap).toBe('8px');
+  });
+});
