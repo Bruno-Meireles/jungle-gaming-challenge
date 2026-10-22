@@ -123,7 +123,7 @@ Fonte normativa: `.AI/standards/i18n-quality.md` (agentes e skills a leem antes 
 - **Lighthouse/SEO**: `lang` correto e `<title>` traduzido por rota.
 
 ### Design system sem texto embutido
-Hoje o DS tem defaults em pt-BR que violam o requisito para quem usa em inglês (levantamento por grep nesta etapa):
+Levantamento original (antes do plano `design-system-i18n`): o DS tinha defaults em pt-BR que violavam o requisito para quem usa em inglês. Todos foram removidos (ver Decidido abaixo):
 
 | Componente | Texto embutido |
 |---|---|
@@ -134,7 +134,7 @@ Hoje o DS tem defaults em pt-BR que violam o requisito para quem usa em inglês 
 | `PasswordInput` | defaults "Mostrar senha" / "Ocultar senha" |
 | `QuantityStepper` | defaults "Diminuir" / "Aumentar" |
 
-Decisão proposta: **todo rótulo vira prop obrigatória (sem default em idioma específico)** e o app passa o texto traduzido; stories e testes do DS passam a fornecer os textos explicitamente. É mudança de contrato do DS (`.AI/plans/design-system.md` §3) e exige novo plano (`/plan-create design-system-i18n`) antes da primeira tela; a guarda automática é um teste que falha se `src/` do DS contiver texto de interface literal fora de stories/testes.
+Decidido (ADR-14, plano `design-system-i18n`): **todo rótulo vira prop obrigatória (sem default em idioma específico)** e o app passa o texto traduzido; stories e testes do DS passam a fornecer os textos explicitamente. Valores exibidos (ETH, moeda, datas) chegam ao DS já formatados como string, e o DS não usa `Intl` nem lib de i18n: toda a i18n fica no app. É mudança de contrato do DS (`.AI/plans/design-system.md` §3); as guardas automáticas são testes que falham se `src/` do DS contiver texto de interface literal ou API de locale, ou se o `package.json` declarar lib de i18n.
 
 ### Boas práticas de código e componentização
 - `pages` só compõem; `widgets`/`features` orquestram; `ui` é apresentacional; lógica em `model` (hooks/casos de uso) e regras puras no domínio, sem regra de negócio nem chamada de API no JSX.
@@ -185,7 +185,7 @@ Produzidos depois desta proposta: `docs/discovery.md` (matriz requisito→featur
 
 | # | Feature | Entrega principal | Depende de |
 |---|---|---|---|
-| F0a | `design-system-i18n` | DS sem texto de interface embutido (rótulos como props), guarda por teste, stories/testes atualizados, baselines regeneradas | DS |
+| F0a | `design-system-i18n` | DS sem texto de interface embutido (rótulos como props), guarda por teste, stories/testes atualizados, baselines inalteradas | DS |
 | F0b | `app-shell` | providers (Query, Router, **i18n**), router base, regras FSD **e de qualidade/i18n** no lint, seletor de idioma, deploy preview | F0a |
 | F1 | `mock-platform` | MSW REST (erros por código, sem texto de UI), cenários, persistência/reset, **spike do Socket.IO** | F0b |
 | F2 | `shared-api` + `session-auth` | Axios, erro padrão, login/cadastro/logout/expiração, guards | F1 |
