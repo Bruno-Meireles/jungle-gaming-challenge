@@ -8,7 +8,15 @@ const dsForbiddenImports = [
   { group: ['axios', 'axios/*'], message: 'O design system não pode depender de Axios.' },
   { group: ['msw', 'msw/*'], message: 'O design system não pode depender de MSW.' },
   { group: ['socket.io-client', 'socket.io-client/*'], message: 'O design system não pode depender de socket.io-client.' },
+  // Acesso a slices só via index.ts: 'primitives/x' e 'patterns/x' (nunca 'primitives/x/X').
+  { group: ['**/primitives/*/*', '**/patterns/*/*'], message: 'Importe o slice pelo index.ts (ex.: primitives/button), não por arquivos internos.' },
 ];
+
+// Entre slices irmãos (primitives/* e patterns/*): '../x' pelo index.ts, nunca '../x/X'.
+const siblingSliceDeepImport = {
+  regex: String.raw`^../[^./][^/]*/[^/]+$`,
+  message: 'Importe o slice irmão pelo index.ts (ex.: ../button), não por arquivos internos.',
+};
 
 export default tseslint.config(
   { ignores: ['**/dist/**', '**/storybook-static/**', '**/playwright-report/**', '**/test-results/**'] },
@@ -27,6 +35,15 @@ export default tseslint.config(
             message: `Não commite testes com ${object}.${property}.`,
           })),
         ),
+      ],
+      // Playwright: test.describe.skip/only/fixme (callee aninhado, fora do alcance de no-restricted-properties).
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector:
+            "CallExpression[callee.object.object.name=/^(test|it)$/][callee.object.property.name='describe'][callee.property.name=/^(only|skip|fixme)$/]",
+          message: 'Não commite test.describe.only/skip/fixme.',
+        },
       ],
     },
   },
@@ -49,6 +66,7 @@ export default tseslint.config(
         {
           patterns: [
             ...dsForbiddenImports,
+            siblingSliceDeepImport,
             {
               group: ['**/patterns', '**/patterns/*'],
               message: 'Primitives não podem importar de patterns (dependência só de patterns para primitives).',
@@ -56,6 +74,12 @@ export default tseslint.config(
           ],
         },
       ],
+    },
+  },
+  {
+    files: ['packages/design-system/src/patterns/**/*.{ts,tsx}'],
+    rules: {
+      'no-restricted-imports': ['error', { patterns: [...dsForbiddenImports, siblingSliceDeepImport] }],
     },
   },
   {
