@@ -128,11 +128,42 @@ const webDomainBlocks = [
 
 const webBootstrapBlock = webBlock([`${WEB_SRC}/app/bootstrap/**/*.${WEB_EXT}`], webLayerPatterns('app', 0));
 
+// ---- apps/web: textos hardcoded em JSX (i18n, ADR-21) ----
+// no-restricted-syntax não faz merge entre blocos `files`: este bloco não alcança arquivos de teste
+// (ignores), que mantêm o bloco de testes (.only/.skip) declarado logo depois.
+const I18N_ATTRS = '/^(aria-label|aria-description|alt|title|placeholder|label)$/';
+const webI18nBlock = {
+  files: [`${WEB_SRC}/**/*.tsx`],
+  ignores: ['**/*.test.{ts,tsx}', 'apps/web/e2e/**', `${WEB_SRC}/mocks/**`],
+  rules: {
+    'no-restricted-syntax': [
+      'error',
+      {
+        selector: 'JSXText[value=/\\p{L}/u]',
+        message: 'Texto hardcoded em JSX: use uma chave de i18n (t(...)).',
+      },
+      {
+        selector: `JSXAttribute[name.name=${I18N_ATTRS}] > Literal[value=/\\p{L}/u]`,
+        message: 'Texto hardcoded em atributo acessível/visível: use uma chave de i18n (t(...)).',
+      },
+      {
+        selector: `JSXAttribute[name.name=${I18N_ATTRS}] > JSXExpressionContainer > Literal[value=/\\p{L}/u]`,
+        message: 'Texto hardcoded em atributo acessível/visível: use uma chave de i18n (t(...)).',
+      },
+      {
+        selector: 'JSXExpressionContainer > TemplateLiteral',
+        message: 'Template literal em JSX: monte o texto por chave de i18n com interpolação (t(...)).',
+      },
+    ],
+  },
+};
+
 export default tseslint.config(
   { ignores: ['**/dist/**', '**/storybook-static/**', '**/playwright-report/**', '**/test-results/**'] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   { files: ['**/*.{ts,tsx}'], plugins: { 'react-hooks': reactHooks }, rules: reactHooks.configs.recommended.rules },
+  webI18nBlock,
   {
     files: ['**/*.{test,spec}.{ts,tsx}', '**/tests/**/*.{ts,tsx}', '**/golden/**/*.ts'],
     rules: {
