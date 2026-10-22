@@ -77,8 +77,10 @@ describe('ChipGroup - comportamento', () => {
     await expect.element(second).toBeDisabled();
     await second.click({ force: true });
     await expect.element(second).not.toBeChecked();
-    await userEvent.tab();
+    page.getByRole('radio', { name: '1/50' }).element().focus();
+    expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/50' }).element());
     await userEvent.keyboard('{ArrowRight}');
+    expect(document.activeElement).toBe(page.getByRole('radio', { name: '1/1' }).element());
     await expect.element(page.getByRole('radio', { name: '1/1' })).toBeChecked();
     expect(calls).toEqual(['3']);
   });
