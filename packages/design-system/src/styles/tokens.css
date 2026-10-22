@@ -4,6 +4,11 @@
   --shadow-*: initial;
   --font-*: initial;
   --text-*: initial;
+  --breakpoint-*: initial;
+
+  /* prompt.md §8: avaliar em 390 (mobile = base sem prefixo), 768 e 1440. Figma mobile = 414 (desvio Q14). */
+  --breakpoint-tablet: 768px;
+  --breakpoint-desktop: 1440px;
 
   --font-sans: "Roboto Mono", ui-monospace, monospace;
   --font-mono: "Roboto Mono", ui-monospace, monospace;

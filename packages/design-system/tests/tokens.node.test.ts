@@ -470,7 +470,8 @@ describe('breakpoints (prompt.md §8)', () => {
   const decls = () => parseDeclarations(readTokens());
 
   it('zera os breakpoints padrao do Tailwind (--breakpoint-*: initial)', () => {
-    expect(decls().find((d) => d.name === '--breakpoint-*')?.value).toBe('initial');
+    // parseDeclarations nao reconhece o `*` do reset; confere no CSS cru.
+    expect(readTokens()).toMatch(/--breakpoint-\*\s*:\s*initial\s*;/);
   });
 
   it.each([
