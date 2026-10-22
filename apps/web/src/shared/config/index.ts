@@ -1,0 +1,1 @@
+export { sharedLocales } from './locales';

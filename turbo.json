@@ -11,6 +11,7 @@
       "dependsOn": ["storybook:build"],
       "outputs": ["playwright-report/**", "test-results/**"]
     },
+    "test:e2e": { "dependsOn": ["^build"], "outputs": ["playwright-report/**", "test-results/**"] },
     "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true }
   }
 }
