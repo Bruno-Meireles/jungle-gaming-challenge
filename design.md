@@ -171,7 +171,9 @@ Eventos: `nft.updated` e `order.updated`, com id estável, recurso, versão e es
 
 **Lighthouse**: início e detalhe, mobile e desktop, 3 medições (mediana), metas Performance ≥ 90, Accessibility ≥ 95, Best Practices ≥ 95, SEO ≥ 90; configuração versionada, LCP/CLS/TBT registrados.
 
-## 9. Próxima etapa (não feita aqui)
+## 9. Próxima etapa
+
+Produzidos depois desta proposta: `docs/discovery.md` (matriz requisito→feature, validação do protótipo, recorte da Home), `docs/flows.md` (fluxogramas) e `docs/routes.md` (mapa de rotas). O texto abaixo permanece como lista do que cada etapa deve cobrir.
 
 1. **Fluxograma** dos fluxos: descoberta → detalhe → carrinho → login/retorno → pagamento → confirmação; recuperação de sessão, pedido pendente/reconexão e cenários de falha.
 2. **Mapeamento detalhado de rotas**: path, search params e schema, guard (público/privado), loader/prefetch, tela(s) do Figma, estados (loading/vazio/erro), modal vs. página (login/cadastro/recibo), 404 e redirecionamentos de retorno.
