@@ -42,11 +42,11 @@ export function PriceFilter({ range, value, onChange, onApply }: PriceFilterProp
           thumbLabels={[t('filters:price.min'), t('filters:price.max')]}
           getValueText={text}
         />
-        <p className="m-0 text-body-14-regular-lh-16 text-foreground">
+        <p className="m-0 text-body-15-regular-lh-16 text-foreground">
           {t('filters:price.range', { min: formatSteps(lo, locale), max: formatSteps(hi, locale) })}
         </p>
         {onApply ? (
-          <Button size="md" className="h-32 self-start px-16" onClick={onApply}>
+          <Button size="md" className="h-36 min-w-[92px] self-start rounded-6 px-12 text-body-large-16-bold-lh-auto" onClick={onApply}>
             {t('filters:apply')}
           </Button>
         ) : null}

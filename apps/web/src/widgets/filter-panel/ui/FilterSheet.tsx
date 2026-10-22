@@ -15,7 +15,7 @@ export function FilterSheet({ className = '' }: { className?: string }) {
         aria-label={t('label')}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className="size-45 rounded-12 px-0 bg-linear-to-br from-primary-light to-primary"
+        className="size-45 rounded-14 px-0 bg-linear-to-br from-primary-light to-primary"
         onClick={() => setOpen(true)}
       >
         <FiltersIcon />
