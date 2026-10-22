@@ -70,7 +70,17 @@ export {
   type SelectItemProps,
 } from './primitives/select';
 export { Separator, type SeparatorProps } from './primitives/separator';
-export { Sheet, type SheetProps } from './primitives/sheet';
+export {
+  Sheet,
+  type SheetProps,
+  type SheetSide,
+  SheetTitle,
+  type SheetTitleProps,
+  SheetDescription,
+  type SheetDescriptionProps,
+  SheetClose,
+  type SheetCloseProps,
+} from './primitives/sheet';
 export { Skeleton, type SkeletonProps } from './primitives/skeleton';
 export {
   Tabs,

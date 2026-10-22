@@ -350,6 +350,45 @@
 @theme {
   --animate-shimmer: shimmer 1.6s linear infinite;
 
+  /* Sheet (C24): slide derivado (sem valor no Figma), desligado sob prefers-reduced-motion em base.css */
+  --animate-sheet-in-bottom: sheet-in-bottom 200ms ease-out;
+  --animate-sheet-out-bottom: sheet-out-bottom 200ms ease-in;
+  --animate-sheet-in-left: sheet-in-left 200ms ease-out;
+  --animate-sheet-out-left: sheet-out-left 200ms ease-in;
+  --animate-sheet-in-right: sheet-in-right 200ms ease-out;
+  --animate-sheet-out-right: sheet-out-right 200ms ease-in;
+
+  @keyframes sheet-in-bottom {
+    from {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-out-bottom {
+    to {
+      transform: translateY(100%);
+    }
+  }
+  @keyframes sheet-in-left {
+    from {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes sheet-out-left {
+    to {
+      transform: translateX(-100%);
+    }
+  }
+  @keyframes sheet-in-right {
+    from {
+      transform: translateX(100%);
+    }
+  }
+  @keyframes sheet-out-right {
+    to {
+      transform: translateX(100%);
+    }
+  }
+
   @keyframes shimmer {
     from {
       background-position: 100% 0;

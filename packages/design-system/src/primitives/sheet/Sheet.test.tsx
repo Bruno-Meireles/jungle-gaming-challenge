@@ -34,6 +34,12 @@ const Example = ({
   );
 };
 
+// A folha desliza ao abrir; mede-se a posicao final, depois das animacoes terminarem.
+async function settled(el: Element) {
+  await Promise.all(el.getAnimations().map((a) => a.finished));
+  return el.getBoundingClientRect();
+}
+
 afterEach(async () => {
   await page.viewport(1440, 900);
   await userEvent.unhover(document.body);
@@ -88,7 +94,7 @@ describe('Sheet - ancoragem (derivado; sem frame no Figma)', () => {
     const dialog = page.getByRole('dialog', { name: 'Filtros' });
     await expect.element(dialog).toBeInTheDocument();
     const el = dialog.element();
-    const rect = el.getBoundingClientRect();
+    const rect = await settled(el);
     expect([rect.left, rect.right, rect.bottom]).toEqual([0, 390, 844]);
     expect(rect.top).toBeGreaterThan(0);
     expect(getComputedStyle(el).borderTopLeftRadius).toBe('8px');
@@ -101,7 +107,7 @@ describe('Sheet - ancoragem (derivado; sem frame no Figma)', () => {
     await render(<Example defaultOpen side="left" />);
     const dialog = page.getByRole('dialog', { name: 'Filtros' });
     await expect.element(dialog).toBeInTheDocument();
-    const rect = dialog.element().getBoundingClientRect();
+    const rect = await settled(dialog.element());
     expect([rect.left, rect.top, rect.bottom]).toEqual([0, 0, 844]);
     expect(rect.right).toBeLessThan(390);
   });
@@ -111,7 +117,7 @@ describe('Sheet - ancoragem (derivado; sem frame no Figma)', () => {
     await render(<Example defaultOpen side="right" />);
     const dialog = page.getByRole('dialog', { name: 'Filtros' });
     await expect.element(dialog).toBeInTheDocument();
-    const rect = dialog.element().getBoundingClientRect();
+    const rect = await settled(dialog.element());
     expect([rect.right, rect.top, rect.bottom]).toEqual([390, 0, 844]);
     expect(rect.left).toBeGreaterThan(0);
   });

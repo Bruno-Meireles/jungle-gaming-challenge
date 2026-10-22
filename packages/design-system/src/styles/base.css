@@ -15,7 +15,8 @@
  * estilos sem camada vencem a utility .animate-shimmer (camada utilities).
  */
 @media (prefers-reduced-motion: reduce) {
-  [data-slot='skeleton'] {
+  [data-slot='skeleton'],
+  [data-slot='sheet-content'] {
     animation: none;
   }
 }
