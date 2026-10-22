@@ -43,7 +43,8 @@ describe('NftCard - titulo como link e card clicavel (C25.1)', () => {
   it('clicar na imagem aciona o link do titulo', async () => {
     const onClick = vi.fn((e: { preventDefault: () => void }) => e.preventDefault());
     await render(<NftCard {...base} link={<a href="#/nft/42" onClick={onClick} />} />);
-    await page.getByRole('img', { name: base.image.alt }).click();
+    /* force: o ::after do link intercepta o ponteiro por desenho (e o que torna o card clicavel). */
+    await page.getByRole('img', { name: base.image.alt }).click({ force: true });
     expect(onClick).toHaveBeenCalledTimes(1);
   });
 
@@ -94,7 +95,11 @@ describe('NftCard - slots badge e action (C25.4)', () => {
       <NftCard
         {...base}
         badge={<span>RARO</span>}
-        action={<button type="button" aria-label="Favoritar Emerald Ape #042" />}
+        action={
+          <button type="button" aria-label="Favoritar Emerald Ape #042">
+            *
+          </button>
+        }
       />,
     );
     await expect.element(page.getByText('RARO')).toBeVisible();
@@ -111,7 +116,11 @@ describe('NftCard - slots badge e action (C25.4)', () => {
       <NftCard
         {...base}
         link={<a href="#/nft/42" />}
-        action={<button type="button" aria-label="Favoritar" />}
+        action={
+          <button type="button" aria-label="Favoritar">
+            *
+          </button>
+        }
       />,
     );
     await userEvent.tab();
@@ -128,7 +137,11 @@ describe('NftCard - slots badge e action (C25.4)', () => {
       <NftCard
         {...base}
         link={<a href="#/nft/42" onClick={onLink} />}
-        action={<button type="button" aria-label="Favoritar" onClick={onAction} />}
+        action={
+          <button type="button" aria-label="Favoritar" onClick={onAction}>
+            *
+          </button>
+        }
       />,
     );
     await page.getByRole('button', { name: 'Favoritar' }).click();
