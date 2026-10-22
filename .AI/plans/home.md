@@ -389,14 +389,14 @@ M3
 - [x] 22 sucesso E2E: E2E 8/8 (desktop-1440 e mobile-390; suíte e2e completa 38/38), typecheck e lint limpos, node 368/368, browser 375/375. Ver Execução
 
 M4
-- [ ] 23a DS `RangeSlider.getValueText`
-- [ ] 23 filtros combinados E2E
-- [ ] 24 faixa de preço E2E
-- [ ] 25 ordenação E2E
-- [ ] 26 abas E2E
-- [ ] 27 busca E2E
-- [ ] 28 paginação e histórico E2E
-- [ ] 29 fora de ordem E2E
+- [x] 23a DS `RangeSlider.getValueText`: GREEN `6a222db` (DS 991/991, typecheck e lint limpos; usos antigos, stories e teste 'desabilitado' passam a fornecer getValueText)
+- [x] 23 filtros combinados E2E: GREEN `f0b2e02` (desktop-1440 e mobile-390 verdes)
+- [ ] 24 faixa de preço E2E: implementação GREEN `f0b2e02`, mas o teste falha por defeito do próprio teste (ver Execução M4); comportamento validado com cópia temporária corrigida (2/2)
+- [x] 25 ordenação E2E: GREEN `0a36832`
+- [x] 26 abas E2E: GREEN `0a36832`
+- [x] 27 busca E2E: GREEN (6/6)
+- [ ] 28 paginação e histórico E2E: GREEN `7810968` (3 dos 4 testes; "voltar restaura..." falha por corrida no próprio teste, ver Execução M4)
+- [x] 29 fora de ordem E2E: verde com 25/26 (`7810968`)
 
 M5
 - [ ] 30 skeleton E2E
@@ -464,3 +464,36 @@ Desvios e lacunas (Figma x implementado):
 - **Título do hero** usa `\n` na chave i18n com `whitespace-pre-line` para reproduzir a quebra do Figma.
 - Observado fora do escopo deste item (nas capturas): contagem "45 NFTs" visível acima da grade (o Figma não tem), ausência de abas, ordenação, filtros e paginação (itens 23-28), preços longos quebram de linha no card de 390.
 - Arquivos alheios ao item (`.gitignore`, `.claude/settings.json`, `tools/action-log.mjs`) apareceram modificados no working tree e não foram commitados.
+
+### M4: filtros e URL (GREEN dos itens 23a, 22b, 23-29)
+
+Entregue (FSD): `app/router/search-serialization.ts` (parseSearch/stringifySearch, ligados ao `createRouter`); `entities/nft` com `useCatalogSearch` (URL como fonte; push em filtros/busca, `replace` opcional), `useCanonicalSearchUrl` (normaliza `?tab=foo&page=-3` para `/` por replace) e `CatalogQueryResult`; `features/catalog-filters` (coleções, redes, faixa de preço), `catalog-sort`, `catalog-view-tabs`, `catalog-search` (toggle no header com `aria-expanded`; campo direto no mobile); `widgets/filter-panel` (`FilterSidebar` >= 1440 com preço só no Aplicar; `FilterSheet` < 1440 com rascunho e um único Aplicar), `widgets/catalog` (`Catalog`: título "Resultados" sr-only focado após paginar, toolbar, resultados, paginação do DS com `href` real, clamp de `page` por replace); `shared/lib/eth`: `formatEthFixed` e `asEthAmount`; `shared/hooks/useLocale`; ícones de busca e filtros. i18n pt-BR/en com paridade (namespaces `filters`, `sort`, `viewTabs`, `search`; `catalog` ganhou `title` e `pagination`).
+
+Verificação final (resultado real): lint e typecheck do app e do DS limpos; Vitest app 400/400 e DS 991/991; E2E completa 84 passed, 4 failed (os 2 testes abaixo, em 1440 e 390).
+
+Decisões e desvios:
+- **Passo e faixa do slider:** passo 0.01 ETH; faixa da API arredondada para fora (`boundsOf`, piso do mínimo e teto do máximo) via `ethToSteps`/`stepsToEth`; extremos viram "sem filtro" (param omitido na URL); `aria-valuetext` com 2 casas fixas ("12,30 ETH").
+- **Preço do card preserva os zeros da API:** `price` do domínio passou de `parseEth` (canônico, "12.3") para `asEthAmount` (valida sem normalizar, "12.30"), pois o E2E 25 exige "12,30 ETH" e o 24 exige sempre casas decimais. `parseEth` continua canônico (testes 9 e 21 intactos).
+- **Fixtures NÃO ajustadas (decisão (b) do chamador não aplicada):** tornar "Novos lançamentos" subconjunto real quebraria os testes 26 (`?tab=new` espera "45 NFTs") e 29 (B = 45 NFTs); incluir digital-art em polygon quebraria o 23 (`Arte digital (0)` com Polygon). Os testes são lei; fixtures ficam como estão até o test-writer rever.
+- **Rótulo das coleções e redes** moram no namespace `filters` da feature (e não em `entities/collection`, que não foi criada); cada checkbox tem `aria-label` "Nome (contagem)" porque o nome por conteúdo do flex não é confiável.
+- **Checkboxes** circulares do DS no lugar do texto simples do Figma (necessários para o papel `checkbox`); contagem fixa "(5)" etc. vem das facetas da API (fixtures), não das ilustrativas do Figma.
+- **Título "Resultados"** é `sr-only` (o Figma não tem esse título); recebe o foco programático após trocar de página (foco invisível: desvio a avaliar no item 36).
+- **Sheet:** `side="bottom"`, vale também em 768 (botão de filtros acima do hero, alinhado à direita); em 390 fica ao lado do campo de busca (Figma: campo + botão 45 px). Ordenação fica no Sheet < 1440 e na barra >= 1440.
+- **Abas** usam o DS com 14 px (Figma 15 px na barra desktop); aba ativa bold + sublinhado do DS.
+- **Busca:** campo `type=search` sem botão de envio (Enter); no desktop/tablet começa aberto se há `?q`.
+- **`useCanonicalSearchUrl`** parte da string real da URL (não do search validado pelo router, que fica uma navegação atrás e desfazia o clique na paginação).
+
+Defeitos nos testes RED (NÃO alterados; devolver ao `test-writer`):
+1. `e2e/home-filters.spec.ts` teste 24 (faixa de preço), em 1440 e 390: (a) após "Aplicar" o teste lê `cards(page).allTextContents()` imediatamente; com `keepPreviousData` (exigido pelo teste 33) os cards antigos seguem visíveis por ~120 ms, então lê dados obsoletos (falta esperar `aria-busy="false"`/contagem); (b) `allTextContents` concatena título e preço sem separador ("Sage Nomad #0091,69 ETH"), e a regex `(\d+,\d+) ETH` extrai "0091,69" (= 91,69), logo qualquer card falha em `<= 12.29`. Cópia temporária corrigida (espera `[aria-busy=true]` zerar e lê `innerText`) passou 2/2 (1440 e 390), confirmando URL `min`/`max`, `aria-valuetext`, rótulo "Preço: 1,50 - 12,29 ETH" e todos os preços dentro da faixa. A cópia foi apagada.
+2. `e2e/home-url-history.spec.ts` "voltar restaura a página 1..." (1440 e 390): `second = await titles(page)` é lido logo após `toHaveURL(page=2)`, antes de os 6 cards chegarem (ainda os 9 da página 1). Falta `await expect(cards(page)).toHaveCount(6)` antes da captura (o primeiro teste do arquivo já faz isso). Cópia temporária com a espera passou 2/2; apagada.
+
+Capturas (Playwright CLI, `scratchpad/`): `home3-1440.png`, `home3-390.png`, `home3-768.png`, `home3-390-top.png`, `home3-390-sheet.png`, `home3-768-top.png`, `home3-768-sheet.png`.
+
+Desvios do Figma observados nas capturas (M4):
+- Sidebar: Figma sem checkboxes e com contagens ilustrativas (33, 12, 65...); implementado com checkbox circular do DS e contagens reais das fixtures (5 por coleção, 15 por rede). Item selecionado em `text-accent` e demais em `secondary` conforme o Figma.
+- Faixa de preço: rótulo "Preço: 0,00 - 12,30 ETH" (Figma "0,02 - 12,30") porque o piso vem do menor preço da fixture (1e-18) arredondado para 0,00; botão "Aplicar" 32 px (Figma 70485 sem medida extraída).
+- Toolbar: abas em 14 px (Figma 15/500); "Ordenar por: Listados recentemente" com chevron do DS; contagem "45 NFTs" visível acima da grade (não existe no Figma; é a região `status` exigida pelo teste 22).
+- Paginação: 1-5 + seta, alinhada à direita no 1440 e centralizada < 1440; o Figma mostra 1-4 + seta (45 itens = 5 páginas).
+- Busca: ícone no header (Figma tem o ícone sem campo); campo de 240 px quando aberto (largura derivada); mobile com campo 45 px e botão de filtros 45 px com gradiente primary (Figma: 15:5313, medida do botão não extraída).
+- Preço extremo "0,000000000000000001 ETH" quebra em duas linhas no card de 390 (já listado no item 34).
+- Seletor de idioma do header aparece junto da busca no 1440; abaixo disso segue sem seletor (rodapé pendente, Q8).
