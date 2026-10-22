@@ -18,7 +18,7 @@ test.describe('Skeleton com movimento normal', () => {
   test.use({ reducedMotion: 'no-preference' });
 
   test('shimmer anima (animation-name diferente de none)', async ({ page }, testInfo) => {
-    test.skip(testInfo.project.name !== 'desktop-1440', 'plano C4.5: apenas 1440');
+    testInfo.skip(testInfo.project.name !== 'desktop-1440', 'plano C4.5: apenas 1440');
     const name = await animationName(page);
     expect(name).not.toBe('none');
     expect(name).toContain('shimmer');
@@ -29,7 +29,7 @@ test.describe('Skeleton com movimento reduzido', () => {
   test.use({ reducedMotion: 'reduce' });
 
   test('shimmer desligado (animation-name none)', async ({ page }, testInfo) => {
-    test.skip(
+    testInfo.skip(
       !['desktop-1440', 'mobile-390'].includes(testInfo.project.name),
       'plano C4.6: apenas 1440 e 390',
     );
