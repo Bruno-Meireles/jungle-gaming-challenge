@@ -1,0 +1,60 @@
+@theme {
+  --color-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --font-*: initial;
+  --text-*: initial;
+
+  --font-sans: "Roboto Mono", ui-monospace, monospace;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
+
+  --color-foreground: #F5F1EB; /* figma:70323:306 */
+  --color-text-accent: #E89B55; /* figma:70330:306 */
+  --color-primary: #D28A4C; /* figma:70323:301 */
+  --color-ink: #140D0A; /* figma:70323:314 */
+  --color-text-secondary: #CFB28C; /* figma:70330:305 */
+  --color-surface-card: #241612; /* figma:70323:312 */
+  --color-secondary: #B39463; /* figma:70323:310 */
+  --color-border: #3F2319; /* figma:70323:318 */
+  --color-background-elevated: #FBFBFB; /* figma:70323:307 */
+  --color-surface-dark: #38220F; /* figma:70323:317 */
+  --color-border-soft: #55321F; /* figma:70323:319 */
+  --color-surface-raised: #2F1D15; /* figma:70323:313 */
+  --color-black: #000000; /* figma:70323:309 */
+  --color-text-coral: #F0805F; /* figma:70323:305 */
+  --color-logo-google-green: #59C36A; /* figma:70323:326 */
+  --color-success: #00A66C; /* figma:70323:321 */
+  --color-logo-google-yellow: #FFDA2D; /* figma:70323:327 */
+  --color-logo-google-blue: #4086F4; /* figma:70323:325 */
+  --color-logo-blue: #4175DF; /* figma:70323:328 */
+  --color-logo-orange: #FF641A; /* figma:70323:323 */
+  --color-logo-facebook: #3B5999; /* figma:70323:324 */
+  --color-gray-light: #EDEDED; /* figma:70323:320 */
+  --color-amber: #E3A44E; /* figma:70323:304 */
+  --color-error: #ED1B2E; /* figma:70323:322 */
+  --color-white: #FFFFFF; /* figma:70323:308 */
+  --color-logo-light-blue: #03A9F4; /* figma:70323:329 */
+  --color-logo-indigo: #283593; /* figma:70323:330 */
+  --color-primary-light: #DD9A5F; /* figma:70323:302 */
+  --color-primary-dark: #C47B3E; /* figma:70323:303 */
+
+  /* aliases semanticos */
+  --color-background: var(--color-ink);
+  --color-focus: var(--color-primary);
+  --color-input-border: var(--color-secondary);
+  --color-destructive-text: var(--color-text-coral);
+  --color-destructive: var(--color-error);
+
+  /* tipografia */
+  --text-body-14-bold-lh-16: 14px; /* figma:70321:354 */
+  --text-body-14-bold-lh-16--line-height: 16px;
+  --text-body-14-bold-lh-16--font-weight: 700;
+  --text-body-14-bold-lh-16--letter-spacing: 0;
+
+  /* raios */
+  --radius-3: 3px; /* figma:70386:262 */
+  --radius-5: 5px; /* figma:70381:242 */
+
+  /* ADR-04: 1 unidade de spacing = 1px do Figma (p-16 = 16px) */
+  --spacing: 1px;
+}

@@ -5,3 +5,8 @@ node_modules/
 dist/
 playwright-report/
 test-results/
+storybook-static/
+.turbo/
+*.tsbuildinfo
+.vitest/
+__screenshots__/**/*.diff.png

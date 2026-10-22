@@ -1,0 +1,6 @@
+/*
+ * Entrada CSS de teste: simula o consumidor (`@import "tailwindcss"` + styles/index.css do DS).
+ * T16 concluido (RED -> GREEN): index.css agrega tokens, fonts e base.
+ */
+@import "tailwindcss";
+@import "../styles/index.css";
