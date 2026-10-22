@@ -36,28 +36,31 @@ const meta = {
     image: { src: IMAGES[0]!, alt: 'Arte do NFT Emerald Ape #042' },
     link: <a href="#/nft/emerald-ape-042" />,
   },
-  /* Largura de coluna do Figma: 175 (mobile) / 258 (>= tablet). */
-  decorators: [
-    (Story) => (
-      <div className="w-175 tablet:w-258">
-        <Story />
-      </div>
-    ),
-  ],
 } satisfies Meta<typeof NftCard>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Default: Story = { tags: ['golden', 'golden-focus'] };
+/* Largura de coluna do Figma: 175 (mobile) / 258 (>= tablet). */
+const column: Story['decorators'] = [
+  (Story) => (
+    <div className="w-175 tablet:w-258">
+      <Story />
+    </div>
+  ),
+];
+
+export const Default: Story = { tags: ['golden', 'golden-focus'], decorators: column };
 
 export const WithBadge: Story = {
   tags: ['golden'],
+  decorators: column,
   args: { badge: <Badge variant="label">RARO</Badge> },
 };
 
 export const WithFavorite: Story = {
   tags: ['golden', 'golden-focus'],
+  decorators: column,
   args: {
     title: 'Sage Nomad #009',
     priceLabel: '1.69 ETH',
@@ -68,6 +71,7 @@ export const WithFavorite: Story = {
 
 export const Skeleton: StoryObj<typeof NftCardSkeleton> = {
   tags: ['golden'],
+  decorators: column as StoryObj<typeof NftCardSkeleton>['decorators'],
   render: () => <NftCardSkeleton />,
 };
 
