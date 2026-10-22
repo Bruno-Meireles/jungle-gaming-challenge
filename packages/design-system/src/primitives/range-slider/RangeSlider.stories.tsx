@@ -21,6 +21,7 @@ const meta = {
     step: 5,
     onValueChange: () => {},
     thumbLabels: ['Preço mínimo', 'Preço máximo'],
+    getValueText: (value: number) => `${value} ETH`,
   },
 } satisfies Meta<typeof RangeSlider>;
 

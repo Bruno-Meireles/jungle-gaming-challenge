@@ -14,6 +14,8 @@ export type RangeSliderProps = {
   step: number;
   onValueChange: (value: [number, number]) => void;
   thumbLabels: [string, string];
+  /** Texto lido por leitores de tela para cada valor (aria-valuetext); sem default de idioma. */
+  getValueText: (value: number) => string;
   disabled?: boolean;
   className?: string;
 };
@@ -28,6 +30,7 @@ export function RangeSlider({
   step,
   onValueChange,
   thumbLabels,
+  getValueText,
   disabled,
   className,
 }: RangeSliderProps) {
@@ -51,8 +54,15 @@ export function RangeSlider({
           className="absolute h-full bg-primary data-[disabled]:bg-disabled-text"
         />
       </SliderPrimitive.Track>
-      <SliderPrimitive.Thumb data-slot="range-slider-thumb" aria-label={thumbLabels[0]} className={thumb} />
-      <SliderPrimitive.Thumb data-slot="range-slider-thumb" aria-label={thumbLabels[1]} className={thumb} />
+      {thumbLabels.map((label, index) => (
+        <SliderPrimitive.Thumb
+          key={label}
+          data-slot="range-slider-thumb"
+          aria-label={label}
+          aria-valuetext={getValueText(value[index] ?? min)}
+          className={thumb}
+        />
+      ))}
     </SliderPrimitive.Root>
   );
 }

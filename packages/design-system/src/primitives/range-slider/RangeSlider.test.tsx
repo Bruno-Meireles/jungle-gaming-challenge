@@ -20,6 +20,7 @@ const Controlled = ({ initial = [20, 80] as [number, number], step = 5 }) => {
         step={step}
         onValueChange={setValue}
         thumbLabels={['Preço mínimo', 'Preço máximo']}
+        getValueText={(v) => `${v} ETH`}
       />
       <output data-testid="out">{value.join('-')}</output>
     </div>
@@ -78,6 +79,7 @@ describe('RangeSlider - comportamento', () => {
         step={5}
         onValueChange={() => {}}
         thumbLabels={['a', 'b']}
+        getValueText={(v) => String(v)}
         disabled
       />,
     );
