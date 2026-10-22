@@ -17,7 +17,7 @@ export type QuantityStepperProps = {
 };
 
 const buttonClass = cn(
-  'inline-flex h-[49.5px] w-33 shrink-0 cursor-pointer items-center justify-center rounded-33 border border-solid border-ink bg-primary p-0 text-ink',
+  'inline-flex h-49.5 w-33 shrink-0 cursor-pointer items-center justify-center rounded-33 border border-solid border-ink bg-primary p-0 text-ink',
   'not-disabled:hover:bg-primary-hover not-disabled:active:bg-primary-active',
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus',
   'disabled:cursor-not-allowed disabled:bg-disabled-bg disabled:text-disabled-text',

@@ -17,8 +17,8 @@ import { cn } from '../../lib/cn';
 const badgeVariants = cva('inline-flex shrink-0 items-center bg-primary text-ink', {
   variants: {
     variant: {
-      count: 'size-[16px] justify-center rounded-8 text-tiny-10-medium leading-[13.19px] ring-2 ring-ink',
-      label: 'h-[32px] px-[8px] pt-[7px] text-caption-13-medium',
+      count: 'size-16 justify-center rounded-8 text-tiny-10-medium leading-[13.19px] ring-2 ring-ink',
+      label: 'h-32 px-8 pt-7 text-caption-13-medium',
     },
   },
 });

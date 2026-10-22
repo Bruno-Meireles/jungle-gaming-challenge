@@ -22,7 +22,7 @@ export function Rating({ value, max, label, className, ...props }: RatingProps) 
       data-slot="rating"
       role="img"
       aria-label={label}
-      className={cn('inline-flex items-center gap-[4px]', className)}
+      className={cn('inline-flex items-center gap-4', className)}
       {...props}
     >
       {Array.from({ length: max }, (_, i) => (

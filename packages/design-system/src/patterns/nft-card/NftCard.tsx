@@ -46,7 +46,7 @@ export function NftCard({ title, priceLabel, image, badge, action, link }: NftCa
         {badge ? <div className="absolute top-16 left-0 flex">{badge}</div> : null}
       </div>
       <div data-slot="nft-card-info" className="flex flex-col pl-8 tablet:gap-6 tablet:pl-0">
-        <h3 className="text-body-15-regular-lh-16 leading-[20px] text-foreground tablet:text-body-large-16-regular-lh-16 tablet:leading-[16px]">
+        <h3 className="text-body-15-regular-lh-16 leading-20 text-foreground tablet:text-body-large-16-regular-lh-16 tablet:leading-16">
           {heading}
         </h3>
         <p className="text-body-large-16-bold-lh-16 text-text-accent tablet:text-body-large-18-bold-lh-16">

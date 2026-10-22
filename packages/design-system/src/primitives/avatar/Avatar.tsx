@@ -22,7 +22,7 @@ export function Avatar({ src, alt, fallback, className, ...props }: AvatarProps)
     <AvatarPrimitive.Root
       data-slot="avatar"
       className={cn(
-        'inline-flex size-[50px] shrink-0 items-center justify-center overflow-hidden rounded-25 border border-border bg-surface-raised text-primary',
+        'inline-flex size-50 shrink-0 items-center justify-center overflow-hidden rounded-25 border border-border bg-surface-raised text-primary',
         className,
       )}
       {...props}
