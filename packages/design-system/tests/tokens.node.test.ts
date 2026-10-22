@@ -116,7 +116,20 @@ const ALIASES: [alias: string, target: string][] = [
   ['--color-input-border', '--color-secondary'],
   ['--color-destructive-text', '--color-text-coral'],
   ['--color-destructive', '--color-error'],
+  // GATE-TOKENS: papeis necessarios aos componentes (surface-raised e success ja sao cores Figma; nao duplicar).
+  ['--color-surface', '--color-surface-card'],
+  ['--color-text', '--color-foreground'],
+  ['--color-text-muted', '--color-text-secondary'],
+  ['--color-accent', '--color-primary'],
+  ['--color-primary-hover', '--color-primary-light'],
+  ['--color-primary-active', '--color-primary-dark'],
+  ['--color-disabled-bg', '--color-border-soft'],
+  ['--color-disabled-text', '--color-secondary'],
+  ['--color-link', '--color-text-accent'], // Forgot Link (70381:244, 70399:242) usa o fill Text/Accent
 ];
+
+// Lacunas: papeis sem evidencia no Figma nao viram token. Overlay do modal (11:4385 e todo o file.json): nenhum fill com alfa < 1.
+const ALIAS_GAPS = ['--color-overlay'];
 
 describe('aliases semanticos de cor (T11)', () => {
   const colorDecls = () => parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--color-'));
@@ -134,6 +147,24 @@ describe('aliases semanticos de cor (T11)', () => {
     expect(referenced).toBe(target);
     const targetDecl = decls.find((d) => d.name === referenced);
     expect(targetDecl?.figma, `${target} deve ter comentario figma:`).toBeTruthy();
+  });
+
+  it('o file.json nao tem nenhum fill SOLID translucido (sem evidencia para --color-overlay)', () => {
+    const translucent: string[] = [];
+    const walk = (o: unknown): void => {
+      if (!o || typeof o !== 'object') return;
+      const n = o as { id?: string; fills?: { type: string; opacity?: number; color?: { a?: number } }[] };
+      for (const f of Array.isArray(n.fills) ? n.fills : []) {
+        if (f.type === 'SOLID' && ((f.opacity ?? 1) < 1 || (f.color?.a ?? 1) < 1)) translucent.push(String(n.id));
+      }
+      for (const v of Object.values(o)) walk(v);
+    };
+    walk(loadFigmaFile().document);
+    expect(translucent).toEqual([]);
+  });
+
+  it.each(ALIAS_GAPS)('Lacuna %s nao tem token inventado', (name) => {
+    expect(parseDeclarations(readTokens()).map((d) => d.name)).not.toContain(name);
   });
 
   it('alias nao contem hex literal e toda cor sem figma: e var(--color-...)', () => {

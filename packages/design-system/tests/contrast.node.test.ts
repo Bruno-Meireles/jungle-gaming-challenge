@@ -84,6 +84,29 @@ describe('contraste dos tokens sobre --color-background (T18)', () => {
     expect(ratioOf('--color-focus')).toBeGreaterThanOrEqual(3.0);
   });
 
+  it('--color-text-muted x background >= 4.5 (texto, WCAG 1.4.3)', () => {
+    expect(ratioOf('--color-text-muted')).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it('--color-accent x background >= 3.0 (componente de UI, WCAG 1.4.11)', () => {
+    expect(ratioOf('--color-accent')).toBeGreaterThanOrEqual(3.0);
+  });
+
+  it.each(['--color-primary', '--color-primary-hover', '--color-primary-active'])(
+    'texto --color-ink sobre %s >= 4.5 (texto de botao, WCAG 1.4.3)',
+    (bg) => {
+      expect(contrastRatio(resolveColor(decls, '--color-ink'), resolveColor(decls, bg))).toBeGreaterThanOrEqual(4.5);
+    },
+  );
+
+  // Desvio registrado: disabled-text (secondary #B39463) x disabled-bg (border-soft #55321F) = 3.94:1 (< 4.5).
+  // Texto desabilitado e isento do WCAG 1.4.3; exigimos >= 3.0 para nao sumir e documentamos em docs/design-tokens.md.
+  it('--color-disabled-text x --color-disabled-bg >= 3.0 (isento de 1.4.3; razao real registrada)', () => {
+    const ratio = contrastRatio(resolveColor(decls, '--color-disabled-text'), resolveColor(decls, '--color-disabled-bg'));
+    console.info(`disabled-text x disabled-bg = ${ratio.toFixed(2)}:1`);
+    expect(ratio).toBeGreaterThanOrEqual(3.0);
+  });
+
   it('registro: razoes calculadas (sem asserção sobre error)', () => {
     const report = Object.fromEntries(
       ['--color-foreground', '--color-destructive-text', '--color-input-border', '--color-focus', '--color-error'].map((t) => [
