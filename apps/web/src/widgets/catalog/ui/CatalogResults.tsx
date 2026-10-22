@@ -5,7 +5,9 @@ import { useTranslation } from 'react-i18next';
 import { NftCardView, type CatalogQueryResult } from '../../../entities/nft';
 
 const SKELETON_KEYS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'] as const;
-const GRID = 'grid grid-cols-2 gap-x-16 gap-y-24 tablet:gap-x-24 tablet:gap-y-32 desktop:grid-cols-3';
+// Figma 2:2 (70342:2678/2802/2828): colunas de 258, gaps 32/72; mobile 14:5226 (70395:244): coluna direita 32 abaixo.
+const GRID =
+  'grid grid-cols-2 gap-x-16 gap-y-24 pb-32 [&>*:nth-child(even)]:translate-y-32 tablet:gap-x-24 tablet:gap-y-32 tablet:pb-0 tablet:[&>*:nth-child(even)]:translate-y-0 desktop:grid-cols-[repeat(3,minmax(0,258px))] desktop:gap-x-32 desktop:gap-y-72';
 
 export function CatalogResults({ query }: { query: CatalogQueryResult }) {
   const { t } = useTranslation('catalog');
