@@ -4,7 +4,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Estado atual
 
-Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado completo do desafio, fonte da verdade), `figma.md`, `.claude/agents/` e este arquivo. Não há código, `package.json` nem git ainda. O enunciado em `prompt.md` (seção `challenge`) define telas, contratos, MSW, Socket.IO, testes e metas de Lighthouse; não o amplie por suposição.
+Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado completo do desafio, fonte da verdade), `figma.md`, `.claude/agents/` e este arquivo. Não há código, `package.json` nem git ainda. O enunciado em `prompt.md` (seção `challenge`) define telas, contratos, MSW, Socket.IO, testes e metas de Lighthouse.
+
+**`prompt.md` é lei (regra do usuário, 2026-10-22):** tudo o que o desafio exige precisa estar presente; nenhuma decisão do desenvolvimento (planos, ADRs, docs) pode remover uma exigência dele. Detalhe não definido no enunciado: complemente conforme necessário para cumprir o requisito e registre a decisão. O que o enunciado não pede é adicional (deve ser marcado como tal e nunca competir com o exigido).
+
+**Dependências:** estão pré-autorizadas as necessárias para atender aos requisitos (versão fixa, compatibilidade verificada com as já instaladas e com o ESLint/TypeScript/Vite do repositório, registro em `ARCHITECTURE.md`); não é preciso pedir aprovação para cada uma.
 
 ## Regras obrigatórias (de `prompt.md`)
 
@@ -12,7 +16,7 @@ Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado co
 - **Clean Architecture + Feature-Sliced Design**: camadas FSD `app > pages > widgets > features > entities > shared`, imports só para camadas inferiores, acesso a slices via `index.ts`. Domínio/use cases sem dependência de React, Axios, TanStack ou MSW.
 - **Três agentes** em `.claude/agents/`: `architect` (**Opus**), `test-writer` (**Sonnet**, RED), `code-writer` (**Sonnet**, GREEN). Fluxo por feature: architect → test-writer → code-writer.
 - **Telas** são desenvolvidas e validadas com **Playwright**, usando o **Playwright CLI** (não o MCP) para economizar tokens; além disso há E2E determinísticos.
-- **Monorepo** com dois pacotes: o app e o **design system**. Ferramenta pretendida: pnpm workspaces + Turborepo (ainda não criada; confirmar com o usuário antes de instalar).
+- **Monorepo** com dois pacotes: o app e o **design system**. Ferramenta: pnpm workspaces + Turborepo (já criada: `apps/web` e `packages/design-system`).
 - **App web** (requisitos adicionais do usuário, valem desde a primeira feature): **i18n desde o momento zero** (pt-BR e inglês, nenhum texto hardcoded; o design system não embute texto de interface) e **melhores práticas de código e componentização**. Detalhes em `.AI/standards/i18n-quality.md`.
 - **Proibido Docker (regra do usuário, 2026-10-22):** não use Docker em desenvolvimento, testes ou validações, nem sugira ou solicite seu uso, nem o ponha em scripts automáticos, planos ou docs como caminho recomendado. Docker só pode ser usado quando o usuário mandar explicitamente. Toda execução é local (Node pelo `.nvmrc`, Playwright e Vitest nativos). Não precisa desinstalar o Docker da máquina.
 - Código que o usuário disser estar "em desenvolvimento" no protótipo ou neste arquivo deve ser ignorado.
