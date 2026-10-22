@@ -341,3 +341,21 @@
   /* ADR-04: 1 unidade de spacing = 1px do Figma (p-16 = 16px) */
   --spacing: 1px;
 }
+
+/*
+ * Movimento do Skeleton (C4). Duracao/curva NAO existem no Figma: valores derivados
+ * (1.6s linear infinite, Lacuna aceita - .AI/plans/executions/skeleton.md). O desligamento
+ * sob prefers-reduced-motion esta em base.css.
+ */
+@theme {
+  --animate-shimmer: shimmer 1.6s linear infinite;
+
+  @keyframes shimmer {
+    from {
+      background-position: 100% 0;
+    }
+    to {
+      background-position: -100% 0;
+    }
+  }
+}

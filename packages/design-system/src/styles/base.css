@@ -9,3 +9,13 @@
     outline-offset: 2px;
   }
 }
+
+/*
+ * prefers-reduced-motion (enunciado §8): desliga o shimmer do Skeleton. Fora de @layer de proposito:
+ * estilos sem camada vencem a utility .animate-shimmer (camada utilities).
+ */
+@media (prefers-reduced-motion: reduce) {
+  [data-slot='skeleton'] {
+    animation: none;
+  }
+}
