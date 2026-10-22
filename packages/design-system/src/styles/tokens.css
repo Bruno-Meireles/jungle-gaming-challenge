@@ -45,11 +45,243 @@
   --color-destructive-text: var(--color-text-coral);
   --color-destructive: var(--color-error);
 
-  /* tipografia */
+  /* tipografia: 1 token por estilo TEXT do Figma (59) */
+  --text-body-14-bold-lh-auto: 14px; /* figma:70321:344 */
+  --text-body-14-bold-lh-auto--line-height: normal;
+  --text-body-14-bold-lh-auto--font-weight: 700;
+  --text-body-14-bold-lh-auto--letter-spacing: 0.1em;
+  --text-body-large-16-bold-lh-auto: 16px; /* figma:70321:328 */
+  --text-body-large-16-bold-lh-auto--line-height: normal;
+  --text-body-large-16-bold-lh-auto--font-weight: 700;
+  --text-body-large-16-bold-lh-auto--letter-spacing: 0;
+  --text-body-large-16-regular-lh-auto: 16px; /* figma:70321:329 */
+  --text-body-large-16-regular-lh-auto--line-height: normal;
+  --text-body-large-16-regular-lh-auto--font-weight: 400;
+  --text-body-large-16-regular-lh-auto--letter-spacing: 0;
+  --text-tiny-10-medium: 10px; /* figma:70321:366 */
+  --text-tiny-10-medium--line-height: normal;
+  --text-tiny-10-medium--font-weight: 500;
+  --text-tiny-10-medium--letter-spacing: 0;
+  --text-body-large-16-medium-lh-auto: 16px; /* figma:70321:330 */
+  --text-body-large-16-medium-lh-auto--line-height: normal;
+  --text-body-large-16-medium-lh-auto--font-weight: 500;
+  --text-body-large-16-medium-lh-auto--letter-spacing: 0;
+  --text-body-14-medium-lh-16: 14px; /* figma:70321:345 */
+  --text-body-14-medium-lh-16--line-height: 16px;
+  --text-body-14-medium-lh-16--font-weight: 500;
+  --text-body-14-medium-lh-16--letter-spacing: 0.1em;
+  --text-display-43-bold: 43px; /* figma:70321:301 */
+  --text-display-43-bold--line-height: 70px;
+  --text-display-43-bold--font-weight: 700;
+  --text-display-43-bold--letter-spacing: 0;
+  --text-body-14-regular-lh-24: 14px; /* figma:70321:346 */
+  --text-body-14-regular-lh-24--line-height: 24px;
+  --text-body-14-regular-lh-24--font-weight: 400;
+  --text-body-14-regular-lh-24--letter-spacing: 0;
+  --text-body-large-16-bold-lh-20: 16px; /* figma:70321:331 */
+  --text-body-large-16-bold-lh-20--line-height: 20px;
+  --text-body-large-16-bold-lh-20--font-weight: 700;
+  --text-body-large-16-bold-lh-20--letter-spacing: 0;
+  --text-body-large-18-bold-lh-16: 18px; /* figma:70321:319 */
+  --text-body-large-18-bold-lh-16--line-height: 16px;
+  --text-body-large-18-bold-lh-16--font-weight: 700;
+  --text-body-large-18-bold-lh-16--letter-spacing: 0;
+  --text-body-15-regular-lh-40: 15px; /* figma:70321:338 */
+  --text-body-15-regular-lh-40--line-height: 40px;
+  --text-body-15-regular-lh-40--font-weight: 400;
+  --text-body-15-regular-lh-40--letter-spacing: 0;
+  --text-body-15-bold-lh-40: 15px; /* figma:70321:339 */
+  --text-body-15-bold-lh-40--line-height: 40px;
+  --text-body-15-bold-lh-40--font-weight: 700;
+  --text-body-15-bold-lh-40--letter-spacing: 0;
+  --text-body-15-regular-lh-16: 15px; /* figma:70321:337 */
+  --text-body-15-regular-lh-16--line-height: normal;
+  --text-body-15-regular-lh-16--font-weight: 400;
+  --text-body-15-regular-lh-16--letter-spacing: 0;
+  --text-body-15-medium: 15px; /* figma:70321:336 */
+  --text-body-15-medium--line-height: 16px;
+  --text-body-15-medium--font-weight: 500;
+  --text-body-15-medium--letter-spacing: 0;
+  --text-body-large-16-regular-lh-16: 16px; /* figma:70321:332 */
+  --text-body-large-16-regular-lh-16--line-height: 16px;
+  --text-body-large-16-regular-lh-16--font-weight: 400;
+  --text-body-large-16-regular-lh-16--letter-spacing: 0;
+  --text-body-large-18-regular: 18px; /* figma:70321:320 */
+  --text-body-large-18-regular--line-height: 16px;
+  --text-body-large-18-regular--font-weight: 400;
+  --text-body-large-18-regular--letter-spacing: 0;
+  --text-body-large-18-bold-lh-24: 18px; /* figma:70321:322 */
+  --text-body-large-18-bold-lh-24--line-height: 24px;
+  --text-body-large-18-bold-lh-24--font-weight: 700;
+  --text-body-large-18-bold-lh-24--letter-spacing: 0;
+  --text-body-14-medium-lh-20: 14px; /* figma:70321:349 */
+  --text-body-14-medium-lh-20--line-height: 20px;
+  --text-body-14-medium-lh-20--font-weight: 500;
+  --text-body-14-medium-lh-20--letter-spacing: 0;
+  --text-caption-12-bold: 12px; /* figma:70321:364 */
+  --text-caption-12-bold--line-height: 14px;
+  --text-caption-12-bold--font-weight: 700;
+  --text-caption-12-bold--letter-spacing: 0;
+  --text-heading-24-bold: 24px; /* figma:70321:307 */
+  --text-heading-24-bold--line-height: normal;
+  --text-heading-24-bold--font-weight: 700;
+  --text-heading-24-bold--letter-spacing: 0;
+  --text-body-large-17-bold: 17px; /* figma:70321:325 */
+  --text-body-large-17-bold--line-height: 16px;
+  --text-body-large-17-bold--font-weight: 700;
+  --text-body-large-17-bold--letter-spacing: 0;
+  --text-body-14-regular-lh-22: 14px; /* figma:70321:348 */
+  --text-body-14-regular-lh-22--line-height: 22px;
+  --text-body-14-regular-lh-22--font-weight: 400;
+  --text-body-14-regular-lh-22--letter-spacing: 0;
+  --text-body-14-regular-lh-16: 14px; /* figma:70321:351 */
+  --text-body-14-regular-lh-16--line-height: 16px;
+  --text-body-14-regular-lh-16--font-weight: 400;
+  --text-body-14-regular-lh-16--letter-spacing: 0;
+  --text-caption-13-regular-lh-22: 13px; /* figma:70321:358 */
+  --text-caption-13-regular-lh-22--line-height: 22px;
+  --text-caption-13-regular-lh-22--font-weight: 400;
+  --text-caption-13-regular-lh-22--letter-spacing: 0;
+  --text-body-14-regular-lh-30: 14px; /* figma:70321:350 */
+  --text-body-14-regular-lh-30--line-height: 30px;
+  --text-body-14-regular-lh-30--font-weight: 400;
+  --text-body-14-regular-lh-30--letter-spacing: 0;
+  --text-tiny-9-bold: 9px; /* figma:70321:367 */
+  --text-tiny-9-bold--line-height: normal;
+  --text-tiny-9-bold--font-weight: 700;
+  --text-tiny-9-bold--letter-spacing: 0.0111em;
+  --text-body-15-bold-lh-16: 15px; /* figma:70321:340 */
+  --text-body-15-bold-lh-16--line-height: 16px;
+  --text-body-15-bold-lh-16--font-weight: 700;
+  --text-body-15-bold-lh-16--letter-spacing: 0;
+  --text-heading-28-bold: 28px; /* figma:70321:304 */
+  --text-heading-28-bold--line-height: normal;
+  --text-heading-28-bold--font-weight: 700;
+  --text-heading-28-bold--letter-spacing: 0;
+  --text-title-22-bold: 22px; /* figma:70321:310 */
+  --text-title-22-bold--line-height: 16px;
+  --text-title-22-bold--font-weight: 700;
+  --text-title-22-bold--letter-spacing: 0;
+  --text-body-14-medium-lh-16-ls-0: 14px; /* figma:70321:347 */
+  --text-body-14-medium-lh-16-ls-0--line-height: 16px;
+  --text-body-14-medium-lh-16-ls-0--font-weight: 500;
+  --text-body-14-medium-lh-16-ls-0--letter-spacing: 0;
+  --text-title-20-regular-lh-10: 20px; /* figma:70321:314 */
+  --text-title-20-regular-lh-10--line-height: 28px;
+  --text-title-20-regular-lh-10--font-weight: 400;
+  --text-title-20-regular-lh-10--letter-spacing: 0;
+  --text-body-14-bold-lh-20: 14px; /* figma:70321:353 */
+  --text-body-14-bold-lh-20--line-height: 20px;
+  --text-body-14-bold-lh-20--font-weight: 700;
+  --text-body-14-bold-lh-20--letter-spacing: 0;
+  --text-body-large-17-regular-lh-16: 17px; /* figma:70321:326 */
+  --text-body-large-17-regular-lh-16--line-height: 16px;
+  --text-body-large-17-regular-lh-16--font-weight: 400;
+  --text-body-large-17-regular-lh-16--letter-spacing: 0;
+  --text-body-14-bold-lh-24: 14px; /* figma:70321:352 */
+  --text-body-14-bold-lh-24--line-height: 24px;
+  --text-body-14-bold-lh-24--font-weight: 700;
+  --text-body-14-bold-lh-24--letter-spacing: 0;
+  --text-body-large-16-bold-lh-16: 16px; /* figma:70321:334 */
+  --text-body-large-16-bold-lh-16--line-height: 16px;
+  --text-body-large-16-bold-lh-16--font-weight: 700;
+  --text-body-large-16-bold-lh-16--letter-spacing: 0;
+  --text-body-large-16-medium-lh-16: 16px; /* figma:70321:333 */
+  --text-body-large-16-medium-lh-16--line-height: 16px;
+  --text-body-large-16-medium-lh-16--font-weight: 500;
+  --text-body-large-16-medium-lh-16--letter-spacing: 0;
+  --text-body-large-17-regular-lh-10: 17px; /* figma:70321:327 */
+  --text-body-large-17-regular-lh-10--line-height: 24px;
+  --text-body-large-17-regular-lh-10--font-weight: 400;
+  --text-body-large-17-regular-lh-10--letter-spacing: 0;
   --text-body-14-bold-lh-16: 14px; /* figma:70321:354 */
   --text-body-14-bold-lh-16--line-height: 16px;
   --text-body-14-bold-lh-16--font-weight: 700;
   --text-body-14-bold-lh-16--letter-spacing: 0;
+  --text-caption-12-regular-lh-16: 12px; /* figma:70321:362 */
+  --text-caption-12-regular-lh-16--line-height: 16px;
+  --text-caption-12-regular-lh-16--font-weight: 400;
+  --text-caption-12-regular-lh-16--letter-spacing: 0;
+  --text-body-15-regular-lh-15: 15px; /* figma:70321:341 */
+  --text-body-15-regular-lh-15--line-height: 15px;
+  --text-body-15-regular-lh-15--font-weight: 400;
+  --text-body-15-regular-lh-15--letter-spacing: 0;
+  --text-title-22-regular: 22px; /* figma:70321:311 */
+  --text-title-22-regular--line-height: 29px;
+  --text-title-22-regular--font-weight: 400;
+  --text-title-22-regular--letter-spacing: 0;
+  --text-body-14-regular-lh-15: 14px; /* figma:70321:355 */
+  --text-body-14-regular-lh-15--line-height: 15px;
+  --text-body-14-regular-lh-15--font-weight: 400;
+  --text-body-14-regular-lh-15--letter-spacing: 0;
+  --text-title-20-medium: 20px; /* figma:70321:316 */
+  --text-title-20-medium--line-height: 16px;
+  --text-title-20-medium--font-weight: 500;
+  --text-title-20-medium--letter-spacing: 0;
+  --text-caption-13-regular-lh-16: 13px; /* figma:70321:359 */
+  --text-caption-13-regular-lh-16--line-height: 16px;
+  --text-caption-13-regular-lh-16--font-weight: 400;
+  --text-caption-13-regular-lh-16--letter-spacing: 0;
+  --text-caption-13-medium: 13px; /* figma:70321:360 */
+  --text-caption-13-medium--line-height: 16px;
+  --text-caption-13-medium--font-weight: 500;
+  --text-caption-13-medium--letter-spacing: 0;
+  --text-body-15-regular-lh-45: 15px; /* figma:70321:342 */
+  --text-body-15-regular-lh-45--line-height: 45px;
+  --text-body-15-regular-lh-45--font-weight: 400;
+  --text-body-15-regular-lh-45--letter-spacing: 0;
+  --text-body-15-bold-lh-15: 15px; /* figma:70321:343 */
+  --text-body-15-bold-lh-15--line-height: 15px;
+  --text-body-15-bold-lh-15--font-weight: 700;
+  --text-body-15-bold-lh-15--letter-spacing: 0;
+  --text-caption-12-regular-lh-18: 12px; /* figma:70321:363 */
+  --text-caption-12-regular-lh-18--line-height: 18px;
+  --text-caption-12-regular-lh-18--font-weight: 400;
+  --text-caption-12-regular-lh-18--letter-spacing: 0;
+  --text-title-20-bold-lh-16: 20px; /* figma:70321:317 */
+  --text-title-20-bold-lh-16--line-height: 16px;
+  --text-title-20-bold-lh-16--font-weight: 700;
+  --text-title-20-bold-lh-16--letter-spacing: 0;
+  --text-body-large-18-medium: 18px; /* figma:70321:324 */
+  --text-body-large-18-medium--line-height: 25px;
+  --text-body-large-18-medium--font-weight: 500;
+  --text-body-large-18-medium--letter-spacing: 0;
+  --text-body-large-16-regular-lh-10: 16px; /* figma:70321:335 */
+  --text-body-large-16-regular-lh-10--line-height: 22px;
+  --text-body-large-16-regular-lh-10--font-weight: 400;
+  --text-body-large-16-regular-lh-10--letter-spacing: 0;
+  --text-title-21-regular: 21px; /* figma:70321:312 */
+  --text-title-21-regular--line-height: 16px;
+  --text-title-21-regular--font-weight: 400;
+  --text-title-21-regular--letter-spacing: 0;
+  --text-body-14-bold-lh-auto-ls-0: 14px; /* figma:70321:356 */
+  --text-body-14-bold-lh-auto-ls-0--line-height: normal;
+  --text-body-14-bold-lh-auto-ls-0--font-weight: 700;
+  --text-body-14-bold-lh-auto-ls-0--letter-spacing: 0;
+  --text-display-32-bold: 32px; /* figma:70321:302 */
+  --text-display-32-bold--line-height: normal;
+  --text-display-32-bold--font-weight: 700;
+  --text-display-32-bold--letter-spacing: 0.1em;
+  --text-heading-26-bold: 26px; /* figma:70321:306 */
+  --text-heading-26-bold--line-height: 32px;
+  --text-heading-26-bold--font-weight: 700;
+  --text-heading-26-bold--letter-spacing: 0;
+  --text-title-23-bold: 23px; /* figma:70321:309 */
+  --text-title-23-bold--line-height: 16px;
+  --text-title-23-bold--font-weight: 700;
+  --text-title-23-bold--letter-spacing: 0;
+  --text-body-large-19-bold: 19px; /* figma:70321:318 */
+  --text-body-large-19-bold--line-height: 29px;
+  --text-body-large-19-bold--font-weight: 700;
+  --text-body-large-19-bold--letter-spacing: 0;
+  --text-body-large-18-light: 18px; /* figma:70321:321 */
+  --text-body-large-18-light--line-height: 16px;
+  --text-body-large-18-light--font-weight: 300;
+  --text-body-large-18-light--letter-spacing: 0;
+  --text-tiny-11-medium: 11px; /* figma:70321:365 */
+  --text-tiny-11-medium--line-height: 16px;
+  --text-tiny-11-medium--font-weight: 500;
+  --text-tiny-11-medium--letter-spacing: 0;
 
   /* raios */
   --radius-3: 3px; /* figma:70386:262 */
