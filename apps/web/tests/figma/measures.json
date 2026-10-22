@@ -1,0 +1,953 @@
+{
+  "header.top": {
+    "value": 24,
+    "node": "70522:3240",
+    "ref": "2:2",
+    "prop": "relTop",
+    "source": "docs/figma/file.json:35"
+  },
+  "header.logo.w": {
+    "value": 160,
+    "node": "I70522:3240;70504:3015;70486:509",
+    "prop": "w",
+    "source": "docs/figma/file.json:87"
+  },
+  "header.logo.h": {
+    "value": 34.29999923706055,
+    "node": "I70522:3240;70504:3015;70486:509",
+    "prop": "h",
+    "source": "docs/figma/file.json:87"
+  },
+  "header.brand.font": {
+    "value": "Roboto Mono",
+    "node": "I70522:3240;70504:3015;70486:510",
+    "prop": "font",
+    "source": "docs/figma/file.json:101"
+  },
+  "header.brand.fs": {
+    "value": 14,
+    "node": "I70522:3240;70504:3015;70486:510",
+    "prop": "fs",
+    "source": "docs/figma/file.json:101"
+  },
+  "header.brand.fw": {
+    "value": 700,
+    "node": "I70522:3240;70504:3015;70486:510",
+    "prop": "fw",
+    "source": "docs/figma/file.json:101"
+  },
+  "header.brand.fill": {
+    "value": "#f5f1eb",
+    "node": "I70522:3240;70504:3015;70486:510",
+    "prop": "fill",
+    "source": "docs/figma/file.json:101"
+  },
+  "header.nav.gap": {
+    "value": 40,
+    "node": "I70522:3240;70504:3015;70486:511",
+    "prop": "gap",
+    "source": "docs/figma/file.json:309"
+  },
+  "header.navItem.h": {
+    "value": 45.000003814697266,
+    "node": "I70522:3240;70504:3015;70486:512",
+    "prop": "h",
+    "source": "docs/figma/file.json:52"
+  },
+  "header.navActive.fs": {
+    "value": 16,
+    "node": "I70522:3240;70504:3015;70486:513",
+    "prop": "fs",
+    "source": "docs/figma/file.json:321"
+  },
+  "header.navActive.fw": {
+    "value": 700,
+    "node": "I70522:3240;70504:3015;70486:513",
+    "prop": "fw",
+    "source": "docs/figma/file.json:321"
+  },
+  "header.navActive.lh": {
+    "value": 21.1015625,
+    "node": "I70522:3240;70504:3015;70486:513",
+    "prop": "lh",
+    "source": "docs/figma/file.json:321"
+  },
+  "header.navActive.fill": {
+    "value": "#e89b55",
+    "node": "I70522:3240;70504:3015;70486:513",
+    "prop": "fill",
+    "source": "docs/figma/file.json:321"
+  },
+  "header.navActive.underlineW": {
+    "value": 3,
+    "node": "I70522:3240;70504:3015;70486:514",
+    "prop": "strokeW",
+    "source": "docs/figma/file.json:434"
+  },
+  "header.navActive.underlineFill": {
+    "value": "#d28a4c",
+    "node": "I70522:3240;70504:3015;70486:514",
+    "prop": "stroke",
+    "source": "docs/figma/file.json:434"
+  },
+  "header.navInactive.fs": {
+    "value": 16,
+    "node": "I70522:3240;70504:3015;70486:515",
+    "prop": "fs",
+    "source": "docs/figma/file.json:584"
+  },
+  "header.navInactive.fw": {
+    "value": 400,
+    "node": "I70522:3240;70504:3015;70486:515",
+    "prop": "fw",
+    "source": "docs/figma/file.json:584"
+  },
+  "header.navInactive.lh": {
+    "value": 21.1015625,
+    "node": "I70522:3240;70504:3015;70486:515",
+    "prop": "lh",
+    "source": "docs/figma/file.json:584"
+  },
+  "header.navInactive.fill": {
+    "value": "#f5f1eb",
+    "node": "I70522:3240;70504:3015;70486:515",
+    "prop": "fill",
+    "source": "docs/figma/file.json:584"
+  },
+  "header.actions.gap": {
+    "value": 28,
+    "node": "I70522:3240;70504:3015;70486:518",
+    "prop": "gap",
+    "source": "docs/figma/file.json:989"
+  },
+  "header.search.w": {
+    "value": 20.00094985961914,
+    "node": "I70522:3240;70504:3015;70486:519",
+    "prop": "w",
+    "source": "docs/figma/file.json:995"
+  },
+  "header.cart.w": {
+    "value": 24.004182815551758,
+    "node": "I70522:3240;70504:3015;70486:521",
+    "prop": "w",
+    "source": "docs/figma/file.json:1467"
+  },
+  "header.login.w": {
+    "value": 100,
+    "node": "I70522:3240;70504:3015;70486:525",
+    "prop": "w",
+    "source": "docs/figma/file.json:2585"
+  },
+  "header.login.h": {
+    "value": 35,
+    "node": "I70522:3240;70504:3015;70486:525",
+    "prop": "h",
+    "source": "docs/figma/file.json:2585"
+  },
+  "header.login.radius": {
+    "value": 6,
+    "node": "I70522:3240;70504:3015;70486:525",
+    "prop": "radius",
+    "source": "docs/figma/file.json:2585"
+  },
+  "header.login.fill": {
+    "value": "#d28a4c",
+    "node": "I70522:3240;70504:3015;70486:525",
+    "prop": "fill",
+    "source": "docs/figma/file.json:2585"
+  },
+  "header.login.gap": {
+    "value": 4,
+    "node": "I70522:3240;70504:3015;70486:526",
+    "prop": "gap",
+    "source": "docs/figma/file.json:2599"
+  },
+  "header.login.fs": {
+    "value": 16,
+    "node": "I70522:3240;70504:3015;70486:528",
+    "prop": "fs",
+    "source": "docs/figma/file.json:3271"
+  },
+  "header.login.fw": {
+    "value": 500,
+    "node": "I70522:3240;70504:3015;70486:528",
+    "prop": "fw",
+    "source": "docs/figma/file.json:3271"
+  },
+  "header.login.fill.text": {
+    "value": "#140d0a",
+    "node": "I70522:3240;70504:3015;70486:528",
+    "prop": "fill",
+    "source": "docs/figma/file.json:3271"
+  },
+  "header.divider.stroke": {
+    "value": "#d28a4c",
+    "node": "I70522:3240;70504:3016",
+    "prop": "stroke",
+    "source": "docs/figma/file.json:3737"
+  },
+  "header.divider.w": {
+    "value": 0.30000001192092896,
+    "node": "I70522:3240;70504:3016",
+    "prop": "strokeW",
+    "source": "docs/figma/file.json:3737"
+  },
+  "hero.h": {
+    "value": 450,
+    "node": "70347:239",
+    "prop": "h",
+    "source": "docs/figma/file.json:3885"
+  },
+  "hero.padL": {
+    "value": 40,
+    "node": "70347:239",
+    "prop": "padL",
+    "source": "docs/figma/file.json:3885"
+  },
+  "hero.gap": {
+    "value": 110,
+    "node": "70342:2674",
+    "prop": "gap",
+    "source": "docs/figma/file.json:4041"
+  },
+  "hero.copy.w": {
+    "value": 600,
+    "node": "70342:2672",
+    "prop": "w",
+    "source": "docs/figma/file.json:4047"
+  },
+  "hero.copy.top": {
+    "value": 43,
+    "node": "70342:2672",
+    "ref": "70347:239",
+    "prop": "relTop",
+    "source": "docs/figma/file.json:4047"
+  },
+  "hero.image.w": {
+    "value": 450,
+    "node": "70342:2673",
+    "prop": "w",
+    "source": "docs/figma/file.json:5244"
+  },
+  "hero.image.h": {
+    "value": 450,
+    "node": "70342:2673",
+    "prop": "h",
+    "source": "docs/figma/file.json:5244"
+  },
+  "hero.image.radius": {
+    "value": 24,
+    "node": "70342:2673",
+    "prop": "radius",
+    "source": "docs/figma/file.json:5244"
+  },
+  "hero.eyebrow.fs": {
+    "value": 14,
+    "node": "3:113",
+    "prop": "fs",
+    "source": "docs/figma/file.json:4071"
+  },
+  "hero.eyebrow.fw": {
+    "value": 500,
+    "node": "3:113",
+    "prop": "fw",
+    "source": "docs/figma/file.json:4071"
+  },
+  "hero.eyebrow.lh": {
+    "value": 16,
+    "node": "3:113",
+    "prop": "lh",
+    "source": "docs/figma/file.json:4071"
+  },
+  "hero.title.font": {
+    "value": "Roboto Mono",
+    "node": "3:107",
+    "prop": "font",
+    "source": "docs/figma/file.json:4185"
+  },
+  "hero.title.fs": {
+    "value": 43,
+    "node": "3:107",
+    "prop": "fs",
+    "source": "docs/figma/file.json:4185"
+  },
+  "hero.title.fw": {
+    "value": 700,
+    "node": "3:107",
+    "prop": "fw",
+    "source": "docs/figma/file.json:4185"
+  },
+  "hero.title.lh": {
+    "value": 70,
+    "node": "3:107",
+    "prop": "lh",
+    "source": "docs/figma/file.json:4185"
+  },
+  "hero.title.fill": {
+    "value": "#f5f1eb",
+    "node": "3:107",
+    "prop": "fill",
+    "source": "docs/figma/file.json:4185"
+  },
+  "hero.text.fs": {
+    "value": 14,
+    "node": "3:114",
+    "prop": "fs",
+    "source": "docs/figma/file.json:4363"
+  },
+  "hero.text.lh": {
+    "value": 24,
+    "node": "3:114",
+    "prop": "lh",
+    "source": "docs/figma/file.json:4363"
+  },
+  "hero.text.w": {
+    "value": 557,
+    "node": "3:114",
+    "prop": "w",
+    "source": "docs/figma/file.json:4363"
+  },
+  "hero.text.fill": {
+    "value": "#cfb28c",
+    "node": "3:114",
+    "prop": "fill",
+    "source": "docs/figma/file.json:4363"
+  },
+  "hero.gap.eyebrowTitle": {
+    "value": 8,
+    "node": "3:107",
+    "ref": "3:113",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:4185"
+  },
+  "hero.gap.titleText": {
+    "value": 4,
+    "node": "3:114",
+    "ref": "3:107",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:4363"
+  },
+  "hero.gap.textButton": {
+    "value": 32,
+    "node": "70342:2667",
+    "ref": "3:114",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:4539"
+  },
+  "hero.button.w": {
+    "value": 140,
+    "node": "70342:2667",
+    "prop": "w",
+    "source": "docs/figma/file.json:4539"
+  },
+  "hero.button.h": {
+    "value": 40,
+    "node": "70342:2667",
+    "prop": "h",
+    "source": "docs/figma/file.json:4539"
+  },
+  "hero.button.radius": {
+    "value": 6,
+    "node": "70342:2667",
+    "prop": "radius",
+    "source": "docs/figma/file.json:4539"
+  },
+  "hero.button.fill": {
+    "value": "#d28a4c",
+    "node": "70342:2667",
+    "prop": "fill",
+    "source": "docs/figma/file.json:4539"
+  },
+  "hero.button.fs": {
+    "value": 16,
+    "node": "3:127",
+    "prop": "fs",
+    "source": "docs/figma/file.json:4553"
+  },
+  "hero.button.fw": {
+    "value": 700,
+    "node": "3:127",
+    "prop": "fw",
+    "source": "docs/figma/file.json:4553"
+  },
+  "hero.button.lh": {
+    "value": 20,
+    "node": "3:127",
+    "prop": "lh",
+    "source": "docs/figma/file.json:4553"
+  },
+  "hero.button.fill.text": {
+    "value": "#140d0a",
+    "node": "3:127",
+    "prop": "fill",
+    "source": "docs/figma/file.json:4553"
+  },
+  "hero.dot.w": {
+    "value": 8,
+    "node": "3:128",
+    "prop": "w",
+    "source": "docs/figma/file.json:4849"
+  },
+  "hero.dot.pitch": {
+    "value": 16,
+    "node": "3:128",
+    "ref": "3:130",
+    "prop": "relLeft",
+    "source": "docs/figma/file.json:4849"
+  },
+  "hero.dot.bottom": {
+    "value": 43,
+    "node": "3:128",
+    "ref": "70347:239",
+    "prop": "relBottom",
+    "source": "docs/figma/file.json:4849"
+  },
+  "hero.dot.left": {
+    "value": 600,
+    "node": "3:130",
+    "ref": "70347:239",
+    "prop": "relLeft",
+    "source": "docs/figma/file.json:5025"
+  },
+  "hero.dot.fill": {
+    "value": "#d28a4c",
+    "node": "3:128",
+    "prop": "fill",
+    "source": "docs/figma/file.json:4849"
+  },
+  "heroM.left": {
+    "value": 24,
+    "node": "70395:240",
+    "ref": "14:5226",
+    "prop": "relLeft",
+    "source": "docs/figma/file.json:276628"
+  },
+  "heroM.h": {
+    "value": 190,
+    "node": "70395:240",
+    "prop": "h",
+    "source": "docs/figma/file.json:276628"
+  },
+  "heroM.padL": {
+    "value": 16,
+    "node": "70395:240",
+    "prop": "padL",
+    "source": "docs/figma/file.json:276628"
+  },
+  "heroM.gap": {
+    "value": 8,
+    "node": "70410:4129",
+    "prop": "gap",
+    "source": "docs/figma/file.json:277088"
+  },
+  "heroM.image.w": {
+    "value": 138,
+    "node": "14:5238",
+    "prop": "w",
+    "source": "docs/figma/file.json:278257"
+  },
+  "heroM.image.h": {
+    "value": 138,
+    "node": "14:5238",
+    "prop": "h",
+    "source": "docs/figma/file.json:278257"
+  },
+  "heroM.image.radius": {
+    "value": 16,
+    "node": "14:5238",
+    "prop": "radius",
+    "source": "docs/figma/file.json:278257"
+  },
+  "heroM.eyebrow.fs": {
+    "value": 12,
+    "node": "14:5288",
+    "prop": "fs",
+    "source": "docs/figma/file.json:277106"
+  },
+  "heroM.eyebrow.fw": {
+    "value": 500,
+    "node": "14:5288",
+    "prop": "fw",
+    "source": "docs/figma/file.json:277106"
+  },
+  "heroM.eyebrow.lh": {
+    "value": 16,
+    "node": "14:5288",
+    "prop": "lh",
+    "source": "docs/figma/file.json:277106"
+  },
+  "heroM.title.fs": {
+    "value": 18,
+    "node": "14:5234",
+    "prop": "fs",
+    "source": "docs/figma/file.json:277219"
+  },
+  "heroM.title.fw": {
+    "value": 700,
+    "node": "14:5234",
+    "prop": "fw",
+    "source": "docs/figma/file.json:277219"
+  },
+  "heroM.title.lh": {
+    "value": 29,
+    "node": "14:5234",
+    "prop": "lh",
+    "source": "docs/figma/file.json:277219"
+  },
+  "heroM.text.fs": {
+    "value": 12,
+    "node": "14:5289",
+    "prop": "fs",
+    "source": "docs/figma/file.json:277334"
+  },
+  "heroM.text.lh": {
+    "value": 18,
+    "node": "14:5289",
+    "prop": "lh",
+    "source": "docs/figma/file.json:277334"
+  },
+  "heroM.text.fill": {
+    "value": "#cfb28c",
+    "node": "14:5289",
+    "prop": "fill",
+    "source": "docs/figma/file.json:277334"
+  },
+  "heroM.gap.eyebrowTitle": {
+    "value": 6,
+    "node": "14:5234",
+    "ref": "14:5288",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:277219"
+  },
+  "heroM.gap.titleText": {
+    "value": 6,
+    "node": "14:5289",
+    "ref": "14:5234",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:277334"
+  },
+  "heroM.explore.fs": {
+    "value": 12,
+    "node": "15:5294",
+    "prop": "fs",
+    "source": "docs/figma/file.json:277516"
+  },
+  "heroM.explore.fw": {
+    "value": 700,
+    "node": "15:5294",
+    "prop": "fw",
+    "source": "docs/figma/file.json:277516"
+  },
+  "heroM.explore.fill": {
+    "value": "#e89b55",
+    "node": "15:5294",
+    "prop": "fill",
+    "source": "docs/figma/file.json:277516"
+  },
+  "side.w": {
+    "value": 310,
+    "node": "70485:382",
+    "prop": "w",
+    "source": "docs/figma/file.json:5563"
+  },
+  "side.padL": {
+    "value": 20,
+    "node": "70485:382",
+    "prop": "padL",
+    "source": "docs/figma/file.json:5563"
+  },
+  "side.padT": {
+    "value": 20,
+    "node": "70485:382",
+    "prop": "padT",
+    "source": "docs/figma/file.json:5563"
+  },
+  "side.radius": {
+    "value": 0,
+    "node": "70485:382",
+    "prop": "radius",
+    "source": "docs/figma/file.json:5563"
+  },
+  "side.fill": {
+    "value": "#241612",
+    "node": "70485:382",
+    "prop": "fill",
+    "source": "docs/figma/file.json:5563"
+  },
+  "side.gap.groups": {
+    "value": 40,
+    "node": "I70485:382;70485:357",
+    "ref": "I70485:382;70485:318",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:9131"
+  },
+  "side.title.fs": {
+    "value": 18,
+    "node": "I70485:382;70485:319",
+    "prop": "fs",
+    "source": "docs/figma/file.json:5591"
+  },
+  "side.title.fw": {
+    "value": 700,
+    "node": "I70485:382;70485:319",
+    "prop": "fw",
+    "source": "docs/figma/file.json:5591"
+  },
+  "side.title.fill": {
+    "value": "#f5f1eb",
+    "node": "I70485:382;70485:319",
+    "prop": "fill",
+    "source": "docs/figma/file.json:5591"
+  },
+  "side.gap.titleList": {
+    "value": 12,
+    "node": "I70485:382;70485:320",
+    "ref": "I70485:382;70485:319",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:5705"
+  },
+  "side.row.h": {
+    "value": 40,
+    "node": "I70485:382;70485:321",
+    "prop": "h",
+    "source": "docs/figma/file.json:5711"
+  },
+  "side.row.fs": {
+    "value": 15,
+    "node": "I70485:382;70485:323",
+    "prop": "fs",
+    "source": "docs/figma/file.json:5723"
+  },
+  "side.networkRow.h": {
+    "value": 40,
+    "node": "I70485:382;70485:372",
+    "prop": "h",
+    "source": "docs/figma/file.json:10426"
+  },
+  "side.price.fs": {
+    "value": 15,
+    "node": "I70485:382;70485:366",
+    "prop": "fs",
+    "source": "docs/figma/file.json:9751"
+  },
+  "side.price.fill": {
+    "value": "#f5f1eb",
+    "node": "I70485:382;70485:366",
+    "prop": "fill",
+    "source": "docs/figma/file.json:9751"
+  },
+  "side.apply.w": {
+    "value": 92,
+    "node": "I70485:382;70485:367",
+    "prop": "w",
+    "source": "docs/figma/file.json:9927"
+  },
+  "side.apply.h": {
+    "value": 36,
+    "node": "I70485:382;70485:367",
+    "prop": "h",
+    "source": "docs/figma/file.json:9927"
+  },
+  "side.apply.radius": {
+    "value": 6,
+    "node": "I70485:382;70485:367",
+    "prop": "radius",
+    "source": "docs/figma/file.json:9927"
+  },
+  "side.apply.fill": {
+    "value": "#d28a4c",
+    "node": "I70485:382;70485:367",
+    "prop": "fill",
+    "source": "docs/figma/file.json:9927"
+  },
+  "side.apply.fs": {
+    "value": 16,
+    "node": "I70485:382;70485:368",
+    "prop": "fs",
+    "source": "docs/figma/file.json:9941"
+  },
+  "side.apply.fw": {
+    "value": 700,
+    "node": "I70485:382;70485:368",
+    "prop": "fw",
+    "source": "docs/figma/file.json:9941"
+  },
+  "side.thumb.w": {
+    "value": 15,
+    "node": "I70485:382;70485:361",
+    "prop": "w",
+    "source": "docs/figma/file.json:9263"
+  },
+  "sideM.filterButton.w": {
+    "value": 45,
+    "node": "70410:4122",
+    "prop": "w",
+    "source": "docs/figma/file.json:275558"
+  },
+  "sideM.filterButton.h": {
+    "value": 45,
+    "node": "70410:4122",
+    "prop": "h",
+    "source": "docs/figma/file.json:275558"
+  },
+  "sideM.filterButton.radius": {
+    "value": 14,
+    "node": "70410:4122",
+    "prop": "radius",
+    "source": "docs/figma/file.json:275558"
+  },
+  "toolbar.tabs.gap": {
+    "value": 20,
+    "node": "70351:240",
+    "prop": "gap",
+    "source": "docs/figma/file.json:12737"
+  },
+  "toolbar.tab.fs": {
+    "value": 15,
+    "node": "4:138",
+    "prop": "fs",
+    "source": "docs/figma/file.json:12743"
+  },
+  "toolbar.tab.fw": {
+    "value": 500,
+    "node": "4:138",
+    "prop": "fw",
+    "source": "docs/figma/file.json:12743"
+  },
+  "toolbar.tabActive.fill": {
+    "value": "#e89b55",
+    "node": "4:138",
+    "prop": "fill",
+    "source": "docs/figma/file.json:12743"
+  },
+  "toolbar.tabInactive.fill": {
+    "value": "#f5f1eb",
+    "node": "4:144",
+    "prop": "fill",
+    "source": "docs/figma/file.json:12857"
+  },
+  "toolbar.underline.w": {
+    "value": 2,
+    "node": "4:146",
+    "prop": "strokeW",
+    "source": "docs/figma/file.json:13914"
+  },
+  "toolbar.underline.fill": {
+    "value": "#d28a4c",
+    "node": "4:146",
+    "prop": "stroke",
+    "source": "docs/figma/file.json:13914"
+  },
+  "toolbar.sort.fs": {
+    "value": 15,
+    "node": "4:147",
+    "prop": "fs",
+    "source": "docs/figma/file.json:13157"
+  },
+  "toolbar.sort.fw": {
+    "value": 400,
+    "node": "4:147",
+    "prop": "fw",
+    "source": "docs/figma/file.json:13157"
+  },
+  "toolbar.sort.fill": {
+    "value": "#f5f1eb",
+    "node": "4:147",
+    "prop": "fill",
+    "source": "docs/figma/file.json:13157"
+  },
+  "toolbar.sort.w": {
+    "value": 300,
+    "node": "70351:241",
+    "prop": "w",
+    "source": "docs/figma/file.json:13151"
+  },
+  "toolbar.gap.grid": {
+    "value": 32,
+    "node": "70342:2828",
+    "ref": "70351:239",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:14065"
+  },
+  "toolbarM.tabs.gap": {
+    "value": 16,
+    "node": "70367:2847",
+    "prop": "gap",
+    "source": "docs/figma/file.json:279271"
+  },
+  "toolbarM.tabActive.fs": {
+    "value": 14,
+    "node": "15:5361",
+    "prop": "fs",
+    "source": "docs/figma/file.json:279009"
+  },
+  "toolbarM.tabActive.fw": {
+    "value": 700,
+    "node": "15:5361",
+    "prop": "fw",
+    "source": "docs/figma/file.json:279009"
+  },
+  "toolbarM.tabActive.fill": {
+    "value": "#e89b55",
+    "node": "15:5361",
+    "prop": "fill",
+    "source": "docs/figma/file.json:279009"
+  },
+  "toolbarM.tabInactive.fs": {
+    "value": 14,
+    "node": "15:5363",
+    "prop": "fs",
+    "source": "docs/figma/file.json:279391"
+  },
+  "toolbarM.tabInactive.fw": {
+    "value": 400,
+    "node": "15:5363",
+    "prop": "fw",
+    "source": "docs/figma/file.json:279391"
+  },
+  "toolbarM.underline.w": {
+    "value": 2,
+    "node": "15:5366",
+    "prop": "strokeW",
+    "source": "docs/figma/file.json:279123"
+  },
+  "toolbarM.gap.grid": {
+    "value": 16,
+    "node": "70395:242",
+    "ref": "70395:241",
+    "prop": "gapBelow",
+    "source": "docs/figma/file.json:279695"
+  },
+  "grid.w": {
+    "value": 842,
+    "node": "70342:2830",
+    "prop": "w",
+    "source": "docs/figma/file.json:12719"
+  },
+  "grid.col.w": {
+    "value": 258,
+    "node": "70342:2678",
+    "prop": "w",
+    "source": "docs/figma/file.json:14077"
+  },
+  "grid.gap.col": {
+    "value": 32,
+    "node": "70342:2802",
+    "prop": "gap",
+    "source": "docs/figma/file.json:14071"
+  },
+  "grid.gap.row": {
+    "value": 72,
+    "node": "70342:2828",
+    "prop": "gap",
+    "source": "docs/figma/file.json:14065"
+  },
+  "gridM.gap.col": {
+    "value": 16,
+    "node": "70395:242",
+    "prop": "gap",
+    "source": "docs/figma/file.json:279695"
+  },
+  "gridM.gap.row": {
+    "value": 24,
+    "node": "70395:243",
+    "prop": "gap",
+    "source": "docs/figma/file.json:279701"
+  },
+  "gridM.colR.offset": {
+    "value": 32,
+    "node": "70395:244",
+    "prop": "padT",
+    "source": "docs/figma/file.json:282416"
+  },
+  "tabbar.bar.h": {
+    "value": 94.94999694824219,
+    "node": "15:5504",
+    "prop": "h",
+    "source": "docs/figma/file.json:285940"
+  },
+  "tabbar.bar.fill": {
+    "value": "#241612",
+    "node": "15:5504",
+    "prop": "fill",
+    "source": "docs/figma/file.json:285940"
+  },
+  "tabbar.bar.shadow": {
+    "value": {
+      "rgb": [
+        10,
+        6,
+        4
+      ],
+      "alpha": 0.45,
+      "x": 0,
+      "y": -10,
+      "blur": 30
+    },
+    "node": "15:5504",
+    "prop": "shadow",
+    "source": "docs/figma/file.json:285940"
+  },
+  "tabbar.center.w": {
+    "value": 65,
+    "node": "15:5507",
+    "prop": "w",
+    "source": "docs/figma/file.json:286292"
+  },
+  "tabbar.center.h": {
+    "value": 65,
+    "node": "15:5507",
+    "prop": "h",
+    "source": "docs/figma/file.json:286292"
+  },
+  "tabbar.center.rise": {
+    "value": 31,
+    "node": "15:5504",
+    "ref": "15:5507",
+    "prop": "relTop",
+    "source": "docs/figma/file.json:285940"
+  },
+  "tabbar.icon.w": {
+    "value": 20,
+    "node": "15:5519",
+    "prop": "w",
+    "source": "docs/figma/file.json:286391"
+  },
+  "tabbar.icon.h": {
+    "value": 20,
+    "node": "15:5519",
+    "prop": "h",
+    "source": "docs/figma/file.json:286391"
+  },
+  "tabbar.icon.fill": {
+    "value": "#cfb28c",
+    "node": "15:5523",
+    "prop": "fill",
+    "source": "docs/figma/file.json:287165"
+  },
+  "tabbar.home.left": {
+    "value": 36,
+    "node": "15:5519",
+    "ref": "15:5504",
+    "prop": "relLeft",
+    "source": "docs/figma/file.json:286391"
+  },
+  "tabbar.scan.w": {
+    "value": 26.82270622253418,
+    "node": "15:5529",
+    "prop": "w",
+    "source": "docs/figma/file.json:288730"
+  },
+  "tabbar.scan.h": {
+    "value": 24,
+    "node": "15:5529",
+    "prop": "h",
+    "source": "docs/figma/file.json:288730"
+  },
+  "tabbar.scan.fill": {
+    "value": "#f5f1eb",
+    "node": "15:5530",
+    "prop": "fill",
+    "source": "docs/figma/file.json:288736"
+  }
+}
