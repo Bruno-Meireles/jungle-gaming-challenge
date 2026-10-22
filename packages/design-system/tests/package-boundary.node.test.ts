@@ -43,6 +43,21 @@ describe('fronteira do pacote design-system', () => {
     ]);
   });
 
+  it.each([
+    'i18next',
+    'react-i18next',
+    'react-intl',
+    'use-intl',
+    'next-intl',
+    'typesafe-i18n',
+    '@formatjs/intl',
+    '@lingui/core',
+  ])('detecta %s proibido', (name) => {
+    expect(findForbiddenDependencies({ dependencies: { [name]: '1.0.0' } })).toEqual([
+      `dependencies:${name}`,
+    ]);
+  });
+
   it('nao acusa dependencias permitidas', () => {
     expect(findForbiddenDependencies({ dependencies: { clsx: '2.1.1' } })).toEqual([]);
   });
