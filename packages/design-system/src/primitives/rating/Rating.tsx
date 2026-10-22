@@ -1,4 +1,6 @@
-export type RatingProps = {
+import type { ComponentProps } from 'react';
+
+export type RatingProps = Omit<ComponentProps<'div'>, 'children'> & {
   value: number;
   max: 5;
   label: string;
