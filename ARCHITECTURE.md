@@ -67,3 +67,5 @@ Registro de decisões duradouras e desvios (formato: contexto, decisão, alterna
 - Overlay do Dialog: derivado da cor-base das sombras do DS (sem fonte no Figma).
 
 **ADR-16 (adendo, item 22 da Home): bootstrap dos mocks.** `msw 2.15.0` já instalado; `public/mockServiceWorker.js` gerado por `msw init` (sem `--save`). `app/bootstrap/enable-mocks.ts` importa `mocks/browser` dinamicamente só com `VITE_ENABLE_MOCKS=true` (`.env.production` versionado com `true`, exceção no `.gitignore`). A UI não espera o worker: as buscas do TanStack Query ficam pausadas via `onlineManager` até ele iniciar. Sem dependência nova.
+
+**ADR-16 (adendo, item 38 da Home): `@axe-core/playwright` 4.14.0 em `apps/web` (devDependency, versão fixa).** Verificação automática de acessibilidade nos E2E da Home (`e2e/home-axe.spec.ts`). Usa o `axe-core` 4.14.0 já fixado no design system (peer `playwright-core >= 1.0.0`, compatível com `@playwright/test` 1.64.1). Pré-autorizada pelo `CLAUDE.md` (necessária ao enunciado §8).
