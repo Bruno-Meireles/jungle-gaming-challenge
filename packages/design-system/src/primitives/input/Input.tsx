@@ -37,7 +37,7 @@ export function Input({ className, startSlot, endSlot, ...props }: InputProps) {
       <input
         data-slot="input-control"
         className={cn(
-          'min-w-0 flex-1 bg-transparent text-body-large-16-regular-lh-16 text-foreground outline-none',
+          'min-w-0 flex-1 bg-transparent text-body-large-16-regular-lh-16 text-foreground outline-transparent',
           'placeholder:text-body-14-regular-lh-16 placeholder:text-secondary',
           'disabled:cursor-not-allowed disabled:text-disabled-text',
         )}

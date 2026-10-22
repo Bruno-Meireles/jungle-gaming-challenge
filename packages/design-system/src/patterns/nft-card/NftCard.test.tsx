@@ -65,7 +65,9 @@ describe('NftCard - foco visivel do card clicavel (C25.1)', () => {
     await userEvent.tab();
     const link = document.activeElement as HTMLElement;
     expect(link.tagName).toBe('A');
-    expect(getComputedStyle(link).outlineStyle).toBe('none');
+    // O link mantem contorno proprio transparente (visivel em modo de alto contraste); o anel visivel e o do ::after.
+    const own = getComputedStyle(link);
+    expect([own.outlineStyle, own.outlineColor]).toEqual(['solid', 'rgba(0, 0, 0, 0)']);
     const after = getComputedStyle(link, '::after');
     expect([after.outlineStyle, after.outlineWidth, after.outlineColor]).toEqual([
       'solid',

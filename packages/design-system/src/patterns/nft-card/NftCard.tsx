@@ -25,7 +25,7 @@ export function NftCard({ title, priceLabel, image, badge, action, link }: NftCa
         link,
         {
           className: cn(
-            'block after:absolute after:inset-0 after:content-[""] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-solid focus-visible:after:outline-offset-2 focus-visible:after:outline-focus',
+            'block after:absolute after:inset-0 after:content-[""] focus-visible:outline-transparent focus-visible:after:outline-2 focus-visible:after:outline-solid focus-visible:after:outline-offset-2 focus-visible:after:outline-focus',
             link.props.className,
           ),
         },
