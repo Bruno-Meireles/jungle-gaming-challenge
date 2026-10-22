@@ -23,7 +23,12 @@ export function NftCard({ title, priceLabel, image, badge, action, link }: NftCa
   const heading = isValidElement<LinkProps>(link)
     ? cloneElement(
         link,
-        { className: cn('block after:absolute after:inset-0 after:content-[""]', link.props.className) },
+        {
+          className: cn(
+            'block after:absolute after:inset-0 after:content-[""] focus-visible:outline-none focus-visible:after:outline-2 focus-visible:after:outline-solid focus-visible:after:outline-offset-2 focus-visible:after:outline-focus',
+            link.props.className,
+          ),
+        },
         title,
       )
     : title;
