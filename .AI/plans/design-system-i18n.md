@@ -176,7 +176,7 @@ Biblioteca de i18n, providers, chaves e locales, seletor de idioma, `<html lang>
 - [x] T4.r + T4 Alert: RED `8c2b93a`, `29aa5f9`; GREEN `5e237dc`
 - [x] T5.r + T5 Breadcrumb: RED `e003d18`, `45e5438`; GREEN `4d716b2`
 - [x] T6.r + T6 Pagination: RED `cba4835`, `0ec1b49`; GREEN `b225086`
-- [ ] G2.a package.json sem lib de i18n
+- [x] G2.a package.json sem lib de i18n: RED `a2416ad` (8 falhas por asserção), GREEN (21/21, typecheck e lint limpos)
 - [ ] G2.b src sem APIs de locale
 - [ ] G2.c lint barra import de i18n
 - [ ] G1.m e G2.m mutações

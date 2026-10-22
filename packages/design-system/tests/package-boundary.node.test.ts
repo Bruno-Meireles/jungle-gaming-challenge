@@ -9,8 +9,19 @@ const DEPENDENCY_FIELDS = [
   'optionalDependencies',
 ] as const;
 
-const FORBIDDEN_EXACT = ['@jg/web', 'axios', 'msw', 'socket.io-client'];
-const FORBIDDEN_SCOPES = ['@tanstack/'];
+const FORBIDDEN_EXACT = [
+  '@jg/web',
+  'axios',
+  'msw',
+  'socket.io-client',
+  'i18next',
+  'react-i18next',
+  'react-intl',
+  'use-intl',
+  'next-intl',
+  'typesafe-i18n',
+];
+const FORBIDDEN_SCOPES = ['@tanstack/', '@formatjs/', '@lingui/'];
 
 type PackageJson = Partial<Record<(typeof DEPENDENCY_FIELDS)[number], Record<string, string>>>;
 
