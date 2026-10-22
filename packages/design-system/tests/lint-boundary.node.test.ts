@@ -35,6 +35,18 @@ describe('fronteira do design system (lint)', () => {
   });
 });
 
+describe('design system agnostico de idioma (lint)', () => {
+  it.each([
+    "import i18n from 'i18next';\nexport const x = i18n;\n",
+    "import { useTranslation } from 'react-i18next';\nexport const x = useTranslation;\n",
+    "import { createIntl } from '@formatjs/intl';\nexport const x = createIntl;\n",
+  ])('reporta no-restricted-imports para lib de i18n no design system: %s', async (code) => {
+    const messages = await lint(code, 'packages/design-system/src/x.ts');
+
+    expect(messages.map((m) => m.ruleId)).toContain('no-restricted-imports');
+  });
+});
+
 describe('camadas internas do design system (lint)', () => {
   it.each(['../../patterns/nft-card', '../../patterns'])(
     'reporta no-restricted-imports para primitive importando %s',
