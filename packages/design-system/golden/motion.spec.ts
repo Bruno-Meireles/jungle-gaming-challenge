@@ -14,6 +14,36 @@ async function animationName(page: Page): Promise<string> {
   return skeleton.evaluate((el) => getComputedStyle(el).animationName);
 }
 
+/*
+ * Sheet (C24.3): a folha desliza ao abrir (animation-name sheet-in-*) e a animacao some com reduce. Apenas 390.
+ */
+const SHEET_STORY = '/iframe.html?id=primitives-sheet--bottom&viewMode=story';
+
+async function sheetAnimationName(page: Page): Promise<string> {
+  await page.goto(SHEET_STORY);
+  const sheet = page.locator('[data-slot="sheet-content"]');
+  await expect(sheet).toBeVisible();
+  return sheet.evaluate((el) => getComputedStyle(el).animationName);
+}
+
+test.describe('Sheet com movimento normal', () => {
+  test.use({ reducedMotion: 'no-preference' });
+
+  test('folha anima ao abrir (animation-name sheet-in-bottom)', async ({ page }, testInfo) => {
+    testInfo.skip(testInfo.project.name !== 'mobile-390', 'plano C24.3: apenas 390');
+    expect(await sheetAnimationName(page)).toBe('sheet-in-bottom');
+  });
+});
+
+test.describe('Sheet com movimento reduzido', () => {
+  test.use({ reducedMotion: 'reduce' });
+
+  test('animacao desligada (animation-name none)', async ({ page }, testInfo) => {
+    testInfo.skip(testInfo.project.name !== 'mobile-390', 'plano C24.3: apenas 390');
+    expect(await sheetAnimationName(page)).toBe('none');
+  });
+});
+
 test.describe('Skeleton com movimento normal', () => {
   test.use({ reducedMotion: 'no-preference' });
 
