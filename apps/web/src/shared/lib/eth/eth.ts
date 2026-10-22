@@ -36,3 +36,9 @@ export function compareEth(a: EthAmount, b: EthAmount): -1 | 0 | 1 {
   if (wa === wb) return 0;
   return wa < wb ? -1 : 1;
 }
+
+/** Valida sem normalizar: preserva o texto da API (ex.: "12.30") para a exibicao do preco. */
+export function asEthAmount(value: string): EthAmount {
+  if (isBranded(value)) return value;
+  throw new Error('invalid_eth');
+}

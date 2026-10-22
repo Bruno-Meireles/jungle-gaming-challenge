@@ -1,5 +1,5 @@
 import type { NftSummaryDto } from '../../../shared/api/contracts/nfts';
-import { parseEth } from '../../../shared/lib/eth/eth';
+import { asEthAmount } from '../../../shared/lib/eth/eth';
 import type { NftSummary } from '../model/domain/nft';
 
 export function toNftSummary(dto: NftSummaryDto): NftSummary {
@@ -8,7 +8,7 @@ export function toNftSummary(dto: NftSummaryDto): NftSummary {
     title: dto.title,
     collectionId: dto.collectionId,
     networkId: dto.networkId,
-    price: parseEth(dto.priceEth),
+    price: asEthAmount(dto.priceEth),
     image: dto.image,
     rarity: dto.rarity,
     listedAt: dto.listedAt,
