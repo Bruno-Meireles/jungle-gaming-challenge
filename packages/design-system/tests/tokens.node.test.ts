@@ -9,7 +9,7 @@ const FIGMA_FILE = resolve(import.meta.dirname, '../../../docs/figma/file.json')
 const GAPS = ['Text/Primary'];
 
 type FigmaStyle = { name: string; styleType: string; description?: string };
-type Declaration = { name: string; value: string; figma?: string };
+type Declaration = { name: string; value: string; figma?: string; derived?: string };
 
 // Tolerante: tokens.css ainda pode nao existir (RED deve falhar por asserção, não por ENOENT).
 function readTokens(): string {
@@ -18,8 +18,13 @@ function readTokens(): string {
 
 // Extrai `--x: valor; /* figma:<id> */` (comentario opcional apos a declaracao).
 function parseDeclarations(css: string): Declaration[] {
-  const re = /(--[a-z0-9-]+)\s*:\s*([^;]+);(?:[ \t]*\/\*\s*figma:([^*]*?)\s*\*\/)?/g;
-  return [...css.matchAll(re)].map((m) => ({ name: m[1]!, value: m[2]!.trim(), figma: m[3] }));
+  const re = /(--[a-z0-9-]+)\s*:\s*([^;]+);(?:[ \t]*\/\*\s*(figma|derived):([^*]*?)\s*\*\/)?/g;
+  return [...css.matchAll(re)].map((m) => ({
+    name: m[1]!,
+    value: m[2]!.trim(),
+    figma: m[3] === 'figma' ? m[4] : undefined,
+    derived: m[3] === 'derived' ? m[4] : undefined,
+  }));
 }
 
 type FigmaFile = { document: unknown; styles: Record<string, FigmaStyle> };
@@ -128,8 +133,9 @@ const ALIASES: [alias: string, target: string][] = [
   ['--color-link', '--color-text-accent'], // Forgot Link (70381:244, 70399:242) usa o fill Text/Accent
 ];
 
-// Lacunas: papeis sem evidencia no Figma nao viram token. Overlay do modal (11:4385 e todo o file.json): nenhum fill com alfa < 1.
-const ALIAS_GAPS = ['--color-overlay'];
+// Token DERIVADO (nao e Figma): --color-overlay = cor-base das sombras do DS (#0A0604) com alfa 0.45 (Dialog/Sheet).
+// Marcado `/* derived:shadow-base */`; nenhum fill do file.json e translucido (teste abaixo), entao nao ha origem Figma.
+const DERIVED = [{ name: '--color-overlay', value: 'rgba(10, 6, 4, 0.45)', basis: 'shadow-base' }];
 
 describe('aliases semanticos de cor (T11)', () => {
   const colorDecls = () => parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--color-'));
@@ -149,7 +155,7 @@ describe('aliases semanticos de cor (T11)', () => {
     expect(targetDecl?.figma, `${target} deve ter comentario figma:`).toBeTruthy();
   });
 
-  it('o file.json nao tem nenhum fill SOLID translucido (sem evidencia para --color-overlay)', () => {
+  it('o file.json nao tem nenhum fill SOLID translucido (por isso --color-overlay e derived, nao figma)', () => {
     const translucent: string[] = [];
     const walk = (o: unknown): void => {
       if (!o || typeof o !== 'object') return;
@@ -163,12 +169,20 @@ describe('aliases semanticos de cor (T11)', () => {
     expect(translucent).toEqual([]);
   });
 
-  it.each(ALIAS_GAPS)('Lacuna %s nao tem token inventado', (name) => {
-    expect(parseDeclarations(readTokens()).map((d) => d.name)).not.toContain(name);
+  it.each(DERIVED)('$name e token derivado: $value marcado derived:$basis (sem figma:)', ({ name, value, basis }) => {
+    const decl = parseDeclarations(readTokens()).find((d) => d.name === name);
+    expect(decl?.value).toBe(value);
+    expect(decl?.derived).toBe(basis);
+    expect(decl?.figma).toBeUndefined();
+  });
+
+  it('o valor de --color-overlay e a cor-base das sombras do DS com alfa 0.45', () => {
+    const shadows = parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--shadow-') && d.value.includes('rgba(10, 6, 4, 0.45)'));
+    expect(shadows.length).toBeGreaterThan(0);
   });
 
   it('alias nao contem hex literal e toda cor sem figma: e var(--color-...)', () => {
-    const withoutFigma = colorDecls().filter((d) => !d.figma);
+    const withoutFigma = colorDecls().filter((d) => !d.figma && !d.derived);
     const aliasNames = ALIASES.map(([a]) => a);
     const missing = aliasNames.filter((a) => !withoutFigma.some((d) => d.name === a));
     expect(missing, 'aliases ausentes em tokens.css').toEqual([]);

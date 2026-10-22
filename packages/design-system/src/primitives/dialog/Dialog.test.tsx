@@ -132,6 +132,15 @@ describe('Dialog - medidas (Figma Sign In/Sign Up Modal 70381:239 / 70383:239)',
     expect(getComputedStyle(overlay!).backgroundColor).toBe('rgba(10, 6, 4, 0.45)');
   });
 
+  it('overlay usa o token --color-overlay (sem rgba arbitrario no componente)', async () => {
+    await render(<Example defaultOpen />);
+    await expect.element(page.getByRole('dialog')).toBeInTheDocument();
+    const overlay = document.querySelector('[data-slot="dialog-overlay"]') as Element;
+    expect(getComputedStyle(document.documentElement).getPropertyValue('--color-overlay').trim()).toBe('rgba(10, 6, 4, 0.45)');
+    expect(overlay.className).toContain('bg-overlay');
+    expect(overlay.className).not.toContain('rgba');
+  });
+
   it('titulo 20/500 e descricao 13/400 lh16 em foreground', async () => {
     await render(<Example defaultOpen />);
     const title = getComputedStyle(page.getByRole('heading', { name: 'Entrar' }).element());
