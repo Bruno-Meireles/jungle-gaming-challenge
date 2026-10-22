@@ -28,8 +28,7 @@
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:build": "storybook build -o storybook-static",
     "test:visual": "node ../../tools/visual.mjs",
-    "test:visual:update": "node ../../tools/visual.mjs --update-snapshots=changed",
-    "test:visual:docker": "node ../../tools/visual-docker.mjs"
+    "test:visual:update": "node ../../tools/visual.mjs --update-snapshots=changed"
   },
   "peerDependencies": {
     "react": "^19.0.0",

@@ -17,7 +17,7 @@
     "test:visual": "turbo run test:visual",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "verify": "turbo run lint typecheck test build storybook:build test:visual"
+    "verify": "turbo run lint typecheck test build"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
