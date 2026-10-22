@@ -4,7 +4,10 @@ import { pageHomeLocales } from '../../pages/home';
 import { pageNotFoundLocales } from '../../pages/not-found';
 import { pageUnavailableLocales } from '../../pages/unavailable';
 import { sharedLocales } from '../../shared/config';
+import { languageLocales } from '../../features/language-switch';
 import { catalogLocales } from '../../widgets/catalog';
+import { featuredLocales } from '../../widgets/featured-nft';
+import { heroLocales } from '../../widgets/hero';
 import { footerLocales } from '../../widgets/footer';
 import { headerLocales } from '../../widgets/header';
 
@@ -16,6 +19,9 @@ export const ptBRResources = {
   nft: nftLocales['pt-BR'],
   catalog: catalogLocales['pt-BR'],
   footer: footerLocales['pt-BR'],
+  hero: heroLocales['pt-BR'],
+  featured: featuredLocales['pt-BR'],
+  language: languageLocales['pt-BR'],
   pageHome: pageHomeLocales['pt-BR'],
   pageUnavailable: pageUnavailableLocales['pt-BR'],
   pageNotFound: pageNotFoundLocales['pt-BR'],
@@ -27,6 +33,9 @@ const enResources = {
   nft: nftLocales.en,
   catalog: catalogLocales.en,
   footer: footerLocales.en,
+  hero: heroLocales.en,
+  featured: featuredLocales.en,
+  language: languageLocales.en,
   pageHome: pageHomeLocales.en,
   pageUnavailable: pageUnavailableLocales.en,
   pageNotFound: pageNotFoundLocales.en,
