@@ -7,7 +7,7 @@ import { Breadcrumb,BreadcrumbItem, BreadcrumbLink, BreadcrumbPage } from './ind
 
 function Trail() {
   return (
-    <Breadcrumb>
+    <Breadcrumb label="Trilha">
       <BreadcrumbItem>
         <BreadcrumbLink href="/">Início</BreadcrumbLink>
       </BreadcrumbItem>
@@ -45,7 +45,7 @@ describe('Breadcrumb - comportamento', () => {
 
   it('BreadcrumbLink asChild renderiza o filho com as mesmas classes e data-slot', async () => {
     await render(
-      <Breadcrumb>
+      <Breadcrumb label="Trilha">
         <BreadcrumbItem>
           <BreadcrumbLink href="/a">Normal</BreadcrumbLink>
         </BreadcrumbItem>
@@ -67,10 +67,8 @@ describe('Breadcrumb - comportamento', () => {
 
 describe('Breadcrumb - rotulo recebido', () => {
   it('expoe o nome recebido via label em nav', async () => {
-    // `label` ainda nao existe no tipo; o T5 troca este objeto frouxo por uso direto.
-    const extra = { label: 'Breadcrumb' } as Record<string, string>;
     await render(
-      <Breadcrumb {...extra}>
+      <Breadcrumb label="Breadcrumb">
         <BreadcrumbItem>
           <BreadcrumbPage>Pagamento</BreadcrumbPage>
         </BreadcrumbItem>

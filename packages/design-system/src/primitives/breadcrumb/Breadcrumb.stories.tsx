@@ -8,6 +8,7 @@ const meta = {
   title: 'Primitives/Breadcrumb',
   component: Breadcrumb,
   tags: ['autodocs'],
+  args: { label: 'Trilha' },
 } satisfies Meta<typeof Breadcrumb>;
 
 export default meta;
@@ -16,8 +17,8 @@ type Story = StoryObj<typeof meta>;
 /* Trilha do checkout: "Início / Mercado / Pagamento" (Figma 107123). */
 export const Default: Story = {
   tags: ['golden', 'golden-focus'],
-  render: () => (
-    <Breadcrumb>
+  render: (args) => (
+    <Breadcrumb {...args}>
       <BreadcrumbItem>
         <BreadcrumbLink href="#inicio">Início</BreadcrumbLink>
       </BreadcrumbItem>
