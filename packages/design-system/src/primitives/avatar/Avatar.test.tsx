@@ -34,16 +34,18 @@ describe('Avatar', () => {
     expect(img.element().getAttribute('src')).toBe(PX_PNG);
   });
 
-  it('sem src mostra o fallback e nenhuma img', async () => {
+  it('sem src mostra o fallback, nenhuma <img>, e o nome acessivel via role=img', async () => {
     await render(<Avatar alt="Foto de Ana" fallback={icon} />);
     await expect.element(page.getByTestId('fallback-icon')).toBeInTheDocument();
     expect(document.querySelector('img')).toBeNull();
+    await expect.element(page.getByRole('img', { name: 'Foto de Ana' })).toBeInTheDocument();
   });
 
-  it('com src que falha ao carregar mostra o fallback', async () => {
+  it('com src que falha ao carregar mostra o fallback com nome acessivel', async () => {
     await render(<Avatar src={BROKEN} alt="Foto de Ana" fallback={icon} />);
     await expect.element(page.getByTestId('fallback-icon')).toBeInTheDocument();
     expect(document.querySelector('img')).toBeNull();
+    await expect.element(page.getByRole('img', { name: 'Foto de Ana' })).toBeInTheDocument();
   });
 
   it('mede 50x50 circular, fundo surface-raised, borda 1px border', async () => {
