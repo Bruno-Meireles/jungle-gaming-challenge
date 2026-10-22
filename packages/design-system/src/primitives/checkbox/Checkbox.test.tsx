@@ -84,12 +84,14 @@ describe('Checkbox - comportamento', () => {
  * Medida - indicador da carteira secundaria (Ellipse 22, 9:1867, docs/figma/file.json:273758-273905):
  * 16x16, stroke 1.5 INSIDE na cor primary (variavel 70320:303), sem fill; texto ao lado 14/16 regular foreground
  * (estilo 70321:351) a 8px (x 5897+16 -> 5921). Os filtros (70485:381) nao desenham caixa, so texto e contagem.
- * Desvios: forma quadrada raio 3 (--radius-3) para diferenciar de radio; marcado = fundo primary + check ink.
+ * Q21: indicador circular (rounded-full); marcado = fundo primary + check ink.
  */
 const PRIMARY = 'rgb(210, 138, 76)';
+const DISABLED_BG = 'rgb(85, 50, 31)'; // --color-disabled-bg = border-soft #55321F
+const DISABLED_TEXT = 'rgb(179, 148, 99)'; // --color-disabled-text = secondary #B39463
 
 describe('Checkbox - medidas, foco e forma', () => {
-  it('mede 16x16, borda primary e raio 3 desmarcado, sem glifo', async () => {
+  it('mede 16x16 circular (Q21: raio >= metade do lado), borda primary, sem glifo', async () => {
     await render(<Checkbox aria-label="Ethereum" />);
     const cb = page.getByRole('checkbox', { name: 'Ethereum' });
     await expect.element(cb).toBeInTheDocument();
@@ -100,7 +102,9 @@ describe('Checkbox - medidas, foco e forma', () => {
     expect(rect.height).toBe(16);
     expect(cs.borderTopStyle).toBe('solid');
     expect(cs.borderTopColor).toBe(PRIMARY);
-    expect(cs.borderTopLeftRadius).toBe('3px');
+    for (const corner of [cs.borderTopLeftRadius, cs.borderTopRightRadius, cs.borderBottomLeftRadius, cs.borderBottomRightRadius]) {
+      expect(Number.parseFloat(corner)).toBeGreaterThanOrEqual(8);
+    }
     expect(cs.backgroundColor).toBe('rgba(0, 0, 0, 0)');
     expect(el.querySelector('svg')).toBeNull();
   });
@@ -128,13 +132,26 @@ describe('Checkbox - medidas, foco e forma', () => {
     expect(cs.outlineColor).toBe(PRIMARY);
   });
 
-  it('disabled usa cursor not-allowed e opacidade reduzida', async () => {
+  it('disabled usa cursor not-allowed e os tokens disabled-bg/disabled-text, sem opacidade (Q10)', async () => {
     await render(<Checkbox aria-label="Bloqueado" disabled />);
     const cb = page.getByRole('checkbox', { name: 'Bloqueado' });
     await expect.element(cb).toBeInTheDocument();
     const cs = getComputedStyle(cb.element());
     expect(cs.cursor).toBe('not-allowed');
-    expect(Number(cs.opacity)).toBeLessThan(1);
+    expect(cs.opacity).toBe('1');
+    expect(cs.backgroundColor).toBe(DISABLED_BG);
+    expect(cs.borderTopColor).toBe(DISABLED_TEXT);
+  });
+
+  it('disabled marcado mantem o check visivel (estado nao depende so de cor) com a cor disabled-text', async () => {
+    await render(<Checkbox aria-label="Bloqueado" disabled defaultChecked />);
+    const cb = page.getByRole('checkbox', { name: 'Bloqueado' });
+    await expect.element(cb).toBeChecked();
+    const el = cb.element();
+    const glyph = el.querySelector('svg');
+    expect(glyph).not.toBeNull();
+    expect(getComputedStyle(el).backgroundColor).toBe(DISABLED_BG);
+    expect(getComputedStyle(glyph as Element).color).toBe(DISABLED_TEXT);
   });
 
   it('nao tem violacoes de acessibilidade (axe)', async () => {
