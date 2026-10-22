@@ -10,3 +10,4 @@ storybook-static/
 *.tsbuildinfo
 .vitest/
 __screenshots__/**/*.diff.png
+.claude/worktrees/
