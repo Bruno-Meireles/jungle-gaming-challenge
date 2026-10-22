@@ -49,8 +49,9 @@ describe('Label', () => {
     await expect.element(star).toBeInTheDocument();
     await expect.element(star).toHaveAttribute('aria-hidden', 'true');
     expect(getComputedStyle(star.element()).color).toBe(CORAL);
-    // nome acessivel exato = sem o asterisco
-    await expect.element(page.getByLabelText('Nome de exibição', { exact: true })).toBeInTheDocument();
+    // nome acessivel (computado pelo navegador, ignora aria-hidden) exato = sem o asterisco;
+    // getByLabelText compara textContent e por isso nao serve para esta asserção.
+    await expect.element(page.getByRole('textbox', { name: 'Nome de exibição', exact: true })).toBeInTheDocument();
   });
 
   it('sem required nao renderiza asterisco', async () => {
