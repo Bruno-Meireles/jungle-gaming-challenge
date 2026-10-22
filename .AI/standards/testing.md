@@ -23,6 +23,7 @@
 - **Regressão visual** (`toHaveScreenshot`): início, detalhe, carrinho e pagamento; dados estáveis, animações desligadas (`reducedMotion`, `animations: 'disabled'`), fontes carregadas, baselines versionadas, tolerância explícita no config. Referência inicial: `docs/figma/screens/`.
 - **Acessibilidade**: navegação por teclado, foco visível e em diálogos, labels e mensagens associadas. Verificação automática com axe (`@axe-core/playwright`) é recomendada e exige aprovação para instalar.
 - **Diagnóstico**: `trace: 'retain-on-failure'`, relatório HTML. Falha → abrir o trace, achar a causa, corrigir o código; aumentar timeout não é correção.
+- **Imagens custam tokens (regra do usuário, 2026-10-22):** nenhum agente abre screenshots (Read de PNG) por padrão. Fidelidade ao Figma se verifica de forma determinística: medidas, cores e tipografia lidas de `docs/figma/file.json` e comparadas ao CSS computado em testes (`*.measure.test.tsx`); estrutura e estados, por asserções de DOM/ARIA. Capturas podem ser **geradas** (Playwright CLI) e guardadas para o usuário, sem serem lidas. Abrir uma imagem só quando o usuário pedir ou para um desvio que nenhuma asserção consiga expressar; nesse caso, uma imagem por vez, recortada ou reduzida, e dizer por quê.
 - Mapeamento de UI: `playwright codegen` e leitura do DOM acessível; descrever o que foi observado, não o que se espera ver.
 
 ## Cenários mínimos
