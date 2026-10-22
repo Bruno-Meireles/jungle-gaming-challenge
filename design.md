@@ -12,6 +12,8 @@ Convenção: itens marcados **[decidir]** exigem aprovação do usuário antes d
 
 Entregar o marketplace descrito no enunciado (descoberta, compra e conta do colecionador; desktop e mobile) com a stack obrigatória: React, TypeScript, TanStack Router, TanStack Query, Axios, Socket.IO, Tailwind, shadcn/ui, MSW, Playwright e Lighthouse. As regras de processo do projeto valem para cada etapa: TDD (RED antes de GREEN), Clean Architecture + FSD, fluxo `architect → test-writer → code-writer`, telas validadas com Playwright CLI.
 
+Requisitos adicionais do usuário para o app web (valem desde a primeira feature; padrão em `.AI/standards/i18n-quality.md`): **(a) melhores práticas de código e componentização** e **(b) internacionalização (pt-BR e inglês) desde o momento zero, sem textos hardcoded**. Ver §5.1.
+
 Restrições que cruzam módulos (enunciado §3–§7): ETH como string decimal, quantidades inteiras; mocks só na camada MSW; eventos Socket.IO passam pelo `socket.io-client` e são idempotentes e versionados; pedidos com chave de idempotência; logout limpa cache e subscriptions; deploy público com mocks ativos no build.
 
 ## 2. Inventário de telas (o que o Figma realmente mostra)
@@ -95,7 +97,8 @@ Regra de ouro de reuso: componente genérico e sem regra de negócio vai para o 
 
 | Tema | Proposta | Estado |
 |---|---|---|
-| Build/dev | Vite 8 + React 19 + TS (já no `apps/web`); `index.html` e entrypoint ainda não existem (`build` do app é provisoriamente `tsc -b`) | confirmado; criar na primeira feature |
+| Build/dev | Vite 8 + React 19 + TS (já no `apps/web`); `index.html`, `main.tsx` e `App.tsx` mínimos já existem; `build` = `tsc -b && vite build` | confirmado |
+| i18n | `i18next` + `react-i18next`: chaves tipadas, namespaces por slice, `Intl` para número/data/plural, detecção + persistência do idioma, `<html lang>` dinâmico. Alternativas: `react-intl` (ICU nativo, mais verboso), Lingui (extração/compilação, mais ferramental). Ver §5.1 | **[decidir]** (nova dependência; recomendação acima) |
 | Router | TanStack Router com search params validados por schema, guards em `beforeLoad` para rotas privadas, `notFoundComponent` | confirmado pelo enunciado |
 | Dados | TanStack Query + Axios (interceptors: sessão, `signal`, normalização de erro); query keys por fábrica incluindo usuário e parâmetros | confirmado |
 | Tempo real | `socket.io-client` real; cliente em `shared/realtime`; handlers em `features/realtime-sync` | confirmado |
@@ -105,6 +108,40 @@ Regra de ouro de reuso: componente genérico e sem regra de negócio vai para o 
 | Senhas | Nunca em claro: o mock guarda hash (Web Crypto) e o cliente não persiste senha | proposta |
 | Estilo | Tailwind 4 via `@jg/design-system/styles.css` (tokens, `--spacing: 1px`, sem paleta padrão) | confirmado |
 | Deploy | Vercel (ou Netlify/Cloudflare) com fallback de SPA para acesso direto e refresh; `VITE_ENABLE_MOCKS=true` no build de demonstração | proposta |
+
+## 5.1 Requisitos adicionais: i18n desde o momento zero e qualidade de código
+
+Fonte normativa: `.AI/standards/i18n-quality.md` (agentes e skills a leem antes de agir).
+
+### Internacionalização (pt-BR e inglês)
+- **Nenhum texto hardcoded no app**: rótulos, placeholders, validação, `aria-label`, `<title>`, estados vazio/erro/loading e anúncios do `LiveRegion` vêm de chaves. O lint do app reprova literais de texto em JSX (`eslint-plugin-i18next` ou equivalente) e o TypeScript reprova chave inexistente.
+- **Propriedade das mensagens por slice** (`config/locales/pt-BR` e `en` em cada slice; compartilhadas em `shared`); `app` registra os recursos e o idioma. Teste de paridade garante as mesmas chaves e placeholders nos dois idiomas.
+- **API devolve códigos** (erro e `fieldErrors`), a UI traduz; o mock MSW não tem texto de interface. Conteúdo do catálogo (título, descrição) é dado do mock; **[decidir]** se é localizado pelo servidor via `Accept-Language` ou único (pt-BR) por ser conteúdo editorial.
+- **Formatação**: `Intl` para datas, plurais e números comuns. **ETH segue string decimal**: a formatação por idioma (`1.19` vs `1,19`) troca só o separador por manipulação de string testada, sem `Number`.
+- **Idioma ativo**: escolha persistida, depois `navigator.language`, depois pt-BR (cópia do Figma); atualiza `<html lang>`; seletor de idioma acessível no cabeçalho/rodapé. **[decidir]** na etapa de rotas: idioma só em estado (recomendado, sem duplicar rotas) ou prefixo na URL (`/en/...`).
+- **Testes**: unitários e E2E nos dois idiomas nos fluxos principais; Playwright define `locale` do contexto; baselines visuais por idioma onde o texto altera o layout (a regressão visual de início, detalhe, carrinho e pagamento passa a ter variante en).
+- **Lighthouse/SEO**: `lang` correto e `<title>` traduzido por rota.
+
+### Design system sem texto embutido
+Hoje o DS tem defaults em pt-BR que violam o requisito para quem usa em inglês (levantamento por grep nesta etapa):
+
+| Componente | Texto embutido |
+|---|---|
+| `Alert` | rótulos "Erro", "Informação", "Sucesso" (sem prop) |
+| `Breadcrumb` | `aria-label="Trilha"` |
+| `Pagination` | `aria-label="Paginação"` e "Próxima" |
+| `DialogClose` | default "Fechar" |
+| `PasswordInput` | defaults "Mostrar senha" / "Ocultar senha" |
+| `QuantityStepper` | defaults "Diminuir" / "Aumentar" |
+
+Decisão proposta: **todo rótulo vira prop obrigatória (sem default em idioma específico)** e o app passa o texto traduzido; stories e testes do DS passam a fornecer os textos explicitamente. É mudança de contrato do DS (`.AI/plans/design-system.md` §3) e exige novo plano (`/plan-create design-system-i18n`) antes da primeira tela; a guarda automática é um teste que falha se `src/` do DS contiver texto de interface literal fora de stories/testes.
+
+### Boas práticas de código e componentização
+- `pages` só compõem; `widgets`/`features` orquestram; `ui` é apresentacional; lógica em `model` (hooks/casos de uso) e regras puras no domínio, sem regra de negócio nem chamada de API no JSX.
+- Composição sobre props booleanas (slots, `children`, `asChild`, variantes `cva`), um componente por arquivo, props exportadas como `<Nome>Props`, uniões discriminadas para estados com verificação de exaustividade, sem `any` nem `as` para silenciar o compilador.
+- **Reuso antes de criar**: checar o DS e os slices antes de escrever componente; duplicação sobe para a camada correta.
+- Limites mensuráveis no lint (complexidade, linhas por função e por arquivo, aninhamento) com valores fixados no plano de F0; fronteiras de erro e de carregamento por rota; `memo` só com medição.
+- Prettier e lint sem avisos fazem parte do `verify`; dependência nova só com decisão em `ARCHITECTURE.md`.
 
 ## 6. Domínio e contratos (nível de planejamento)
 
@@ -139,14 +176,16 @@ Eventos: `nft.updated` e `order.updated`, com id estável, recurso, versão e es
 1. **Fluxograma** dos fluxos: descoberta → detalhe → carrinho → login/retorno → pagamento → confirmação; recuperação de sessão, pedido pendente/reconexão e cenários de falha.
 2. **Mapeamento detalhado de rotas**: path, search params e schema, guard (público/privado), loader/prefetch, tela(s) do Figma, estados (loading/vazio/erro), modal vs. página (login/cadastro/recibo), 404 e redirecionamentos de retorno.
 3. Tabela de endpoints e payloads (`ARCHITECTURE.md`).
-4. Resolver os itens **[decidir]** desta página.
+4. Resolver os itens **[decidir]** desta página, incluindo os de i18n (biblioteca, conteúdo do catálogo localizado ou não, idioma em estado ou na URL).
+5. Abrir `/plan-create design-system-i18n` (F0a) antes da primeira tela.
 
 ## 10. Roadmap sugerido de features (cada uma passa por plan-create/execute/review)
 
 | # | Feature | Entrega principal | Depende de |
 |---|---|---|---|
-| F0 | `app-shell` | `index.html`, providers, router base, regras FSD no lint, `build` do app real, deploy preview | DS |
-| F1 | `mock-platform` | MSW REST, cenários, persistência/reset, **spike do Socket.IO** | F0 |
+| F0a | `design-system-i18n` | DS sem texto de interface embutido (rótulos como props), guarda por teste, stories/testes atualizados, baselines regeneradas | DS |
+| F0b | `app-shell` | providers (Query, Router, **i18n**), router base, regras FSD **e de qualidade/i18n** no lint, seletor de idioma, deploy preview | F0a |
+| F1 | `mock-platform` | MSW REST (erros por código, sem texto de UI), cenários, persistência/reset, **spike do Socket.IO** | F0b |
 | F2 | `shared-api` + `session-auth` | Axios, erro padrão, login/cadastro/logout/expiração, guards | F1 |
 | F3 | `catalog` | Início: busca, filtros, ordenação, paginação na URL, skeleton | F2 |
 | F4 | `nft-detail` + `favorites` | Detalhe, galeria, edição, quantidade, favorito otimista | F3 |
@@ -162,4 +201,6 @@ Eventos: `nft.updated` e `order.updated`, com id estável, recurso, versão e es
 - Telas sem frame (confirmação mobile, perfil/carteiras mobile, tablet): derivadas do desktop e do DS; revisar com o usuário.
 - Precisão decimal: bug de ponto flutuante em total/taxa é eliminatório por qualidade; cobrir o domínio com testes de propriedade/tabela.
 - Performance: imagens de NFT e fontes locais precisam de dimensões fixas e `loading` adequado para LCP/CLS.
+- i18n tardio: qualquer texto hardcoded no DS ou nos primeiros slices vira retrabalho; por isso F0a precede as telas e o lint de literais entra em F0b.
+- Layout e idioma: textos em inglês e pt-BR têm larguras diferentes; testar 390/768/1440 nos dois idiomas e evitar larguras fixas em rótulos.
 - Flakiness de testes em Chromium sob carga: já tratada no DS (ponteiro, setas Radix); manter o padrão nos E2E.

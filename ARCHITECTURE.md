@@ -53,4 +53,5 @@ Registro de decisões duradouras e desvios (formato: contexto, decisão, alterna
 
 - Alvos de toque abaixo de 24×24 (WCAG 2.2, 2.5.8): `DialogClose` (18×18) e o botão do `PasswordInput` (20×20). Decidir se o projeto adota WCAG 2.2 AA; o Figma desenha esses tamanhos.
 - `eslint-plugin-storybook` instalado e não configurado.
+- **i18n do design system:** componentes ainda trazem defaults em pt-BR (Alert, Breadcrumb, Pagination, DialogClose, PasswordInput, QuantityStepper). O requisito de i18n desde o momento zero (`.AI/standards/i18n-quality.md`) exige rótulos como props, sem default em idioma; tratar em `design-system-i18n` antes da primeira tela (`design.md` §5.1).
 - Overlay do Dialog: derivado da cor-base das sombras do DS (sem fonte no Figma).

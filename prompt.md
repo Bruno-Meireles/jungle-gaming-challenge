@@ -11,6 +11,8 @@ Não fazer nada caso esses requisitos não sejam validos:
 * Alem dos testes com Playwright devem ser utilizados testes end to end Playwright deve ser utilizado para mapeamento e validação de UI, para a escrita de testes determinirticos end to end em ferramentas determiniticas referencia de mercado.
 * Para economia de tokens utilize Playwright CLI para economizar tokens de mcp.
 * Deve haver um design system para isso utilize a ferramenta de mercado apropriada para mono repo onde havera um pacote para o projeto e um pacote para o desygn system.
+* (Requisitos adicionais do site web) Aplicar as melhores práticas de código e de componentização.
+* (Requisitos adicionais do site web) Internacionalização (i18n) desde o momento zero, para evitar textos hardcoded e permitir variação entre inglês e pt-BR.
 
 # Dicovery
 * Utilize como base para não disperdiçar tempo e também com parcimonia validando tudo que estiver dentro da pasta como base de algo que fizemos em prototypo.

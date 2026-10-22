@@ -13,6 +13,7 @@ Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado co
 - **Três agentes** em `.claude/agents/`: `architect` (**Opus**), `test-writer` (**Sonnet**, RED), `code-writer` (**Sonnet**, GREEN). Fluxo por feature: architect → test-writer → code-writer.
 - **Telas** são desenvolvidas e validadas com **Playwright**, usando o **Playwright CLI** (não o MCP) para economizar tokens; além disso há E2E determinísticos.
 - **Monorepo** com dois pacotes: o app e o **design system**. Ferramenta pretendida: pnpm workspaces + Turborepo (ainda não criada; confirmar com o usuário antes de instalar).
+- **App web** (requisitos adicionais do usuário, valem desde a primeira feature): **i18n desde o momento zero** (pt-BR e inglês, nenhum texto hardcoded; o design system não embute texto de interface) e **melhores práticas de código e componentização**. Detalhes em `.AI/standards/i18n-quality.md`.
 - Código que o usuário disser estar "em desenvolvimento" no protótipo ou neste arquivo deve ser ignorado.
 - Copilot descumpriu regras no protótipo: na inicialização, siga estas regras à risca e não crie scaffolding além do pedido.
 
@@ -36,4 +37,4 @@ Ainda não existem. Quando o monorepo for criado, documente aqui os comandos rea
 
 ## Padrões compartilhados
 
-`.AI/standards/` é a fonte única dos padrões usados por agentes e skills: `grounding.md` (evidência, lacunas, limites), `architecture.md` (Clean Architecture + FSD, estado, mocks) e `testing.md` (TDD e Playwright). Leia o que a tarefa tocar antes de agir.
+`.AI/standards/` é a fonte única dos padrões usados por agentes e skills: `grounding.md` (evidência, lacunas, limites), `architecture.md` (Clean Architecture + FSD, estado, mocks), `testing.md` (TDD e Playwright) e `i18n-quality.md` (i18n e qualidade de código do app). Leia o que a tarefa tocar antes de agir.

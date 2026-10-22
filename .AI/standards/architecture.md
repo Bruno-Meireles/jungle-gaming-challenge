@@ -18,6 +18,9 @@
 ## Design system (pacote separado)
 Componentes visuais reutilizáveis e tokens (cores, tipografia, espaçamento, raios, de `docs/figma/`) vivem no pacote do design system, adaptando shadcn/ui. O app importa do pacote; o pacote nunca importa do app. Componente com regra de negócio fica no app.
 
+## Qualidade de código e i18n
+Ver `i18n-quality.md`: componentização, limites de lint e internacionalização (pt-BR e inglês) valem em todo código do app.
+
 ## Estado e dados
 - TanStack Query: `queryKey` produzidas por fábrica por recurso, incluindo usuário e parâmetros; invalidação após mutation; `signal` repassado ao Axios para cancelar respostas obsoletas.
 - Parâmetros de busca/filtro/ordenação/paginação ficam na URL (TanStack Router com validação do search schema).
