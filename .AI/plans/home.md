@@ -1,0 +1,423 @@
+# Plano: home
+
+Autor do plano: `architect` (Opus), gravado por `/plan-create`. Plano único que entrega a **Home responsiva** (1440, 768, 390) e absorve o mínimo de F0b (shell, providers, i18n, lint) e do mock do catálogo, conforme `docs/discovery.md` §5. Segue o ADR-15 (sem Docker; `verify` cotidiano sem golden). `prompt.md` é lei: nenhuma decisão deste plano remove exigência do enunciado (ver "Rastreabilidade").
+
+## Decisões do usuário e premissas
+
+Regras do usuário (CLAUDE.md, 2026-10-22): `prompt.md` é lei e o que ele não define é complementado e registrado; dependências necessárias estão pré-autorizadas (versão fixa, compatibilidade verificada, registro em `ARCHITECTURE.md`); Docker é proibido salvo ordem explícita; commit por etapa. As lacunas do `architect` foram resolvidas com a recomendação dele, **assumidas com aprovação por essas regras**; reverter qualquer uma exige novo plano:
+
+- **Q1** ADR-15 vale sem Docker (já em `ARCHITECTURE.md`); `test:e2e` entra no `verify` cotidiano.
+- **Q2** Roadmap: Home = F0b mínimo + catálogo; F1 amplia mocks (persistência, reset, demais cenários, Socket.IO); F2 sessão. `design.md` §10 é corrigido no M1 ("Home depende de F0b", não de F2).
+- **Q3** Separador decimal: vírgula em pt-BR, ponto em en; desvio do Figma registrado (o Figma mistura os dois).
+- **Q4** Abas Todos/Novos lançamentos/Em alta são **filtro de subconjunto** (`new` = listado nos 30 dias antes de `MOCK_NOW`; `trending` = `popularity ≥ 80`); a ordenação fica no Select.
+- **Q5** Sem `Accept-Language`: na Home só aparecem título (nome próprio) e preço; o idioma fica fora da `queryKey`. Reavaliar no detalhe (F4).
+- **Q6** Desktop: o ícone de busca abre um campo acessível no header (`aria-expanded`); busca submetida por Enter (push no histórico). Mobile: campo direto, como no frame.
+- **Q7** Rotas stub renderizam no lugar o conteúdo "não disponível", sem redirecionar: `/nfts/$nftId`, `/login`, `/cart`.
+- **Q8** Seletor de idioma no rodapé (desktop e mobile) e no header desktop; desvio do Figma registrado.
+- **Q9** Hero: 3 destaques de `/api/highlights`, troca manual, sem autoplay; duas chaves de cópia (desktop e mobile), fiel ao Figma.
+- **Q10** `RangeSlider` do DS ganha `getValueText: (value: number) => string` **obrigatória** (`aria-valuetext`; §8 exige acessibilidade); TDD no DS, primeiro item do M4.
+- **Q11** Tablet 768 derivado: header desktop, filtros e ordenação no Sheet, grade de 2 colunas, sem barra inferior.
+- **Q12** Mobile sem frame abaixo da dobra: paginação igual à do desktop, ordenação no Sheet, rodapé empilhado, destaque lateral omitido.
+- **Q13** Imagens dos NFTs: obtidas dos image fills do Figma pela API (token do `.env`, estendendo `tools/figma-extract.mjs`), em WebP com `width`/`height`; origem registrada (§8: documentar substituição de asset). Se a API não entregar algum fill, o item vira lacuna registrada, nunca imagem inventada sem aviso.
+- **Q14** Ícones: SVG locais em `shared/ui/icons`, `aria-hidden` (fecha o ADR-11 pendente).
+- **Q15** Execução e revisão por marco (`/plan-execute home` até o M*n*, depois revisão), sem dividir o plano.
+- **Q16** Breakpoints do DS mantidos (`tablet` 768, `desktop` 1440); layout tablet vale de 768 a 1439 px. Reavaliar no Lighthouse (F9).
+- **Q17** i18n com `i18next` + `react-i18next` (tipos via `CustomTypeOptions`).
+- **Q18** `zod` na borda (DTO e search schema).
+- **Menores:** contador do carrinho oculto até F5; coração de favoritar omitido até F4; botão central da barra inferior (scan) → `/unavailable?feature=scan`; banners "Explorar" → `/?tab=new` e `/?collections=digital-art`; newsletter leva a `/unavailable?feature=newsletter` sem sucesso falso; skip link incluído (desvio registrado); preço riscado do Figma e card sem título omitidos (desvios).
+- **Pendente do usuário, fora desta feature:** estratégia de baselines locais para a regressão visual das páginas (§9), tratada na validação final (ADR-15).
+
+## 1. Requisitos cobertos
+
+| § | Trecho | Como a Home atende |
+|---|---|---|
+| §2 | Stack obrigatória (React, TS, TanStack Router/Query, Axios, Tailwind, shadcn/ui, MSW, Playwright) | todas participam: rotas e `validateSearch`, Query com `signal`, Axios em `shared/api`, mocks MSW, E2E Playwright; shadcn/ui via DS |
+| §3 Início (:61) | "Destaques, catálogo, busca, filtros, ordenação e navegação para o NFT" | hero, destaque, grade, busca, filtros, abas, ordenação, link do título para `/nfts/$nftId` |
+| §3 (:71) | frames desktop e mobile | `2:2` (1440×3668) e `14:5226` (414×896, validado em 390); 768 derivado |
+| §3 (:73) | ações fora do escopo sem sucesso falso | `/unavailable?feature=<id>` e 404 |
+| §3 Catálogo (:77-79) | URL como estado, filtros combináveis, `page` reiniciado, vazio/falha/fora de ordem | `validateSearch`, `withFilterChange`, estados, descarte de resposta obsoleta |
+| §3 (:91) | ETH string decimal, quantidades inteiras | `priceEth` string; `shared/lib/eth` em bigint de 18 casas |
+| §4 (:115-127) | Router, Query, Axios; contratos tipados; estados; cancelamento; isolamento; rotas inexistentes e acesso direto; política de cache documentada | §3 Contratos, testes 12-37, ADR-20 |
+| §5 NFTs (:136,144) | listagem com busca/filtros/ordenação/paginação; erros por tipo | `GET /api/nfts`, erros por código |
+| §6 (:150-174) | mocks na camada de rede; lentidão, latência, falhas; fixtures com variedade; ativação por configuração e no build de demonstração | `src/mocks` fora do FSD; cenários `default`, `catalog-empty`, `catalog-error`, `catalog-flaky`, `catalog-slow`, `catalog-out-of-order`; 45 fixtures; `VITE_ENABLE_MOCKS` inclusive no build |
+| §8 (:200-216) | fidelidade ao Figma; 390/768/1440; skeleton com shimmer sem CLS; movimento reduzido; teclado, foco, drawers, labels, alt, contraste, feedback acessível, sem overflow com zoom; assets locais e substituições documentadas | testes 30, 34-39 e inspeção por captura (40); Q13 |
+| §9 (:222,233,235-239) | fluxos 1 e 12; Chromium em desktop e mobile; estado isolado; relógio, latência; REST pelos handlers MSW; relatório HTML e traces | E2E em 1440 e 390 (768 onde há layout); contexto novo por teste; `page.clock`; cenário por `addInitScript`; regressão visual das páginas na validação final (ADR-15, `prompt.md:235` segue valendo) |
+| §10 (:243) | Lighthouse de início com build otimizado e mocks | F9; a Home prepara `lang`, `<title>`, `meta description`, imagens com dimensões |
+| §12 (:277-285) | deploy obrigatório com mocks; acesso direto e refresh; comandos de dev com mocks, build, preview, tipos, lint, Playwright | M7: SPA rewrite, mocks no build, testes 41-43; scripts `dev:mocks`, `preview`, `test:e2e` |
+| Adicionais (prompt.md:14-15) | boas práticas; i18n desde o zero | i18next tipado, paridade, lint de literais, limites numéricos |
+
+Frames do Figma: desktop `2:2` e mobile `14:5226` (`frames.json:4-5,103-104`); PNGs `docs/figma/screens/2-2_Desktop_In_cio.png` e `14-5226_Mobile_In_cio.png`. O frame mobile tem 896 px de altura: rodapé, paginação e ordenação mobile não aparecem nele (Q12).
+
+### Rastreabilidade: exigências do enunciado que NÃO são desta feature
+
+Nenhuma exigência é removida; cada uma tem feature dona (roadmap `design.md` §10, corrigido no M1):
+
+| Exigência | Dona |
+|---|---|
+| Detalhe (galeria, edição, quantidade, favoritos, compra); favoritos persistentes; atualização otimista com rollback | F4 |
+| Carrinho (persistência, visitante→login, cupom, cotação), contador real | F5 |
+| Pagamento, carteira e rede, pedido idempotente, recibo | F6 |
+| Cadastro, login, logout, expiração, troca de usuário, isolamento por usuário, senhas não em claro | F2 |
+| Perfil, avatar, senha, carteiras | F8 |
+| Socket.IO (`nft.updated`, `order.updated`), reconciliação, spike do `@mswjs/socket.io-binding` | F1 (mock) e F7 |
+| MSW: persistência, reset completo de cenário, ≥ 2 usuários, demais cenários do §6 | F1 |
+| Fluxos E2E 2-11 do §9 | features respectivas e F9 |
+| Regressão visual de início/detalhe/carrinho/pagamento com baselines versionadas | validação final (ADR-15) |
+| Lighthouse (3 medições, mediana, relatórios, LCP/CLS/TBT) | F9 |
+| README completo (setup, envs, credenciais, cenários, reset) e `ARCHITECTURE.md` completo | F9 (cada feature acrescenta suas decisões) |
+| Deploy público do projeto inteiro | M7 prepara; publicação exige conta do usuário (F9) |
+
+## 2. Slice FSD (pacote `apps/web` salvo indicação contrária)
+
+Regras: imports só para camadas inferiores; acesso por `index.ts`; slices da mesma camada não se importam. O domínio (`model/domain/**`, `shared/lib/**`) não importa React, Axios, TanStack, MSW nem i18next.
+
+```
+apps/web/src
+  app/
+    bootstrap/enable-mocks.ts       import dinâmico de ../mocks/browser se VITE_ENABLE_MOCKS === 'true'
+    providers/AppProviders.tsx      QueryClientProvider + I18nextProvider + RouterProvider
+    providers/query-client.ts       política de cache (ADR-20)
+    i18n/init.ts, resources.ts, i18next.d.ts, language-store.ts (localStorage 'jg:locale')
+    router/router.tsx               árvore de código: root, '/', '/nfts/$nftId', '/login', '/cart', '/unavailable', notFoundComponent, errorComponent
+    layouts/RootLayout.tsx          SkipLink + Header + <main id="content"><Outlet/></main> + Footer + BottomNav + LiveRegion
+  pages/
+    home/            index.ts → { HomePage, homeSearchSchema }   model/useHomeSearch.ts (getRouteApi('/'))
+    unavailable/     index.ts → { UnavailablePage, unavailableSearchSchema }  (whitelist de feature ids)
+    not-found/       index.ts → { NotFoundPage }
+  widgets/
+    header/          logo, nav (Início/Mercado → '/', Criadores/Aprenda → /unavailable), busca (feature), carrinho (sem contador), Entrar → /login, seletor de idioma
+    hero/            carrossel manual de 3 destaques (pontos = botões), CTA Explorar → #catalog
+    filter-panel/    sidebar ≥1440; Sheet (DS) <1440 com botão de filtros; compõe catalog-filters (+ catalog-sort no Sheet)
+    catalog/         toolbar (catalog-view-tabs + catalog-sort), resultados (união loading|empty|error|success), grade, paginação, aria-busy, anúncio de contagem
+    featured-nft/    "NFT em destaque / Oferta limitada" (dados de highlights)
+    promo-banners/   2 banners com Explorar
+    journal/         "Diário da Cunhagem" (texto i18n; "Ler mais" → /unavailable?feature=journal)
+    footer/          pilares, newsletter (não funcional), contatos, links → /unavailable, carteiras compatíveis, seletor de idioma
+    bottom-nav/      só <768
+  features/
+    catalog-search/      formulário role=search; desktop: botão de ícone com aria-expanded abre o campo
+    catalog-filters/     coleções e redes (Checkbox + contagem da faceta), faixa de preço (RangeSlider em passos inteiros + Aplicar)
+    catalog-sort/        Select (recent|price-asc|price-desc|popular)
+    catalog-view-tabs/   Tabs (all|new|trending)
+    language-switch/     troca o idioma, persiste, atualiza <html lang> sem reload
+  entities/
+    nft/       index.ts → tipos de domínio, normalizeCatalogSearch, withFilterChange, nftKeys, useCatalogQuery, useHighlightsQuery, NftCardView
+               model/domain/* (puro), api/fetch-catalog-page.ts, api/fetch-highlights.ts (DTO → domínio), config/locales; network ids em model/domain/network.ts
+    collection/ index.ts → COLLECTION_IDS, isCollectionId; config/locales com os rótulos
+  shared/
+    api/http-client.ts, api/api-error.ts, api/contracts/{nfts,highlights,error}.ts (zod + tipos DTO)
+    lib/eth/ (parseEth, compareEth, formatEthAmount(locale), ethToSteps/stepsToEth), lib/i18n/ (Locale, resolveLocale, useDocumentMeta), lib/assert-never.ts
+    ui/ wrappers i18n do DS: AppPagination, AppAlert, AppSheet, AppRangeSlider, icons/ (SVG locais)
+    config/env.ts, config/site.ts, config/locales/{pt-BR,en}.ts (comum)
+  mocks/   (fora do FSD; só app/bootstrap importa; pode importar shared/api/contracts e shared/lib)
+    browser.ts, node.ts, scenario.ts (localStorage 'jg:mocks:scenario'), handlers/{catalog,highlights}.ts,
+    catalog/query-catalog.ts (filtro/ordem/página/facetas puros), fixtures/nfts.ts (45 itens)
+apps/web/public/ mockServiceWorker.js (msw init), images/nfts/*
+apps/web/e2e/  *.spec.ts, fixtures/scenario.ts
+apps/web/playwright.config.ts, vercel.json, .env.production
+```
+
+Pacote do design system: sem componente novo; única mudança é `RangeSlider.getValueText` (Q10).
+
+### Dependências (pré-autorizadas; versão fixa, compatibilidade conferida na instalação, registro nos ADRs)
+
+| Pacote | Versão | Motivo |
+|---|---|---|
+| `@tanstack/react-router` | 1.170.45 | rotas, `validateSearch`, `notFound` |
+| `@tanstack/react-query` | 5.104.5 | cache, `signal`, `placeholderData` |
+| `axios` | 1.20.0 | cliente HTTP |
+| `msw` | 2.x (2.15.0; conferir o maior 2.x com `pnpm view msw@2 version`) | mocks REST; **não usar 3.x**: `@mswjs/socket.io-binding@0.2.0` exige `msw ^2.10.2` |
+| `zod` | 4.6.7 | validação na borda |
+| `i18next` / `react-i18next` | 26.5.5 / 17.1.2 | i18n |
+| `@playwright/test` | 1.64.1 (igual ao `playwright` instalado) | runner E2E |
+| `@axe-core/playwright` | 4.14.0 | axe nos E2E (`testing.md`) |
+
+Antes de cada instalação: conferir peers e compatibilidade com Vite 8.3.5, Tailwind 4.3.3, Vitest 5.0.5, ESLint 10.13.0 e TypeScript 6.0.3. Sem plugins de lint novos (`eslint-plugin-react` e `eslint-plugin-i18next` descartados: peers sem ESLint 10, ADR-21).
+
+**Lint (ADR-21), só regras do núcleo e do typescript-eslint:** `no-restricted-imports` por camada, deep import, slice irmão, `mocks` fora de `app/bootstrap`, React/Axios/TanStack/MSW/i18next em `model/domain` e `shared/lib`; `no-restricted-syntax` para literais com letra em JSX (`JSXText`, atributos `aria-label|aria-description|alt|title|placeholder|label`, template em JSX; exceções: testes, `e2e/**`, `src/mocks/**`; a ordem dos blocos preserva o `no-restricted-syntax` de `.only/.skip` dos testes, `eslint.config.js:31-53`); qualidade em `src/**` exceto testes: `complexity 10`, `max-depth 3`, `max-params 3`, `max-nested-callbacks 3`, `max-lines 200`, `max-lines-per-function 80`, `no-explicit-any`, `as` proibido salvo `as const`, `switch-exhaustiveness-check`; testes `max-lines 400`.
+
+## 3. Contratos
+
+### 3.1 Search params da rota `/` (`homeSearchSchema`)
+
+| Param | Tipo | Default (omitido) | Normalização |
+|---|---|---|---|
+| `q` | string | — | trim; vazio vira ausente; máx. 100 caracteres |
+| `tab` | `all\|new\|trending` | `all` | inválido vira ausente |
+| `sort` | `recent\|price-asc\|price-desc\|popular` | `recent` | idem |
+| `collections` | slug[] (whitelist) | [] | sem duplicatas, ordenado, desconhecidos descartados |
+| `networks` | `ethereum\|polygon\|solana`[] | [] | idem |
+| `min`, `max` | string decimal ETH (`^\d+(\.\d{1,18})?$`) | — | inválido descartado; `min > max` (bigint) descarta os dois |
+| `page` | inteiro ≥ 1 | 1 | `-1`, `2.5`, `abc` viram ausente; acima de `totalPages` vira a última (`replace`) |
+
+`withFilterChange(search, patch)` zera `page` quando muda `q`, `tab`, `sort`, `collections`, `networks`, `min` ou `max`. Busca e filtros fazem push no histórico; a normalização usa replace.
+
+### 3.2 `GET /api/nfts`
+
+Query: `search?`, `view=all|new|trending`, `sort`, `collections` (repetido, ordenado), `networks` (idem), `minPriceEth?`, `maxPriceEth?`, `page`, `pageSize=9` (fixo).
+
+```ts
+type NftSummaryDto = { id: string /* slug */; title: string; collectionId: CollectionId; networkId: NetworkId;
+  priceEth: string /* decimal */; image: { src: string; width: number; height: number }; rarity: 'common' | 'rare';
+  listedAt: string /* ISO */; popularity: number /* inteiro */; version: number /* inteiro, p/ F7 */ };
+type CatalogPageDto = { items: NftSummaryDto[]; page: number; pageSize: number; totalItems: number; totalPages: number;
+  facets: { collections: { id: CollectionId; count: number }[]; networks: { id: NetworkId; count: number }[];
+            priceRange: { minEth: string; maxEth: string } } };
+```
+
+- Facetas **disjuntivas**: a contagem de coleções aplica todos os filtros menos `collections`; a de redes, todos menos `networks`. `priceRange` vem do catálogo inteiro.
+- Erros só com código, sem texto: `{ code: 'validation_failed', fieldErrors? }` 400; `{ code: 'service_unavailable' }` 503; `{ code: 'internal_error' }` 500. Falha de rede vira `ApiError{ code: 'network_error' }` no adaptador; resposta fora do schema vira `invalid_response`. `ApiError = { status: number | null; code; transient: boolean; fieldErrors? }`; `transient` vale para 503, `network_error` e 500.
+
+### 3.3 `GET /api/highlights`
+
+`{ hero: NftSummaryDto[] /* exatamente 3 */; featured: NftSummaryDto }`. Recurso separado: não depende dos filtros e mantém estável a chave da lista.
+
+### 3.4 Domínio e UI
+
+DTO → domínio no adaptador: `NftSummary { id; title; collectionId; networkId; price: EthAmount /* string validada */; image; rarity; listedAt }`. A UI recebe `NftCardViewModel { id; title; priceLabel; image: { src; alt }; href; isRare }`; `priceLabel = t('shared:eth.amount', { amount: formatEthAmount(price, locale) })`, que só manipula string (nunca `Number`).
+
+### 3.5 Cache, cancelamento e chaves (ADR-20)
+
+- `nftKeys.list(viewer, query) = ['nfts','list',{ viewer },normalizedQuery]`; `viewer = 'anonymous'` até F2. Idioma fora da chave (Q5).
+- `queryFn: ({ signal }) => fetchCatalogPage(query, signal)`; troca de parâmetro aborta a requisição.
+- `staleTime` 30 s; `retry` só para `transient`, no máximo 1, `retryDelay` 300 ms; `placeholderData: keepPreviousData` com `aria-busy="true"`; skeleton só sem dado.
+
+### 3.6 MSW (só em `src/mocks`)
+
+| Cenário | Comportamento |
+|---|---|
+| `default` | latência fixa de 120 ms (sem aleatoriedade) |
+| `catalog-empty` | 200 com `items: []`, `totalItems: 0`, facetas zeradas |
+| `catalog-error` | 503 `service_unavailable` sempre |
+| `catalog-flaky` | as 2 primeiras requisições a `/api/nfts` devolvem 503; depois 200 |
+| `catalog-slow` | 1500 ms em `/api/nfts` e `/api/highlights` |
+| `catalog-out-of-order` | 1ª requisição após a carga inicial leva 1200 ms; as seguintes, 100 ms |
+
+Seleção por `localStorage['jg:mocks:scenario']` (lido só por `mocks/scenario.ts`; desconhecido vira `default`); testes usam `page.addInitScript`. Reset implícito por contexto novo (catálogo é só leitura); persistência e reset completos em F1. Ativação por `VITE_ENABLE_MOCKS=true`, inclusive no build (`.env.production`).
+
+Fixtures (45 NFTs): slugs únicos `^[a-z0-9-]+$`; 9 coleções (`digital-art, photography, music, 3d-art, collectibles, generative, gaming, memberships, utility`) e 3 redes com ≥ 2 itens cada; 6 raros; preços de `0.000000000000000001` a `12.30`, incluindo `1.19`, `1.10`, `0.02`; nomes do Figma presentes (Emerald Ape #042 = 1.19, Sage Nomad #009 = 1.69, Neon Vessel #552 = 1.99, Cosmic Bloom #118, Violet Nomad #314, Ivory Baron #088, Golden Beat #207, Golden Signal #160); imagens da Q13; 5 páginas com `pageSize` 9.
+
+### 3.7 Rotas stub
+
+`/nfts/$nftId`, `/login` e `/cart` renderizam no lugar `UnavailablePage` com a feature (`nft-detail`, `auth`, `cart`), sem redirecionar. `/unavailable?feature=<id>` usa a whitelist `creators|learn|auth|nft-detail|cart|favorites|journal|newsletter|footer|social|scan`; id desconhecido mostra mensagem genérica. Rota inexistente cai no `notFoundComponent` com link para `/`. Sem eventos Socket.IO nesta feature.
+
+### 3.8 i18n
+
+Namespaces por slice em `config/locales/{pt-BR,en}.ts`: `shared, header, footer, bottomNav, hero, catalog, filters, search, sort, viewTabs, nft, collection, featured, banners, journal, language, pageHome, pageUnavailable, pageNotFound`. `en` tipado `satisfies LocaleShape<typeof ptBR>`; teste de paridade confere chaves e `{{placeholders}}`. Prioridade: `jg:locale` salvo, `navigator.languages` por prefixo, `pt-BR`. `useDocumentMeta` define `<html lang>`, `<title>` e `meta description` por rota. Conteúdo editorial do catálogo (título) é dado do mock em pt-BR, não mensagem (limitação registrada).
+
+## 4. Aceite
+
+| # | Critério observável | Teste |
+|---|---|---|
+| A1 | Lint reprova imports contra FSD, deep import, domínio com framework e literais em JSX; limites ativos | 3, 4, 5 |
+| A2 | Paridade de chaves e placeholders pt-BR/en | 2 |
+| A3 | `<html lang>` e `<title>` corretos e traduzidos; troca sem reload, persistida | 6, 7, 35 |
+| A4 | ETH string decimal fim a fim; 18 casas exatas; pt-BR "1,19 ETH", en "1.19 ETH" | 9, 10, 12, 16, 22 |
+| A5 | Contrato `GET /api/nfts`: parâmetros, DTO validado, erros por código, cancelamento por `signal` | 12-17 |
+| A6 | Listagem com 9 cards, contagem anunciada, título leva a `/nfts/<slug>` | 22 |
+| A7 | URL como fonte: filtros combináveis, ordenação, abas, busca, paginação, histórico, refresh, `page` reiniciado, params inválidos normalizados | 18, 19, 23-28 |
+| A8 | Resposta obsoleta nunca aparece | 29 |
+| A9 | Skeleton com shimmer, sem CLS, sem animação com movimento reduzido | 30 |
+| A10 | Vazio com "Limpar filtros"; erro traduzido com "Tentar novamente" e recuperação | 31, 32 |
+| A11 | Atualização em segundo plano com `aria-busy` e dados anteriores visíveis | 33 |
+| A12 | Hero manual sem autoplay; destaque com link | 34 |
+| A13 | Teclado, foco visível, Sheet com foco preso e retorno, labels | 36, 38 |
+| A14 | Layout 1440/768/390 sem overflow horizontal (e reflow em 320) | 37 |
+| A15 | 404, `/unavailable` e stubs coerentes, sem simular sucesso | 8 |
+| A16 | Medidas do Figma nos widgets (ADR-08) e desvios da captura pelo CLI listados | 39, 40 |
+| A17 | `RangeSlider` anuncia o valor formatado (`aria-valuetext`) | 23a, 24 |
+| A18 | Build de demonstração com mocks ativos; acesso direto e refresh funcionam | 41, 42, 43 |
+
+## 5. Testes RED (um por vez, menor para maior; RED → GREEN, cada um em commit próprio)
+
+**V** ✔ = entra no `verify` cotidiano (Vitest em `test`; E2E em `test:e2e`). Projetos Playwright: `desktop-1440` (1440×900), `tablet-768` (768×1024, só specs `@tablet`) e `mobile-390` (390×844), Chromium, `locale 'pt-BR'`, `trace 'retain-on-failure'`, relatório HTML, `forbidOnly`, `webServer` com `vite` e `VITE_ENABLE_MOCKS=true`, **sem `toHaveScreenshot`**. O projeto Vitest `node` do app inclui `src/**/*.node.test.ts`.
+
+### M1: shell, i18n e lint
+Pronto: `lint typecheck test` verdes; `/` renderiza o layout com i18n; `design.md` §10 corrigido; dependências instaladas e registradas (ADR-16, 17, 21).
+
+| # | Teste | Arquivo | Tipo | VP | V |
+|---|---|---|---|---|---|
+| 1 | `resolveLocale`: salvo > `navigator.languages` por prefixo > `pt-BR` | `src/shared/lib/i18n/resolve-locale.node.test.ts` | unit | — | ✔ |
+| 2 | Paridade pt-BR/en: mesmas chaves e `{{x}}` em todos os namespaces | `src/app/i18n/locales-parity.node.test.ts` | unit | — | ✔ |
+| 3 | Lint FSD: shared→entities, entities→features, feature→feature, deep import, `react`/`axios`/`@tanstack/*` em `model/domain`, `mocks` fora de `app/bootstrap` dão erro; import por `index.ts` passa | `apps/web/tests/lint-fsd.node.test.ts` | unit (API do ESLint) | — | ✔ |
+| 4 | Lint i18n: JSXText com letra, `aria-label`/`alt`/`placeholder`/`title` literais e template em JSX dão erro; glifo sem letra passa; testes isentos mantêm o `no-restricted-syntax` de `.only/.skip` | `apps/web/tests/lint-i18n.node.test.ts` | unit | — | ✔ |
+| 5 | Lint de qualidade: complexidade 11, profundidade 4, 4 parâmetros, função de 81 linhas, arquivo de 201 linhas, `any`, `as X` dão erro; `as const` passa | `apps/web/tests/lint-quality.node.test.ts` | unit | — | ✔ |
+| 6 | `AppProviders`: `<html lang>` segue o idioma; trocar atualiza texto e `lang` sem remontar e grava `jg:locale` | `src/app/providers/AppProviders.test.tsx` | integração (Vitest browser) | 1440 | ✔ |
+| 7 | Shell: landmarks banner/main/contentinfo, skip link leva o foco ao `main`, `lang="pt-BR"` e título pt; com `locale 'en-US'` → `lang="en"` e título en | `e2e/shell.spec.ts` | E2E | 1440, 390 | ✔ |
+| 8 | Rotas: `/rota-x` mostra 404 com link para `/`; `/unavailable?feature=creators` mostra mensagem e link de volta; `/login`, `/cart` e `/nfts/emerald-ape-042` mostram "não disponível" mantendo a URL; feature desconhecida mostra o genérico | `e2e/routes.spec.ts` | E2E | 1440, 390 | ✔ |
+
+### M2: shared/api, MSW e contrato
+Pronto: contrato validado por zod nos dois lados; handlers testados com `msw/node`; worker registrado no dev (ADR-16, 18, 19, 22).
+
+| # | Teste | Arquivo | Tipo | V |
+|---|---|---|---|---|
+| 9 | `parseEth`/`compareEth`: válidos (`0`, `1.19`, `12.30`, `0.000000000000000001`) e inválidos (`1e3`, `-1`, `.5`, `1.`, `1,5`, 19 casas); `1.10 == 1.1`; `0.1 > 0.09`; ida e volta canônica | `src/shared/lib/eth/eth.node.test.ts` | unit | ✔ |
+| 10 | `formatEthAmount`: pt-BR `1,19`, en `1.19`; 18 casas preservadas; milhar; o fonte não usa `Number(`/`parseFloat` | `src/shared/lib/eth/format-eth.node.test.ts` | unit | ✔ |
+| 11 | `ethToSteps('12.30','0.01') = 1230`, `stepsToEth(2,'0.01') = '0.02'`; arredondamento piso/teto | `src/shared/lib/eth/eth-steps.node.test.ts` | unit | ✔ |
+| 12 | Schemas zod aceitam DTO válido; rejeitam `priceEth` numérico, decimal inválido, slug desconhecido, `hero` com ≠ 3 itens | `src/shared/api/contracts/nfts.node.test.ts` | unit | ✔ |
+| 13 | `httpClient`: 503 → `service_unavailable` transitório; 400 → não transitório com `fieldErrors`; rede → `network_error`; abort identificável | `src/shared/api/http-client.node.test.ts` | integração (`msw/node`) | ✔ |
+| 14 | `queryCatalog` (puro): busca sem diferenciar maiúsculas em título e coleção; OR na dimensão e AND entre dimensões; preço inclusivo por bigint; `view`; 4 ordenações; `page` limitado; facetas disjuntivas; `priceRange` | `src/mocks/catalog/query-catalog.node.test.ts` | unit | ✔ |
+| 15 | Fixtures: ≥ 40 itens, slugs únicos, toda coleção e rede com ≥ 2, ≥ 3 raros, preços válidos, imagens existem em `public/` | `src/mocks/fixtures/nfts.node.test.ts` | unit | ✔ |
+| 16 | `fetchCatalogPage(query, signal)`: query string esperada; DTO vira domínio com `price` string; DTO inválido vira `invalid_response`; `signal` abortado rejeita | `src/entities/nft/api/fetch-catalog-page.node.test.ts` | integração (`msw/node`) | ✔ |
+| 17 | `readScenario`: whitelist; desconhecido ou ausente → `default` | `src/mocks/scenario.node.test.ts` | unit | ✔ |
+
+### M3: entidade e lista
+Pronto: a Home lista a página 1 do cenário `default` nos dois viewports.
+
+| # | Teste | Arquivo | Tipo | VP | V |
+|---|---|---|---|---|---|
+| 18 | `normalizeCatalogSearch`: defaults omitidos, arrays sem duplicatas e ordenados, inválidos descartados, `min > max` descarta os dois, `q` com trim | `src/entities/nft/model/domain/catalog-query.node.test.ts` | unit | — | ✔ |
+| 19 | `withFilterChange` zera `page`; `toApiParams` mapeia `q→search`, `tab→view`, `min→minPriceEth` | idem | unit | — | ✔ |
+| 20 | `nftKeys.list`: mesma chave para arrays em ordem diferente e default explícito × omitido; chave distinta por parâmetro e por `viewer` | `src/entities/nft/model/nft-keys.node.test.ts` | unit | — | ✔ |
+| 21 | `toCardViewModel`: `href` `/nfts/<id>`, `priceLabel` por idioma, `alt` traduzido, `isRare` | `src/entities/nft/model/to-card-view-model.node.test.ts` | unit | — | ✔ |
+| 22 | Sucesso: 9 cards; 1º "Emerald Ape #042" com "1,19 ETH"; `status` anuncia "45 NFTs"; link do título leva a `/nfts/emerald-ape-042`; com `?sort=price-asc` o 1º preço é "0,000000000000000001 ETH" | `e2e/home-catalog.spec.ts` | E2E | 1440, 390 | ✔ |
+
+### M4: filtros e URL
+Pronto: o fluxo §9.1 passa.
+
+| # | Teste | Arquivo | Tipo | VP | V |
+|---|---|---|---|---|---|
+| 23a | **DS:** `RangeSlider` exige `getValueText` (RED de tipo, `@ts-expect-error` no `typetest`) e cada thumb expõe `aria-valuetext` com o texto recebido (inglês no teste de repasse); stories e testes existentes passam a fornecê-lo; baselines intactas | `packages/design-system/src/primitives/range-slider/RangeSlider.test.tsx` + `tests/ui-text-props.typetest.tsx` | unit (browser) + tipo | 1440 | ✔ |
+| 23 | Coleção + rede combinadas: URL `?collections=digital-art&networks=polygon`; contagens da API; partindo de `?page=2`, `page` volta a 1. Em 390, via botão de filtros (Sheet) e "Aplicar" | `e2e/home-filters.spec.ts` | E2E | 1440, 390 | ✔ |
+| 24 | Faixa de preço por teclado (setas nos thumbs) e Aplicar: URL `min`/`max` como strings decimais; todos os preços visíveis dentro da faixa; `aria-valuetext` "12,30 ETH"; rótulo "Preço: 0,02 - 12,30 ETH" | idem | E2E | 1440, 390 | ✔ |
+| 25 | Ordenação por teclado no Select: `?sort=price-desc`; 1º card é o mais caro; em 390, dentro do Sheet | `e2e/home-sort-tabs.spec.ts` | E2E | 1440, 390 | ✔ |
+| 26 | Abas por setas: `?tab=new`, conjunto conforme a fixture, página reiniciada | idem | E2E | 1440, 390 | ✔ |
+| 27 | Busca: desktop, botão com `aria-expanded` abre o campo e Enter submete; mobile, campo direto: `?q=nomad` mostra só nomes com "Nomad"; limpar remove o param; Esc fecha o campo e devolve o foco | `e2e/home-search.spec.ts` | E2E | 1440, 390 | ✔ |
+| 28 | Paginação e histórico: `page=2` traz itens distintos e o foco vai ao título dos resultados; voltar restaura a página 1 e os filtros; refresh mantém; `?page=999` vira a última (replace); `?tab=foo&page=-3` vira `/` sem erro | `e2e/home-url-history.spec.ts` | E2E | 1440, 390 | ✔ |
+| 29 | Fora de ordem (`catalog-out-of-order`): marcar A (lenta) e depois B (rápida); quando A terminar, a grade continua a de B e a URL é a de B | `e2e/home-out-of-order.spec.ts` | E2E | 1440, 390 | ✔ |
+
+### M5: estados
+Pronto: fluxo §9.12; união de estados exaustiva (`assertNever`).
+
+| # | Teste | Arquivo | Tipo | VP | V |
+|---|---|---|---|---|---|
+| 30 | Skeleton (`catalog-slow`): região com `aria-busy="true"` e status "Carregando" traduzido; 9 skeletons; `animation-name` ≠ `none`; altura do skeleton igual à do card (±1 px); com `reducedMotion 'reduce'`, animação `none` | `e2e/home-states.spec.ts` | E2E | 1440, 390 | ✔ |
+| 31 | Vazio (`catalog-empty` e `?q=zzz`): título e texto; "Limpar filtros" leva a `/` | idem | E2E | 1440, 390 | ✔ |
+| 32 | Erro: `catalog-error` mostra `role=alert` traduzido e "Tentar novamente" focável; tentar de novo mantém o erro. `catalog-flaky`: erro e, após tentar de novo, sucesso. Mesma mensagem em en | idem | E2E | 1440, 390 | ✔ |
+| 33 | Atualização em segundo plano (`catalog-slow` após a carga): mudar filtro mantém os cards anteriores com `aria-busy="true"`; depois `false` e novos cards; sem skeleton | idem | E2E | 1440, 390 | ✔ |
+| 34 | Destaques: hero com 3 botões de ponto ("Destaque 2 de 3") com `aria-current`; clique troca a imagem; com `page.clock`, avançar 30 s não troca; destaque lateral (1440) linka para o detalhe; "Explorar" leva o foco a `#catalog` | `e2e/home-highlights.spec.ts` | E2E | 1440, 390 | ✔ |
+
+### M6: layout responsivo, i18n, a11y e fidelidade
+Pronto: testes verdes em todos os projetos; relatório da captura pelo CLI anexado à seção Execução.
+
+| # | Teste | Arquivo | Tipo | VP | V |
+|---|---|---|---|---|---|
+| 35 | Idioma: seletor troca pt-BR para en; `lang`, título, navegação, abas, ordenação, coleções e "1.19 ETH" mudam; reload mantém en; primeiro acesso com `en-US` abre em en | `e2e/home-i18n.spec.ts` | E2E | 1440, 390 | ✔ |
+| 36 | Teclado: ordem de Tab (skip, navegação, busca, filtros, abas, ordenação, cards, paginação, rodapé); foco visível (`outline-style` ≠ `none`); Sheet de filtros com foco preso, Esc fecha e devolve o foco; todo checkbox, slider e campo com nome acessível | `e2e/home-a11y.spec.ts` | E2E | 1440, 390 | ✔ |
+| 37 | Layout `@tablet`: 1440 tem sidebar e grade de 3 colunas; 768 tem botão de filtros e 2 colunas, sem barra inferior; 390 tem campo de busca, botão de filtros, 2 colunas e barra inferior; nos três `scrollWidth ≤ clientWidth`; em 320 sem overflow horizontal | `e2e/home-layout.spec.ts` | E2E | 1440, 768, 390 | ✔ |
+| 38 | axe sem violações na Home carregada, no vazio, no erro e com o Sheet aberto | `e2e/home-axe.spec.ts` | E2E | 1440, 390 | ✔ |
+| 39 | Medidas (ADR-08) de header, hero, sidebar, toolbar, grade (gaps) e barra inferior, com o valor lido do nó em `docs/figma/file.json` (`2:2`/`14:5226`) e citação de `arquivo:linha`; valor ausente vira Lacuna, não palpite | `src/widgets/*/ui/*.measure.test.tsx` | integração (Vitest browser) | 1440 / 390 | ✔ |
+| 40 | Inspeção, não é teste: `pnpm --filter @jg/web exec playwright screenshot --viewport-size=1440,900 --full-page http://localhost:5173/ <scratchpad>/home-1440.png` (e `390,844`, `768,1024`; conferir flags com `--help`); comparar com `docs/figma/screens/2-2_*.png` e `14-5226_*.png`; cada desvio vira item (elemento, esperado, observado) | — | CLI | 1440, 768, 390 | ✘ |
+
+### M7: build de demonstração e deploy (§12)
+Pronto: `build` com mocks ativos; acesso direto e refresh funcionam no preview; pronto para publicar. A **publicação** exige a conta do usuário (Vercel recomendada pelo enunciado) e fica para o fechamento (F9) ou quando o usuário a fizer.
+
+| # | Teste | Arquivo | Tipo | VP | V |
+|---|---|---|---|---|---|
+| 41 | Config de deploy: `vercel.json` com rewrite SPA de qualquer caminho para `/index.html`; `.env.production` define `VITE_ENABLE_MOCKS=true`; `build` e `preview` existem no `package.json`; `dev:mocks` ativa os mocks | `apps/web/tests/deploy-config.node.test.ts` | unit | — | ✔ |
+| 42 | Sobre o build de preview (mocks do build, sem dev server): acesso direto e refresh em `/`, `/nfts/emerald-ape-042` e `/rota-x` (404) funcionam; o catálogo carrega dos handlers MSW | `e2e/preview.spec.ts` (`@preview`) | E2E | 1440, 390 | ✔ |
+| 43 | Scripts: `pnpm --filter @jg/web dev:mocks`, `preview` e `test:e2e` existem e rodam; evidência colada | — | verificação | — | ✘ |
+
+Scripts em `apps/web/package.json`: `dev:mocks`, `preview`, `test:e2e`; no `turbo.json`, `test:e2e` com `dependsOn: ["^build"]` e entrada no `verify` da raiz. Se `test:e2e` + `build` exceder o tempo razoável do `verify`, registrar a medição e decidir sem relaxar timeout.
+
+## 6. Riscos e lacunas remanescentes
+
+- **R1:** `msw/node` pode não interceptar o Axios 1.20 nessa configuração; fallback: Vitest browser com `setupWorker` (não verificado).
+- **R2:** se o abort não propagar pelo service worker, o teste 29 continua válido (afirma a UI).
+- **R3:** as contagens do Figma (33, 12, 65… e 119/78/86) são ilustrativas e inconsistentes entre si; fixtures têm 45 itens; desvio registrado.
+- **R4:** assinaturas do TanStack Router e Query (`getRouteApi`, `keepPreviousData`, `notFoundComponent`) devem ser confirmadas nos tipos instalados antes do GREEN (`grounding.md`).
+- **R5:** sem Docker, a regressão visual das páginas depende da decisão pendente do usuário sobre baselines locais (ADR-15); a Home não cria baselines.
+- **R6:** a obtenção das imagens pela API do Figma depende do token do `.env` e do alcance dos image fills (Q13); falha vira lacuna registrada.
+- **R7:** de 768 a 1439 px vale o layout tablet; o Lighthouse desktop emula ~1350 px (Q16).
+
+## 7. Fora do escopo
+
+Login, cadastro, sessão e interceptors (F2); detalhe, favoritos (F4); carrinho e contador real (F5); checkout e pedidos (F6); Socket.IO e `nft.updated` (F7); perfil e carteiras (F8); persistência e reset completos dos mocks, demais cenários do §6 e spike do socket (F1); páginas editoriais e de suporte, newsletter funcional, login social; regressão visual com baselines, snapshots de DOM consolidados, Lighthouse e README completo (F9); publicação do deploy; `Accept-Language`; qualquer componente novo no DS além do `getValueText`.
+
+## 8. Decisões para ARCHITECTURE.md (ADR-16 em diante; o ADR-15 já está registrado)
+
+**ADR-16 Stack de rotas, dados e mocks do app.** Contexto: enunciado §2/§4 exige Router, Query, Axios e MSW; `@mswjs/socket.io-binding@0.2.0` declara peer `msw ^2.10.2`. Decisão: `@tanstack/react-router 1.170.45` com árvore de código; `@tanstack/react-query 5.104.5`; `axios 1.20.0`; `msw` 2.x fixado; `zod 4.6.7` na borda; mocks em `src/mocks`, fora do FSD, importados só por `app/bootstrap` e ativados por `VITE_ENABLE_MOCKS`. Descartado: MSW 3.x (quebra o binding de Socket.IO), plugin de geração de rotas, guards manuais no lugar do zod. Consequência: atualizar o MSW exige reavaliar o binding em F1.
+
+**ADR-17 i18n do app.** `i18next 26.5.5` + `react-i18next 17.1.2`; namespaces por slice em TS, `en` tipado pelo shape do pt-BR, teste de paridade de placeholders; detecção própria (salvo, `navigator.languages`, pt-BR); idioma em estado, sem URL; `useDocumentMeta` controla `lang`, `title` e `description`; conteúdo editorial não localizado e idioma fora da `queryKey`. Descartado: `react-intl`, Lingui, `i18next-browser-languagedetector`. Consequência: localizar conteúdo em F4 exige pôr o `locale` na chave e enviar `Accept-Language`.
+
+**ADR-18 ETH em bigint com helpers próprios.** `shared/lib/eth`: parse e validação por regex, comparação em bigint de 18 casas, formatação por idioma só por string, slider em passos inteiros (`ethToSteps`/`stepsToEth`). Descartado: biblioteca decimal; slider em `number` de ETH (passa por float). Consequência: carrinho e cotação (F5) reutilizam o módulo.
+
+**ADR-19 Contrato do catálogo.** `GET /api/nfts` (busca, `view`, `sort`, coleções, redes, preço em string, `page`, `pageSize` 9) com facetas disjuntivas e `priceRange`; `GET /api/highlights`; erros só por código; slugs estáveis; semântica de `view` no servidor simulado. Descartado: contagens fixas no front, texto em erro, destaques dentro da listagem. Consequência: a UI traduz todos os códigos; contagens do Figma registradas como ilustrativas.
+
+**ADR-20 Política de cache do catálogo.** Chave `['nfts','list',{ viewer },query]` com `viewer='anonymous'` até F2; `staleTime` 30 s; retry só em erro transitório, máx. 1, 300 ms; `keepPreviousData` com `aria-busy`; skeleton só sem dado; `signal` ao Axios. Descartado: skeleton a cada troca de filtro, retry em 4xx. Consequência: F2 troca o `viewer` e limpa o cache no logout.
+
+**ADR-21 Lint de FSD, i18n e qualidade sem plugins.** Regras do núcleo e do typescript-eslint com os limites numéricos acima. Descartado: `eslint-plugin-react` (peer só até ESLint ^9.7), `eslint-plugin-i18next` (sem compatibilidade declarada com ESLint 10), `eslint-plugin-boundaries`. Consequência: guardas provadas por testes da API do ESLint, como no ADR-14.
+
+**ADR-22 Cenários MSW determinísticos.** Cenário por `localStorage['jg:mocks:scenario']` (lido só pela camada de mocks, injetado nos E2E por `addInitScript`); latências fixas; "fora de ordem" por ordem de chegada; falha temporária nas N primeiras requisições. Descartado: `delay()` realista do MSW (aleatório), cenário na URL do app. Consequência: F1 acrescenta reset e persistência sobre o mesmo seletor.
+
+**ADR-23 Rotas stub para destinos futuros.** `/nfts/$nftId`, `/login` e `/cart` renderizam no lugar "não disponível", mantendo a URL final, sem redirecionar. Descartado: redirecionar para `/unavailable` (quebra o voltar e o link direto). Consequência: F2, F4 e F5 só trocam o componente.
+
+**ADR-24 Build de demonstração com mocks e SPA fallback.** `.env.production` com `VITE_ENABLE_MOCKS=true`; `vercel.json` com rewrite para `/index.html`; E2E sobre o build de preview. Descartado: mocks só em dev (viola §6/§12). Consequência: o deploy público exibe os mocks e as rotas diretas funcionam.
+
+**Desvios do Figma a registrar:** separador decimal (Q3), seletor de idioma (Q8), skip link, preço riscado omitido, card sem título não replicado, contagens ilustrativas, cópia do hero por breakpoint (Q9), layout tablet derivado (Q11), mobile sem frame abaixo da dobra (Q12).
+
+## Progresso
+
+M1
+- [ ] 1 `resolveLocale`
+- [ ] 2 paridade pt-BR/en
+- [ ] 3 lint FSD
+- [ ] 4 lint i18n
+- [ ] 5 lint de qualidade
+- [ ] 6 `AppProviders` e idioma
+- [ ] 7 shell E2E
+- [ ] 8 rotas stub, 404 e `/unavailable` E2E
+- [ ] Docs M1: `design.md` §10, ADR-16/17/21, dependências instaladas
+
+M2
+- [ ] 9 `parseEth`/`compareEth`
+- [ ] 10 `formatEthAmount`
+- [ ] 11 `ethToSteps`/`stepsToEth`
+- [ ] 12 schemas zod
+- [ ] 13 `httpClient`
+- [ ] 14 `queryCatalog`
+- [ ] 15 invariantes das fixtures (inclui imagens, Q13)
+- [ ] 16 `fetchCatalogPage`
+- [ ] 17 `readScenario`
+
+M3
+- [ ] 18 `normalizeCatalogSearch`
+- [ ] 19 `withFilterChange` e `toApiParams`
+- [ ] 20 `nftKeys`
+- [ ] 21 `toCardViewModel`
+- [ ] 22 sucesso E2E
+
+M4
+- [ ] 23a DS `RangeSlider.getValueText`
+- [ ] 23 filtros combinados E2E
+- [ ] 24 faixa de preço E2E
+- [ ] 25 ordenação E2E
+- [ ] 26 abas E2E
+- [ ] 27 busca E2E
+- [ ] 28 paginação e histórico E2E
+- [ ] 29 fora de ordem E2E
+
+M5
+- [ ] 30 skeleton E2E
+- [ ] 31 vazio E2E
+- [ ] 32 erro e retry E2E
+- [ ] 33 atualização em segundo plano E2E
+- [ ] 34 destaques E2E
+
+M6
+- [ ] 35 i18n E2E
+- [ ] 36 teclado e foco E2E
+- [ ] 37 layout responsivo E2E
+- [ ] 38 axe E2E
+- [ ] 39 medidas do Figma
+- [ ] 40 inspeção por captura do CLI (relatório de desvios)
+
+M7
+- [ ] 41 config de deploy
+- [ ] 42 preview E2E
+- [ ] 43 scripts `dev:mocks`, `preview`, `test:e2e`
+- [ ] Docs finais: ADR-18/19/20/22/23/24, desvios do Figma, README raiz (comandos)
+
+## Execução
+
+(preenchida por `/plan-execute home`)
