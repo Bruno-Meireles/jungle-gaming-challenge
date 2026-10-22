@@ -435,3 +435,7 @@ Desvios do plano no M1:
 - **Dívida anterior:** 78 arquivos fora do Prettier no repositório (`pnpm format:check`), fora do `verify`.
 - **Aviso:** na primeira execução com cache frio, `App.test.tsx` falhou uma vez com "Invalid hook call" (reotimização de dependências do Vitest); não reproduziu nas execuções seguintes. Vigiar.
 
+
+### M2/M3: itens GREEN em andamento
+
+- **Item 15 (fixtures):** `apps/web/src/mocks/fixtures/nfts.ts` (45 itens, tabela de linhas mais um construtor). **Desvio/Lacuna (imagens):** o Figma tem só 4 image fills distintos; os 37 itens sintéticos (nomes e slugs inventados, p.ex. `amber-fox-021`) usam, cada um, uma cópia em `public/nfts/<slug>.webp` de um dos 8 WebP existentes (rotação por índice), pois o teste exige `/nfts/<id>.webp` existente. Preços dos itens do Figma sem valor no plano (Cosmic Bloom 0.85, Violet Nomad 2.40, Ivory Baron 3.15, Golden Beat 0.45, Golden Signal 0.75) e quais itens são raros (índices 2, 6, 12, 19, 28, 36) foram escolhidos pelo code-writer: o Figma/plano não os definem. Extremos `0.000000000000000001` e `12.30`, mais `1.10` e `0.02`, estão em itens sintéticos.
