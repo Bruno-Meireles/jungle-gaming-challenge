@@ -1,6 +1,6 @@
 // Testes de tipo: checados só pelo `tsc` (não casam com os padrões do Vitest).
 // Cada `@ts-expect-error` prova que omitir a prop de rótulo deixa de compilar.
-import { DialogClose, PasswordInput, SheetClose } from '../src';
+import { DialogClose, PasswordInput, QuantityStepper, SheetClose } from '../src';
 
 export const _t1 = () => (
   <>
@@ -20,5 +20,37 @@ export const _t2 = () => (
     <PasswordInput hideLabel="Ocultar" />
     {/* @ts-expect-error PasswordInput exige hideLabel (sem default) */}
     <PasswordInput showLabel="Mostrar" />
+  </>
+);
+
+export const _t3 = () => (
+  <>
+    <QuantityStepper
+      value={1}
+      min={0}
+      max={5}
+      onValueChange={() => {}}
+      label="Quantidade"
+      decrementLabel="Diminuir"
+      incrementLabel="Aumentar"
+    />
+    {/* @ts-expect-error QuantityStepper exige decrementLabel (sem default) */}
+    <QuantityStepper
+      value={1}
+      min={0}
+      max={5}
+      onValueChange={() => {}}
+      label="Quantidade"
+      incrementLabel="Aumentar"
+    />
+    {/* @ts-expect-error QuantityStepper exige incrementLabel (sem default) */}
+    <QuantityStepper
+      value={1}
+      min={0}
+      max={5}
+      onValueChange={() => {}}
+      label="Quantidade"
+      decrementLabel="Diminuir"
+    />
   </>
 );
