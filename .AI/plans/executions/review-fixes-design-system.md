@@ -1,0 +1,27 @@
+# Correcoes de revisao do design system
+
+Branch `feat/design-system`. TDD por item: commit `test(red)` com a falha por assercao, depois `fix(green)`. Comandos de teste: `pnpm exec vitest run --project unit|node <caminho>` em `packages/design-system`.
+
+## Itens
+
+- **I3 Checkbox** (RED 4bfaeee, GREEN 8387cf5). RED: `borderTopLeftRadius` 3px nao e >= 8; `expected '0.5' to be '1'` (opacity); fundo/cor do check checados nao eram disabled-bg/disabled-text. GREEN: `rounded-full`, `disabled:bg-disabled-bg disabled:border-disabled-text disabled:text-disabled-text` (+ variantes `data-[state=checked|indeterminate]`), sem opacity; check (svg) herda `text-disabled-text`. Check e foco mantidos (testes existentes passam).
+- **I4 Dialog overlay** (RED 3057b16, GREEN 7147300). RED: `--color-overlay` vazio (`expected '' to be 'rgba(10, 6, 4, 0.45)'`) e teste de token derivado (`tests/tokens.node.test.ts`). GREEN: `--color-overlay: rgba(10, 6, 4, 0.45); /* derived:shadow-base */` em `tokens.css` (comentario explica que NAO e Figma), `bg-overlay` no `DialogContent`. Ajuste justificado nos testes de tokens: `parseDeclarations` passou a reconhecer `derived:`; `ALIAS_GAPS` (Lacuna sem token) virou `DERIVED` com teste proprio (valor, marca `derived`, sem `figma:`, cor-base = a das sombras); o teste "toda cor sem figma e var(...)" ignora derived; o teste "file.json sem fill translucido" foi mantido (e a justificativa de o token ser derivado). `docs/design-tokens.md` atualizado (linha do overlay).
+- **I5 Badge count** (RED 195fa3a, GREEN 3b173c2). RED: `Cannot find element with locator: getByRole('img', { name: '6 itens no carrinho' })`. GREEN: `role="img"` quando ha `aria-label` e nenhum role explicito.
+- **I6 axe** (RED 2b0d1af, GREEN da0bfaa). Novo `src/test/axe.test.tsx` (RED com tags antigas: `expected [ 'wcag2a', 'wcag2aa' ] to deeply equal [ Array(6) ]`; target-size e heading-order nao detectados: `promise resolved "undefined" instead of rejecting`). GREEN: `AXE_TAGS = wcag2a, wcag2aa, wcag21a, wcag21aa, wcag22aa, best-practice`, mensagem do helper agora lista os ids; `.storybook/preview.tsx` com `a11y.options.runOnly` nas mesmas tags. Resultado: nenhuma regra desligada e NENHUMA violacao nova nas 262 unit + 91 storybook (nada a corrigir).
+- **I7 Avatar** (RED 15c246a, GREEN 48a900c). RED: `Cannot find element with locator: getByRole('img', { name: 'Foto de Ana' })` (sem src e src quebrado). GREEN: Fallback com `role="img"` e `aria-label={alt}` quando nao ha src ou a imagem falhou (estado via `onLoadingStatusChange`); enquanto carrega o fallback e so placeholder (evita dois `img` nomeados; com role incondicional o teste existente "com src valido" achava o span). 
+- **M1 lint** (RED 342cbc7, GREEN f0abb22). RED: 13 falhas (ex.: `test.describe.skip` sem `no-restricted-syntax`; deep import nao reportado). GREEN em `eslint.config.js`: seletor `no-restricted-syntax` para `test|it.describe.only|skip|fixme` nos arquivos de teste; padroes `**/primitives/*/*` e `**/patterns/*/*` em todo o DS; regex para irmaos `../x/Y` em primitives e patterns (glob `../*/*` casava `../../lib/cn`, por isso regex). Testes em `tests/lint-test-hygiene.node.test.ts` e `tests/lint-boundary.node.test.ts`.
+- **M5 VisuallyHidden** (RED 508b8c7, GREEN 66cd39f). Novo `tests/public-api-props.node.test.ts` (todo valor exportado em `src/index.ts` deve ter `<Nome>Props`). RED: `falta export type VisuallyHiddenProps`. GREEN: tipo `VisuallyHiddenProps` + export em `index.ts` do slice e `src/index.ts`.
+- **M6 arbitrarios** (2f55f71; refactor, sem RED possivel: cobertos pelos testes de medida existentes). Trocados: Avatar `size-50`; Badge `size-16 h-32 px-8 pt-7`; QuantityStepper `h-49.5`; Rating `gap-4`; NftCard `leading-20` / `tablet:leading-16`. NAO trocados (sem utilitario equivalente: o Tailwind so gera multiplos de 0.25): Badge `leading-[13.19px]`, Separator `[0.3px]` (tentados e revertidos: os testes de medida acusaram NaN e 0px). `border-[1.5px]`/`border-[1.2px]` (espessura de borda, fora da escala de spacing) mantidos.
+- **M7**: Lacuna do `Math.round` (4,5 exibe 5 estrelas) registrada em `C19-rating.md`.
+
+## Golden (Docker)
+- `pnpm storybook:build` e `pnpm test:visual:docker --update-snapshots=changed -g "primitives-checkbox|primitives-dialog|primitives-badge|primitives-avatar|primitives-rating|patterns-nftcard"`: so 2 PNG mudaram (checkbox mobile), pois a tolerancia (`maxDiffPixelRatio 0.0005` em viewport grande) absorve o raio do circulo de 16px. Para nao deixar baselines desatualizadas, checkbox foi regenerado com `--update-snapshots=all -g primitives-checkbox` (15 PNG). PNG revisados visualmente (mobile disabled, checked, focus; desktop unchecked): circulo, borda primary; disabled com fundo marrom `border-soft` e borda `secondary`; check visivel no marcado; anel de foco circular. Dialog, Badge, Avatar, Rating, NftCard: sem diferenca (as mudancas sao de papel ARIA, token com mesmo valor e utilitarios equivalentes).
+- `pnpm test:visual:docker` completo sem update: 296 passed, 7 skipped (7.8m).
+
+## Verificacoes finais
+- `pnpm -r typecheck`: ok. `pnpm -r lint`: ok. `pnpm --filter @jg/design-system build`: ok.
+- `pnpm --filter @jg/design-system test` x2: 70 arquivos, 800 passed, ambas as vezes.
+
+## Lacunas
+- A tolerancia de golden esconde mudancas pequenas (cantos de 16px); baselines de componentes pequenos podem ficar levemente defasadas ate um `--update-snapshots=all` dirigido.
+- Avatar: o nome do fallback so e exposto sem src ou apos erro; durante o carregamento o fallback e placeholder sem nome.
