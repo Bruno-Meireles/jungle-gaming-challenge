@@ -10,15 +10,16 @@ import { VisuallyHidden } from '../visually-hidden';
 
 export type AlertProps = {
   tone: 'info' | 'error' | 'success';
+  toneLabel: string;
   title?: ReactNode;
   children: ReactNode;
   action?: ReactNode;
 };
 
 const TONES = {
-  error: { role: 'alert', label: 'Erro', border: 'border-error', icon: 'text-error' },
-  info: { role: 'status', label: 'Informação', border: 'border-primary', icon: 'text-primary' },
-  success: { role: 'status', label: 'Sucesso', border: 'border-success', icon: 'text-success' },
+  error: { role: 'alert', border: 'border-error', icon: 'text-error' },
+  info: { role: 'status', border: 'border-primary', icon: 'text-primary' },
+  success: { role: 'status', border: 'border-success', icon: 'text-success' },
 } as const;
 
 function ToneIcon({ tone }: { tone: AlertProps['tone'] }) {
@@ -57,7 +58,7 @@ function ToneIcon({ tone }: { tone: AlertProps['tone'] }) {
   );
 }
 
-export function Alert({ tone, title, children, action }: AlertProps) {
+export function Alert({ tone, toneLabel, title, children, action }: AlertProps) {
   const t = TONES[tone];
   return (
     <div
@@ -71,7 +72,7 @@ export function Alert({ tone, title, children, action }: AlertProps) {
         <ToneIcon tone={tone} />
       </span>
       <div className="flex min-w-0 flex-1 flex-col gap-4">
-        <VisuallyHidden>{t.label}</VisuallyHidden>
+        <VisuallyHidden>{toneLabel}</VisuallyHidden>
         {title ? <p className="text-body-14-bold-lh-auto">{title}</p> : null}
         <div className="text-body-14-regular-lh-24">{children}</div>
       </div>

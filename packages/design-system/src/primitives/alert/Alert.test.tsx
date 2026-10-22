@@ -11,15 +11,15 @@ import { Alert } from './Alert';
  */
 describe('Alert', () => {
   it('tom error usa role=alert (assertivo)', async () => {
-    await render(<Alert tone="error">Pagamento recusado</Alert>);
+    await render(<Alert tone="error" toneLabel="Erro">Pagamento recusado</Alert>);
     await expect.element(page.getByRole('alert').getByText('Pagamento recusado')).toBeVisible();
   });
 
   it('tons info e success usam role=status (polido)', async () => {
     await render(
       <>
-        <Alert tone="info">Frete calculado</Alert>
-        <Alert tone="success">Pedido criado</Alert>
+        <Alert tone="info" toneLabel="Informação">Frete calculado</Alert>
+        <Alert tone="success" toneLabel="Sucesso">Pedido criado</Alert>
       </>,
     );
     await expect.element(page.getByRole('status').first().getByText('Frete calculado')).toBeVisible();
@@ -32,6 +32,7 @@ describe('Alert', () => {
     await render(
       <Alert
         tone="error"
+        toneLabel="Erro"
         title="Falha na rede"
         action={
           <button type="button" onClick={() => clicked++}>
@@ -54,9 +55,9 @@ describe('Alert', () => {
   it('o tom nao depende so da cor: rotulo textual para leitor de tela e icone proprio por tom', async () => {
     await render(
       <>
-        <Alert tone="error">a</Alert>
-        <Alert tone="info">b</Alert>
-        <Alert tone="success">c</Alert>
+        <Alert tone="error" toneLabel="Erro">a</Alert>
+        <Alert tone="info" toneLabel="Informação">b</Alert>
+        <Alert tone="success" toneLabel="Sucesso">c</Alert>
       </>,
     );
     await expect.element(page.getByText('Erro', { exact: true })).toBeInTheDocument();
@@ -71,10 +72,8 @@ describe('Alert', () => {
   });
 
   it('expoe o toneLabel recebido (sr-only) em vez de um texto fixo', async () => {
-    // Provisorio: toneLabel ainda nao esta no tipo; o T4 o torna prop obrigatoria e substitui isto por uso direto.
-    const extra = { toneLabel: 'Error' } as Record<string, string>;
     await render(
-      <Alert tone="error" {...extra}>
+      <Alert tone="error" toneLabel="Error">
         Falha
       </Alert>,
     );
@@ -83,7 +82,7 @@ describe('Alert', () => {
   });
 
   it('tom error tem contorno de 1px na cor --color-error', async () => {
-    await render(<Alert tone="error">Falha</Alert>);
+    await render(<Alert tone="error" toneLabel="Erro">Falha</Alert>);
     const cs = getComputedStyle(page.getByRole('alert').element());
     expect(cs.borderTopWidth).toBe('1px');
     expect(cs.borderTopColor).toBe('rgb(237, 27, 46)');
@@ -93,7 +92,7 @@ describe('Alert', () => {
     'tom %s nao tem violacoes de acessibilidade (axe)',
     async (tone) => {
       const { container } = await render(
-        <Alert tone={tone} title="Titulo" action={<button type="button">Acao</button>}>
+        <Alert tone={tone} toneLabel="Rotulo" title="Titulo" action={<button type="button">Acao</button>}>
           Mensagem
         </Alert>,
       );
