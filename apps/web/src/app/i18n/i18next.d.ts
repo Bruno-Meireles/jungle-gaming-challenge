@@ -12,6 +12,8 @@ declare module 'i18next' {
       'featured',
       'language',
       'filters',
+      'sort',
+      'viewTabs',
       'pageHome',
       'pageUnavailable',
       'pageNotFound',

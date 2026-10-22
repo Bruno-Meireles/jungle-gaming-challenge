@@ -4,6 +4,8 @@ import { pageHomeLocales } from '../../pages/home';
 import { pageNotFoundLocales } from '../../pages/not-found';
 import { pageUnavailableLocales } from '../../pages/unavailable';
 import { sharedLocales } from '../../shared/config';
+import { sortLocales } from '../../features/catalog-sort';
+import { viewTabsLocales } from '../../features/catalog-view-tabs';
 import { filtersLocales } from '../../features/catalog-filters';
 import { languageLocales } from '../../features/language-switch';
 import { catalogLocales } from '../../widgets/catalog';
@@ -24,6 +26,8 @@ export const ptBRResources = {
   featured: featuredLocales['pt-BR'],
   language: languageLocales['pt-BR'],
   filters: filtersLocales['pt-BR'],
+  sort: sortLocales['pt-BR'],
+  viewTabs: viewTabsLocales['pt-BR'],
   pageHome: pageHomeLocales['pt-BR'],
   pageUnavailable: pageUnavailableLocales['pt-BR'],
   pageNotFound: pageNotFoundLocales['pt-BR'],
@@ -39,6 +43,8 @@ const enResources = {
   featured: featuredLocales.en,
   language: languageLocales.en,
   filters: filtersLocales.en,
+  sort: sortLocales.en,
+  viewTabs: viewTabsLocales.en,
   pageHome: pageHomeLocales.en,
   pageUnavailable: pageUnavailableLocales.en,
   pageNotFound: pageNotFoundLocales.en,
