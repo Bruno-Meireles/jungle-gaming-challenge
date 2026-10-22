@@ -364,7 +364,7 @@ M1
 - [x] 3 lint FSD: RED `97489b9` (40 falhas por asserção), GREEN (91/91 node do app; lint do DS e lint-boundary 21/21; typecheck e lint limpos). Limitação: regras casam só imports relativos e profundidade até 5 pastas; estender se o app adotar alias
 - [x] 4 lint i18n: RED `f840e7d` (10 falhas por asserção), GREEN (node 114/114; lint do DS e lint-boundary/test-hygiene 57/57; typecheck e lint limpos)
 - [x] 5 lint de qualidade: RED `35461f3` (10 falhas por asserção) + correção do teste (off-by-one em `functionOfLines`; caso `switch-exhaustiveness-check` retirado por ser type-aware e inviável com `lintText` de arquivos virtuais: exaustividade fica por `assertNever` + `tsc`, desvio do ADR-21), GREEN (node 133/133; typecheck, lint do app e do DS limpos; lint-boundary/test-hygiene 57/57)
-- [ ] 6 `AppProviders` e idioma
+- [x] 6 `AppProviders` e idioma: RED `6f4c6cd` (5 falhas por ausência do comportamento), GREEN (5/5; app 167/167; typecheck e lint limpos). Desvio: `i18next.d.ts` (CustomTypeOptions) adiado para os namespaces reais; chaves tipadas passam a ser exigidas quando houver o primeiro namespace (item 7)
 - [ ] 7 shell E2E
 - [ ] 8 rotas stub, 404 e `/unavailable` E2E
 - [ ] Docs M1: `design.md` §10, ADR-16/17/21, dependências instaladas
