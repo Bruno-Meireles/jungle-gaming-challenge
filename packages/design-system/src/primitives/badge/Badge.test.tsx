@@ -26,9 +26,9 @@ const PRIMARY = 'rgb(210, 138, 76)';
 const INK = 'rgb(20, 13, 10)';
 
 describe('Badge', () => {
-  it('count mostra o numero e aceita aria-label como nome acessivel', async () => {
+  it('count mostra o numero e expoe role=img com aria-label como nome acessivel', async () => {
     await render(<Badge variant="count" aria-label="6 itens no carrinho">6</Badge>);
-    const badge = page.getByLabelText('6 itens no carrinho');
+    const badge = page.getByRole('img', { name: '6 itens no carrinho' });
     await expect.element(badge).toBeInTheDocument();
     await expect.element(badge).toHaveTextContent('6');
   });
@@ -84,7 +84,7 @@ describe('Badge', () => {
         6
       </Badge>,
     );
-    await expect.element(page.getByLabelText('6 itens no carrinho')).toBeInTheDocument();
+    await expect.element(page.getByRole('img', { name: '6 itens no carrinho' })).toBeInTheDocument();
     await expectNoA11yViolations(container);
   });
 
