@@ -93,4 +93,4 @@ export {
   type TabsContentProps,
 } from './primitives/tabs';
 export { Textarea, type TextareaProps } from './primitives/textarea';
-export { VisuallyHidden } from './primitives/visually-hidden';
+export { VisuallyHidden, type VisuallyHiddenProps } from './primitives/visually-hidden';
