@@ -139,14 +139,19 @@ describe('Select - medidas', () => {
   });
 
   it('lista aberta: opcao com padding-x 16, painel surface e selecionada com aria-selected', async () => {
-    await render(<Sample defaultValue="menor" open />);
-    const opt = page.getByRole('option', { name: 'Menor preco' });
-    await expect.element(opt).toBeVisible();
-    await expect.element(opt).toHaveAttribute('aria-selected', 'true');
-    expect(getComputedStyle(opt.element()).paddingLeft).toBe('16px');
-    const panel = document.querySelector('[data-slot="select-content"]') as HTMLElement | null;
-    expect(panel).not.toBeNull();
-    expect(getComputedStyle(panel!).backgroundColor).toBe('rgb(36, 22, 18)');
+    // Desmonta ao fim: o Select aberto trava o ponteiro do body e o setup global (unhover) ficaria preso.
+    const { unmount } = await render(<Sample defaultValue="menor" open />);
+    try {
+      const opt = page.getByRole('option', { name: 'Menor preco' });
+      await expect.element(opt).toBeVisible();
+      await expect.element(opt).toHaveAttribute('aria-selected', 'true');
+      expect(getComputedStyle(opt.element()).paddingLeft).toBe('16px');
+      const panel = document.querySelector('[data-slot="select-content"]') as HTMLElement | null;
+      expect(panel).not.toBeNull();
+      expect(getComputedStyle(panel!).backgroundColor).toBe('rgb(36, 22, 18)');
+    } finally {
+      await unmount();
+    }
   });
 });
 
@@ -158,8 +163,16 @@ describe('Select - acessibilidade', () => {
   });
 
   it('nao tem violacoes (axe) aberto', async () => {
-    await render(<Sample defaultValue="recentes" open />);
-    await expect.element(page.getByRole('listbox')).toBeVisible();
-    await expectNoA11yViolations(document.body);
+    const { unmount } = await render(<Sample defaultValue="recentes" open />);
+    try {
+      await expect.element(page.getByRole('listbox')).toBeVisible();
+      // O Radix Select modal marca o resto da pagina (incluindo o trigger) com aria-hidden enquanto aberto;
+      // axe reporta aria-hidden-focus nesse container. Valida-se o painel aberto (portal) e o trigger fechado (teste acima).
+      const panel = document.querySelector('[data-radix-popper-content-wrapper]') as HTMLElement;
+      expect(panel).not.toBeNull();
+      await expectNoA11yViolations(panel);
+    } finally {
+      await unmount();
+    }
   });
 });

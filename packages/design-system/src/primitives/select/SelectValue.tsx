@@ -1,10 +1,7 @@
-import type { ReactNode } from 'react';
+import * as SelectPrimitive from '@radix-ui/react-select';
 
-export type SelectValueProps = {
-  placeholder?: ReactNode;
-};
+export type SelectValueProps = React.ComponentProps<typeof SelectPrimitive.Value>;
 
 export function SelectValue(props: SelectValueProps) {
-  void props;
-  return null;
+  return <SelectPrimitive.Value data-slot="select-value" {...props} />;
 }
