@@ -27,5 +27,7 @@ export type BadgeProps = React.ComponentProps<'span'> &
   Required<Pick<VariantProps<typeof badgeVariants>, 'variant'>>;
 
 export function Badge({ className, variant, ...props }: BadgeProps) {
-  return <span data-slot="badge" className={cn(badgeVariants({ variant }), className)} {...props} />;
+  // aria-label em <span> sem role e ignorado por leitores de tela: com rotulo, o badge e uma imagem nomeada.
+  const role = props['aria-label'] && !props.role ? 'img' : props.role;
+  return <span data-slot="badge" role={role} className={cn(badgeVariants({ variant }), className)} {...props} />;
 }
