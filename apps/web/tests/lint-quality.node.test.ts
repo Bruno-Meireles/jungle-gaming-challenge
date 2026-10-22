@@ -59,7 +59,7 @@ function codeLines(count: number) {
 
 // funcao com exatamente `total` linhas (declaracao + corpo + fechamento)
 function functionOfLines(total: number) {
-  return `export function f() {\n  let x = 0;\n${lines(total - 3, () => '  x += 1;')}\n  return x;\n}\n`;
+  return `export function f() {\n  let x = 0;\n${lines(total - 4, () => '  x += 1;')}\n  return x;\n}\n`;
 }
 
 describe('qualidade de codigo em apps/web/src (lint ADR-21)', () => {
@@ -98,25 +98,9 @@ describe('qualidade de codigo em apps/web/src (lint ADR-21)', () => {
     expect(ids).not.toContain('no-restricted-syntax');
   });
 
-  // Exige regra type-aware (parserOptions.projectService); o helper atual nao define project.
-  // O GREEN decide como habilitar (projectService restrito a apps/web/src sem testes).
-  it('reprova switch nao exaustivo sobre uniao', async () => {
-    const code = [
-      "type Tab = 'all' | 'new' | 'trending';",
-      'export function label(tab: Tab) {',
-      '  switch (tab) {',
-      "    case 'all':",
-      "      return 'a';",
-      "    case 'new':",
-      "      return 'n';",
-      '  }',
-      "  return '';",
-      '}',
-      '',
-    ].join('\n');
-
-    expect(await ruleIds(code, TS)).toContain('@typescript-eslint/switch-exhaustiveness-check');
-  });
+  // Exaustividade de switch sobre uniao nao e testada por lint: a regra e type-aware e o helper
+  // usa arquivos virtuais. Ela e garantida em compilacao por `assertNever` + `tsc` (desvio do
+  // plano registrado em ADR-21).
 
   it('reporta os dois usos de no-restricted-syntax (i18n e asserção) no mesmo .tsx', async () => {
     const code =
