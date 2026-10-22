@@ -3,17 +3,45 @@ import tseslint from 'typescript-eslint';
 import reactHooks from 'eslint-plugin-react-hooks';
 
 const dsForbiddenImports = [
-  { group: ['@jg/web', '@jg/web/*'], message: 'O design system não pode depender do app (@jg/web).' },
-  { group: ['@tanstack/*'], message: 'O design system não pode depender de TanStack (Query/Router).' },
+  {
+    group: ['@jg/web', '@jg/web/*'],
+    message: 'O design system não pode depender do app (@jg/web).',
+  },
+  {
+    group: ['@tanstack/*'],
+    message: 'O design system não pode depender de TanStack (Query/Router).',
+  },
   { group: ['axios', 'axios/*'], message: 'O design system não pode depender de Axios.' },
   { group: ['msw', 'msw/*'], message: 'O design system não pode depender de MSW.' },
-  { group: ['socket.io-client', 'socket.io-client/*'], message: 'O design system não pode depender de socket.io-client.' },
   {
-    group: ['i18next', 'i18next/*', 'react-i18next', 'react-i18next/*', 'react-intl', 'react-intl/*', 'use-intl', 'use-intl/*', 'next-intl', 'next-intl/*', 'typesafe-i18n', 'typesafe-i18n/*', '@formatjs/*', '@lingui/*'],
-    message: 'O design system é agnóstico de idioma: não pode depender de lib de i18n (textos entram por props).',
+    group: ['socket.io-client', 'socket.io-client/*'],
+    message: 'O design system não pode depender de socket.io-client.',
+  },
+  {
+    group: [
+      'i18next',
+      'i18next/*',
+      'react-i18next',
+      'react-i18next/*',
+      'react-intl',
+      'react-intl/*',
+      'use-intl',
+      'use-intl/*',
+      'next-intl',
+      'next-intl/*',
+      'typesafe-i18n',
+      'typesafe-i18n/*',
+      '@formatjs/*',
+      '@lingui/*',
+    ],
+    message:
+      'O design system é agnóstico de idioma: não pode depender de lib de i18n (textos entram por props).',
   },
   // Acesso a slices só via index.ts: 'primitives/x' e 'patterns/x' (nunca 'primitives/x/X').
-  { group: ['**/primitives/*/*', '**/patterns/*/*'], message: 'Importe o slice pelo index.ts (ex.: primitives/button), não por arquivos internos.' },
+  {
+    group: ['**/primitives/*/*', '**/patterns/*/*'],
+    message: 'Importe o slice pelo index.ts (ex.: primitives/button), não por arquivos internos.',
+  },
 ];
 
 // Entre slices irmãos (primitives/* e patterns/*): '../x' pelo index.ts, nunca '../x/X'.
@@ -30,8 +58,14 @@ const WEB_LAYERS = ['shared', 'entities', 'features', 'widgets', 'pages', 'app']
 const MAX_DEPTH = 5;
 
 const webDsEntrypointOnly = {
-  group: ['@jg/design-system/src', '@jg/design-system/src/*', '@jg/design-system/dist', '@jg/design-system/dist/*'],
-  message: 'Importe apenas do entrypoint público @jg/design-system (ou @jg/design-system/styles.css).',
+  group: [
+    '@jg/design-system/src',
+    '@jg/design-system/src/*',
+    '@jg/design-system/dist',
+    '@jg/design-system/dist/*',
+  ],
+  message:
+    'Importe apenas do entrypoint público @jg/design-system (ou @jg/design-system/styles.css).',
 };
 
 const webMocksOnlyInBootstrap = {
@@ -100,7 +134,12 @@ function webBlock(files, patterns) {
 
 const webLayerBlocks = WEB_LAYERS.flatMap((layer) => {
   if (layer === 'shared' || layer === 'app') {
-    return [webBlock([`${WEB_SRC}/${layer}/**/*.${WEB_EXT}`], [...webLayerPatterns(layer, 0), webMocksOnlyInBootstrap])];
+    return [
+      webBlock(
+        [`${WEB_SRC}/${layer}/**/*.${WEB_EXT}`],
+        [...webLayerPatterns(layer, 0), webMocksOnlyInBootstrap],
+      ),
+    ];
   }
   return Array.from({ length: MAX_DEPTH + 1 }, (_, depth) =>
     webBlock(
@@ -126,7 +165,10 @@ const webDomainBlocks = [
   ),
 ];
 
-const webBootstrapBlock = webBlock([`${WEB_SRC}/app/bootstrap/**/*.${WEB_EXT}`], webLayerPatterns('app', 0));
+const webBootstrapBlock = webBlock(
+  [`${WEB_SRC}/app/bootstrap/**/*.${WEB_EXT}`],
+  webLayerPatterns('app', 0),
+);
 
 // ---- apps/web: textos hardcoded em JSX (i18n, ADR-21) ----
 // no-restricted-syntax não faz merge entre blocos `files`: este bloco não alcança arquivos de teste
@@ -153,7 +195,8 @@ const webI18nSelectors = [
 
 // ---- apps/web: qualidade de código (ADR-21) ----
 const webAssertionSelector = {
-  selector: "TSAsExpression:not([typeAnnotation.type='TSTypeReference'][typeAnnotation.typeName.name='const'])",
+  selector:
+    "TSAsExpression:not([typeAnnotation.type='TSTypeReference'][typeAnnotation.typeName.name='const'])",
   message: 'Asserção de tipo `as X` proibida (exceto `as const`): use type guard ou validação.',
 };
 const webTestGlobs = ['**/*.test.{ts,tsx}', 'apps/web/e2e/**', 'apps/web/tests/**'];
@@ -181,15 +224,30 @@ const webI18nBlock = {
 };
 
 const webTestQualityBlock = {
-  files: ['apps/web/**/*.test.{ts,tsx}', 'apps/web/e2e/**/*.{ts,tsx}', 'apps/web/tests/**/*.{ts,tsx}'],
+  files: [
+    'apps/web/**/*.test.{ts,tsx}',
+    'apps/web/e2e/**/*.{ts,tsx}',
+    'apps/web/tests/**/*.{ts,tsx}',
+  ],
   rules: { 'max-lines': ['error', { max: 400, ...webLimit }] },
 };
 
 export default tseslint.config(
-  { ignores: ['**/dist/**', '**/storybook-static/**', '**/playwright-report/**', '**/test-results/**'] },
+  {
+    ignores: [
+      '**/dist/**',
+      '**/storybook-static/**',
+      '**/playwright-report/**',
+      '**/test-results/**',
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
-  { files: ['**/*.{ts,tsx}'], plugins: { 'react-hooks': reactHooks }, rules: reactHooks.configs.recommended.rules },
+  {
+    files: ['**/*.{ts,tsx}'],
+    plugins: { 'react-hooks': reactHooks },
+    rules: reactHooks.configs.recommended.rules,
+  },
   webQualityBlock,
   webI18nBlock,
   {
@@ -238,7 +296,8 @@ export default tseslint.config(
             siblingSliceDeepImport,
             {
               group: ['**/patterns', '**/patterns/*'],
-              message: 'Primitives não podem importar de patterns (dependência só de patterns para primitives).',
+              message:
+                'Primitives não podem importar de patterns (dependência só de patterns para primitives).',
             },
           ],
         },
@@ -248,7 +307,10 @@ export default tseslint.config(
   {
     files: ['packages/design-system/src/patterns/**/*.{ts,tsx}'],
     rules: {
-      'no-restricted-imports': ['error', { patterns: [...dsForbiddenImports, siblingSliceDeepImport] }],
+      'no-restricted-imports': [
+        'error',
+        { patterns: [...dsForbiddenImports, siblingSliceDeepImport] },
+      ],
     },
   },
   {

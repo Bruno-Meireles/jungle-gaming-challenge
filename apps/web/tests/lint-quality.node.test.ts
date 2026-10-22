@@ -87,7 +87,10 @@ describe('qualidade de codigo em apps/web/src (lint ADR-21)', () => {
   });
 
   it('reprova asserção de tipo `as X` com no-restricted-syntax', async () => {
-    const ids = await ruleIds('declare const b: unknown;\ntype Foo = { a: 1 };\nexport const a = b as Foo;\n', TS);
+    const ids = await ruleIds(
+      'declare const b: unknown;\ntype Foo = { a: 1 };\nexport const a = b as Foo;\n',
+      TS,
+    );
 
     expect(ids).toContain('no-restricted-syntax');
   });
@@ -114,11 +117,21 @@ describe('qualidade de codigo em apps/web/src (lint ADR-21)', () => {
 
   describe('arquivos de teste', () => {
     it('aceita arquivo .test.ts com 300 linhas', async () => {
-      expect(await ruleIds(lines(300, (i) => `export const v${i} = ${i};`), TEST)).not.toContain('max-lines');
+      expect(
+        await ruleIds(
+          lines(300, (i) => `export const v${i} = ${i};`),
+          TEST,
+        ),
+      ).not.toContain('max-lines');
     });
 
     it('reprova arquivo .test.ts com 401 linhas', async () => {
-      expect(await ruleIds(lines(401, (i) => `export const v${i} = ${i};`), TEST)).toContain('max-lines');
+      expect(
+        await ruleIds(
+          lines(401, (i) => `export const v${i} = ${i};`),
+          TEST,
+        ),
+      ).toContain('max-lines');
     });
   });
 
