@@ -51,3 +51,27 @@ describe('higiene de testes (lint)', () => {
     expect(messages.map((m) => m.ruleId)).not.toContain('no-restricted-properties');
   });
 });
+
+// Playwright: `test.describe.skip/only/fixme` (callee aninhado, fora do alcance de no-restricted-properties).
+// Montados em runtime para este arquivo nao conter modificadores reais.
+const PLAYWRIGHT_DESCRIBE = ['only', 'skip', 'fixme'].map((prop) => `test.describe.${prop}`);
+
+describe('higiene de testes Playwright (lint)', () => {
+  it.each(PLAYWRIGHT_DESCRIBE.flatMap((call) => TEST_FILES.map((file) => [call, file] as const)))(
+    'reporta no-restricted-syntax para %s em %s',
+    async (call, file) => {
+      const messages = await lint(`${call}('x', () => {});\n`, file);
+
+      expect(messages.map((m) => m.ruleId)).toContain('no-restricted-syntax');
+    },
+  );
+
+  it.each(TEST_FILES)('nao reporta no-restricted-syntax para test.describe e test.describe.configure em %s', async (file) => {
+    const messages = await lint(
+      "test.describe('x', () => {});\ntest.describe.configure({ mode: 'serial' });\n",
+      file,
+    );
+
+    expect(messages.map((m) => m.ruleId)).not.toContain('no-restricted-syntax');
+  });
+});

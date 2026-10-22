@@ -66,3 +66,26 @@ describe('camadas internas do design system (lint)', () => {
     expect(messages.map((m) => m.ruleId)).not.toContain('no-restricted-imports');
   });
 });
+
+describe('acesso a slices via index.ts (lint)', () => {
+  it.each([
+    ['../../primitives/button/Button', 'packages/design-system/src/patterns/nft-card/NftCard.tsx'],
+    ['../button/Button', 'packages/design-system/src/primitives/password-input/PasswordInput.tsx'],
+    ['./primitives/button/Button', 'packages/design-system/src/index.ts'],
+    ['../../patterns/nft-card/NftCard', 'packages/design-system/src/x.ts'],
+  ])('reporta no-restricted-imports para deep import %s', async (mod, file) => {
+    const messages = await lint(`import { X } from '${mod}';\nexport const x = X;\n`, file);
+
+    expect(messages.map((m) => m.ruleId)).toContain('no-restricted-imports');
+  });
+
+  it.each([
+    ['../../primitives/button', 'packages/design-system/src/patterns/nft-card/NftCard.tsx'],
+    ['./Button', 'packages/design-system/src/primitives/button/Button.test.tsx'],
+    ['./primitives/button', 'packages/design-system/src/index.ts'],
+  ])('nao reporta no-restricted-imports para %s', async (mod, file) => {
+    const messages = await lint(`import { X } from '${mod}';\nexport const x = X;\n`, file);
+
+    expect(messages.map((m) => m.ruleId)).not.toContain('no-restricted-imports');
+  });
+});
