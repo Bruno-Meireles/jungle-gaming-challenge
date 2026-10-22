@@ -1,8 +1,7 @@
-export type TabsContentProps = React.ComponentProps<'div'> & {
-  value: string;
-};
+import * as TabsPrimitive from '@radix-ui/react-tabs';
+
+export type TabsContentProps = React.ComponentProps<typeof TabsPrimitive.Content>;
 
 export function TabsContent(props: TabsContentProps) {
-  void props;
-  return null;
+  return <TabsPrimitive.Content data-slot="tabs-content" {...props} />;
 }
