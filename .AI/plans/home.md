@@ -452,16 +452,15 @@ Desvios do plano no M1:
 
 ### Item 34 (GREEN: destaques, header completo)
 
-Entregue:  (, , ,  extraído),  (Select do DS, namespace ),  (marca, nav "Principal", carrinho sem contador, Entrar),  (carrossel manual, pontos com , sem autoplay nem transição),  (só ≥1440),  com  () e /ícones em . Capturas:  e .
+Entregue: `entities/nft` (`fetchHighlights`, `useHighlightsQuery`, `nftKeys.highlights`, `toNftSummary` extraído), `features/language-switch` (Select do DS, namespace `language`), `widgets/header` (marca, nav "Principal", carrinho sem contador, Entrar), `widgets/hero` (carrossel manual, pontos com `aria-current`, sem autoplay nem transição), `widgets/featured-nft` (só ≥1440), `pages/home` com `#catalog` (`tabIndex=-1`) e `PageContainer`/ícones em `shared/ui`. Capturas: `scratchpad/home2-1440.png` e `home2-390.png`.
 
-Desvios e lacunas (Figma × implementado):
-- **Mobile:** o frame não tem header; foi mantido um header compacto (marca, carrinho, Entrar) porque o spec exige a marca no banner. Sem nav e sem seletor de idioma abaixo de 768/1440 (idioma só no header ≥1440 até o rodapé existir, Q8). Busca (ícone no header desktop; campo no mobile) e barra inferior ficam para os itens 27 e M6.
-- **Hero mobile:** a imagem secundária sobreposta (58x58) e o fundo (círculos/gradiente do grupo 14:5290) não foram replicados; gradiente aproximado por  (stops do Figma não mapeados em tokens). Desktop: o vetor 2:104 não tem fill, então sem fundo.
+Desvios e lacunas (Figma x implementado):
+- **Mobile:** o frame não tem header; foi mantido um header compacto (marca, carrinho, Entrar) porque o spec exige a marca no banner. Sem nav abaixo de 768 e sem seletor de idioma abaixo de 1440 (idioma só no header ≥1440 até o rodapé existir, Q8). Busca (ícone no header desktop; campo no mobile) e barra inferior ficam para o item 27 e o M6.
+- **Hero mobile:** a imagem secundária sobreposta (58x58) e o fundo (círculos/gradiente do grupo 14:5290) não foram replicados; gradiente aproximado por `primary/20 -> primary/5` (stops do Figma não mapeados em tokens). Desktop: o vetor 2:104 não tem fill, então sem fundo.
 - **Pontos:** áreas de toque de 24 px (WCAG 2.5.8) com marca de 8 px; passo de 24 px no lugar de 16 px do Figma. Posição dos pontos em tablet (768) derivada.
-- **Tablet (768–1439):** hero com imagem 300 px e título 28 px, derivados (sem frame, Q11).
-- **Header:** ícones de carrinho e Entrar desenhados à mão (a geometria dos vetores do Figma não foi extraída); ícone de busca omitido; o botão Entrar usa o Button do DS com ajustes (h-35, raio 6, 16/500) sobre o primary md (h-40, raio 3); contador do carrinho omitido (menores do plano). Mercado e Início apontam para ; só Início fica ativo.
+- **Tablet (768-1439):** hero com imagem 300 px e título 28 px, derivados (sem frame, Q11).
+- **Header:** ícones de carrinho e Entrar desenhados à mão (a geometria dos vetores do Figma não foi extraída); ícone de busca omitido; o botão Entrar usa o Button do DS com ajustes (h-35, raio 6, 16/500) sobre o primary md (h-40, raio 3); contador do carrinho omitido (menores do plano). Mercado e Início apontam para `/`; só Início fica ativo.
 - **Destaque lateral:** o Figma tem formas decorativas (retângulos 30/31/32) não replicadas; fundo por gradiente aproximado. Filtros ainda não existem, então a coluna lateral só tem o destaque (no Figma fica abaixo dos filtros).
-- **Título do hero** usa 
- em chave i18n com  para reproduzir a quebra do Figma.
-- Observado fora do escopo deste item (nas capturas): contagem "45 NFTs" visível acima da grade (o Figma não tem), ausência de abas/ordenação/filtros/paginação (itens 23–28), preços longos quebram de linha no card de 390.
-- Arquivos não relacionados já modificados no working tree antes/durante a execução (, , ) não foram commitados.
+- **Título do hero** usa `\n` na chave i18n com `whitespace-pre-line` para reproduzir a quebra do Figma.
+- Observado fora do escopo deste item (nas capturas): contagem "45 NFTs" visível acima da grade (o Figma não tem), ausência de abas, ordenação, filtros e paginação (itens 23-28), preços longos quebram de linha no card de 390.
+- Arquivos alheios ao item (`.gitignore`, `.claude/settings.json`, `tools/action-log.mjs`) apareceram modificados no working tree e não foram commitados.
