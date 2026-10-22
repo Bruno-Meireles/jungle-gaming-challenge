@@ -116,7 +116,20 @@ const ALIASES: [alias: string, target: string][] = [
   ['--color-input-border', '--color-secondary'],
   ['--color-destructive-text', '--color-text-coral'],
   ['--color-destructive', '--color-error'],
+  // GATE-TOKENS: papeis necessarios aos componentes (surface-raised e success ja sao cores Figma; nao duplicar).
+  ['--color-surface', '--color-surface-card'],
+  ['--color-text', '--color-foreground'],
+  ['--color-text-muted', '--color-text-secondary'],
+  ['--color-accent', '--color-primary'],
+  ['--color-primary-hover', '--color-primary-light'],
+  ['--color-primary-active', '--color-primary-dark'],
+  ['--color-disabled-bg', '--color-border-soft'],
+  ['--color-disabled-text', '--color-secondary'],
+  ['--color-link', '--color-text-accent'], // Forgot Link (70381:244, 70399:242) usa o fill Text/Accent
 ];
+
+// Lacunas: papeis sem evidencia no Figma nao viram token. Overlay do modal (11:4385 e todo o file.json): nenhum fill com alfa < 1.
+const ALIAS_GAPS = ['--color-overlay'];
 
 describe('aliases semanticos de cor (T11)', () => {
   const colorDecls = () => parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--color-'));
@@ -136,6 +149,24 @@ describe('aliases semanticos de cor (T11)', () => {
     expect(targetDecl?.figma, `${target} deve ter comentario figma:`).toBeTruthy();
   });
 
+  it('o file.json nao tem nenhum fill SOLID translucido (sem evidencia para --color-overlay)', () => {
+    const translucent: string[] = [];
+    const walk = (o: unknown): void => {
+      if (!o || typeof o !== 'object') return;
+      const n = o as { id?: string; fills?: { type: string; opacity?: number; color?: { a?: number } }[] };
+      for (const f of Array.isArray(n.fills) ? n.fills : []) {
+        if (f.type === 'SOLID' && ((f.opacity ?? 1) < 1 || (f.color?.a ?? 1) < 1)) translucent.push(String(n.id));
+      }
+      for (const v of Object.values(o)) walk(v);
+    };
+    walk(loadFigmaFile().document);
+    expect(translucent).toEqual([]);
+  });
+
+  it.each(ALIAS_GAPS)('Lacuna %s nao tem token inventado', (name) => {
+    expect(parseDeclarations(readTokens()).map((d) => d.name)).not.toContain(name);
+  });
+
   it('alias nao contem hex literal e toda cor sem figma: e var(--color-...)', () => {
     const withoutFigma = colorDecls().filter((d) => !d.figma);
     const aliasNames = ALIASES.map(([a]) => a);
@@ -145,11 +176,16 @@ describe('aliases semanticos de cor (T11)', () => {
   });
 });
 
-// Tipografia (T12): tokens `--text-*` entram sob demanda. Convencao Tailwind 4:
-// `--text-<n>` (font-size) + `--text-<n>--line-height|--font-weight|--letter-spacing`.
-const TEXT_TOKENS: [token: string, styleId: string, styleName: string][] = [
-  ['--text-body-14-bold-lh-16', '70321:354', 'Body/14 Bold · lh 16'],
-];
+/// Tipografia (T12, generalizado no GATE-TOKENS): UM token `--text-<slug do estilo>` para CADA estilo TEXT do file.json.
+// Convencao Tailwind 4: `--text-<n>` (font-size) + `--text-<n>--line-height|--font-weight|--letter-spacing`.
+// `Body/14 Bold · lh 16` -> `--text-body-14-bold-lh-16`; `ls 0%` -> `ls-0`.
+function textSlug(styleName: string): string {
+  return `--text-${styleName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`;
+}
+
+const TEXT_STYLES: [token: string, styleId: string, styleName: string][] = Object.entries(loadFigmaFile().styles)
+  .filter(([, s]) => s.styleType === 'TEXT')
+  .map(([id, s]) => [textSlug(s.name), id, s.name]);
 
 type TextMetrics = { fontSize: number; fontWeight: number; lineHeightPx: number; lineHeightUnit: string; letterSpacing: number };
 
@@ -178,6 +214,22 @@ function nodeTextMetrics(root: unknown): Map<string, Map<string, TextMetrics>> {
   return map;
 }
 
+// Estilo sem uso em nos: metricas da description `combo:<size>|<peso>|<lh>px|<ls>%` (lh auto -> INTRINSIC_%).
+const WEIGHTS: Record<string, number> = { Thin: 100, Light: 300, Regular: 400, Medium: 500, SemiBold: 600, Bold: 700 };
+function descriptionMetrics(style: FigmaStyle): TextMetrics | undefined {
+  const m = style.description?.match(/^combo:(\d+(?:\.\d+)?)\|(\w+)\|(auto|\d+(?:\.\d+)?px)\|(-?[\d.]+)%/);
+  if (!m || WEIGHTS[m[2]!] === undefined) return undefined;
+  const size = Number(m[1]);
+  const px = m[3]!.endsWith('px');
+  return {
+    fontSize: size,
+    fontWeight: WEIGHTS[m[2]!]!,
+    lineHeightPx: px ? Number.parseFloat(m[3]!) : 0,
+    lineHeightUnit: px ? 'PIXELS' : 'INTRINSIC_%',
+    letterSpacing: (Number(m[4]) / 100) * size,
+  };
+}
+
 // Figma -> CSS: 'lh auto' (INTRINSIC_%) vira `normal`; letter-spacing 0 vira `0`, senao em.
 function expectedCss(m: TextMetrics) {
   const em = (m.letterSpacing / m.fontSize).toFixed(4).replace(/\.?0+$/, '');
@@ -189,20 +241,25 @@ function expectedCss(m: TextMetrics) {
   };
 }
 
-describe('tokens de tipografia (T12)', () => {
+describe('tokens de tipografia (T12, todos os estilos TEXT)', () => {
   const file = loadFigmaFile();
   const used = nodeTextMetrics(file.document);
+  const metricsOf = (id: string): TextMetrics | undefined => [...(used.get(id)?.values() ?? [])][0] ?? descriptionMetrics(file.styles[id]!);
 
-  it.each(TEXT_TOKENS)('%s: estilo %s (%s) existe como TEXT e seus nos nao divergem', (_token, styleId, styleName) => {
-    expect(file.styles[styleId]?.styleType).toBe('TEXT');
-    expect(file.styles[styleId]?.name).toBe(styleName);
-    expect(used.get(styleId)?.size ?? 0, 'nos que usam o estilo').toBeGreaterThan(0);
-    expect([...(used.get(styleId)?.values() ?? [])]).toHaveLength(1);
+  it('o file.json tem 59 estilos TEXT e os nomes de token nao colidem', () => {
+    expect(TEXT_STYLES).toHaveLength(59);
+    const tokens = TEXT_STYLES.map(([t]) => t);
+    expect(new Set(tokens).size).toBe(tokens.length);
   });
 
-  it.each(TEXT_TOKENS)('tokens.css declara %s (%s) com tamanho, line-height, peso e letter-spacing do Figma', (token, styleId) => {
-    const m = [...(used.get(styleId)?.values() ?? [])][0];
-    expect(m, `nos de ${styleId} no file.json`).toBeDefined();
+  it.each(TEXT_STYLES)('%s: estilo %s (%s) tem metricas consistentes (nos nao divergem; sem uso: description)', (_token, styleId) => {
+    expect(used.get(styleId)?.size ?? 0, 'metricas distintas entre os nos').toBeLessThanOrEqual(1);
+    expect(metricsOf(styleId), `metricas de ${styleId}`).toBeDefined();
+  });
+
+  it.each(TEXT_STYLES)('tokens.css declara %s (%s) com tamanho, line-height, peso e letter-spacing do Figma', (token, styleId) => {
+    const m = metricsOf(styleId);
+    expect(m, `metricas de ${styleId}`).toBeDefined();
     const want = expectedCss(m as TextMetrics);
     const decls = parseDeclarations(readTokens());
     const val = (n: string) => decls.find((d) => d.name === n)?.value;
@@ -214,19 +271,32 @@ describe('tokens de tipografia (T12)', () => {
     }).toEqual(want);
   });
 
+  it.each(TEXT_STYLES)('%s declara /* figma:%s */', (token, styleId) => {
+    expect(parseDeclarations(readTokens()).find((d) => d.name === token)?.figma).toBe(styleId);
+  });
+
+  it('inventario: o conjunto de --text-* base == os estilos TEXT (nenhum faltando, nenhum inventado)', () => {
+    const base = parseDeclarations(readTokens())
+      .filter((d) => d.name.startsWith('--text-') && !d.name.slice(2).includes('--') && d.value !== 'initial')
+      .map((d) => d.name)
+      .sort();
+    expect(base).toEqual(TEXT_STYLES.map(([t]) => t).sort());
+  });
+
   it('todo --text-* base declarado tem /* figma:<styleId> */ de um estilo TEXT existente', () => {
-    const base = parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--text-') && !d.name.slice(2).includes('--'));
+    const base = parseDeclarations(readTokens()).filter((d) => d.name.startsWith('--text-') && !d.name.slice(2).includes('--') && d.value !== 'initial');
     expect(base.length, 'ao menos um --text-* declarado').toBeGreaterThan(0);
     const bad = base.filter((d) => !d.figma || file.styles[d.figma]?.styleType !== 'TEXT').map((d) => d.name);
     expect(bad).toEqual([]);
   });
 });
 
-// Raio, sombra e spacing (T13). Raios/sombras entram sob demanda; ADR-04: --spacing 1 unidade = 1px do Figma.
-const RADIUS_TOKENS: [token: string, value: string, nodeId: string][] = [
-  ['--radius-3', '3px', '70386:262'], // Button primario (Save Button), file.json:253196
-  ['--radius-5', '5px', '70381:242'], // Input (Email Input), file.json:193043
-];
+// Raio, sombra e spacing (T13, generalizado no GATE-TOKENS); ADR-04: --spacing 1 unidade = 1px do Figma.
+// Raio: todo `cornerRadius` distinto de nos (ou rectangleCornerRadii com 4 cantos iguais) vira `--radius-<valor>`,
+// valor arredondado a 2 casas, ponto decimal como `p` (2.118... -> `--radius-2p12`).
+const round2 = (n: number): number => Number(n.toFixed(2));
+const radiusToken = (r: number): string => `--radius-${String(round2(r)).replace('.', 'p')}`;
+const radiusValue = (r: number): string => `${round2(r)}px`;
 
 type FigmaNode = {
   id?: string;
@@ -235,10 +305,11 @@ type FigmaNode = {
   effects?: { type: string; visible?: boolean; color: { r: number; g: number; b: number; a: number }; offset: { x: number; y: number }; radius: number }[];
 };
 
-// Percorre o document ate achar o no com o id (undefined se nao existir).
+// Percorre o document ate achar o no com o id (undefined se nao existir). So conta objetos com `type`:
+// o file.json repete alguns ids (ex.: I70492:696;70491:1237) em objetos que nao sao nos.
 function findNode(root: unknown, id: string): FigmaNode | undefined {
   if (!root || typeof root !== 'object') return undefined;
-  if ((root as FigmaNode).id === id) return root as FigmaNode;
+  if ((root as FigmaNode).id === id && typeof (root as { type?: unknown }).type === 'string') return root as FigmaNode;
   for (const v of Object.values(root)) {
     const found = findNode(v, id);
     if (found) return found;
@@ -253,27 +324,95 @@ function nodeRadius(node: FigmaNode): number | undefined {
   return r && r.every((v) => v === r[0]) ? r[0] : undefined;
 }
 
-// `<x>px <y>px <blur>px rgba(r, g, b, a)` esperado para um DROP_SHADOW do Figma.
-function expectedShadow(e: NonNullable<FigmaNode['effects']>[number]): string {
+// Inventario: raio (arredondado) -> id do primeiro no que o usa; cantos assimetricos (Lacunas) -> id do primeiro no.
+function radiusInventory(root: unknown): { uniform: Map<number, string>; asymmetric: Map<string, string> } {
+  const uniform = new Map<number, string>();
+  const asymmetric = new Map<string, string>();
+  const walk = (o: unknown): void => {
+    if (!o || typeof o !== 'object') return;
+    const node = o as FigmaNode;
+    if (node.id !== undefined) {
+      const r = nodeRadius(node);
+      if (r !== undefined) {
+        if (!uniform.has(round2(r))) uniform.set(round2(r), node.id);
+      } else if (node.rectangleCornerRadii && !asymmetric.has(node.rectangleCornerRadii.join(','))) {
+        asymmetric.set(node.rectangleCornerRadii.join(','), node.id);
+      }
+    }
+    for (const v of Object.values(o)) walk(v);
+  };
+  walk(root);
+  return { uniform, asymmetric };
+}
+
+// Lacunas: cantos assimetricos [tl,tr,br,bl] sem token (nao ha como expressa-los num unico `--radius-*`).
+const ASYMMETRIC_GAPS = ['0,3,3,0', '0,6,6,0', '14,0,0,14', '31,31,0,0', '40,40,0,0'];
+
+// Sombra: todo efeito DROP_SHADOW/INNER_SHADOW visivel e distinto vira `--shadow-<nome>` com valor
+// `[inset ]Xpx Ypx Rpx [Spx] rgba(r, g, b, a)` (numeros a 2 casas; spread omitido quando 0).
+// Nome: x<X>-y<Y>-b<blur>[-s<spread>]-a<alfa%>-<hex6 da cor, minusculo>; `n` = negativo, `p` = ponto decimal.
+type Effect = NonNullable<FigmaNode['effects']>[number] & { spread?: number };
+const isShadow = (e: Effect): boolean => (e.type === 'DROP_SHADOW' || e.type === 'INNER_SHADOW') && e.visible !== false;
+
+function expectedShadow(e: Effect): string {
   const c = (v: number) => Math.round(v * 255);
-  const a = Number(e.color.a.toFixed(2));
-  return `${e.offset.x}px ${e.offset.y}px ${e.radius}px rgba(${c(e.color.r)}, ${c(e.color.g)}, ${c(e.color.b)}, ${a})`;
+  const spread = e.spread ?? 0;
+  return `${e.type === 'INNER_SHADOW' ? 'inset ' : ''}${round2(e.offset.x)}px ${round2(e.offset.y)}px ${round2(e.radius)}px${
+    spread ? ` ${round2(spread)}px` : ''
+  } rgba(${c(e.color.r)}, ${c(e.color.g)}, ${c(e.color.b)}, ${round2(e.color.a)})`;
+}
+
+function shadowToken(e: Effect): string {
+  const slug = (n: number) => String(round2(n)).replace('-', 'n').replace('.', 'p');
+  const hex = toHex(e.color).slice(1).toLowerCase();
+  const spread = e.spread ?? 0;
+  return `--shadow-${e.type === 'INNER_SHADOW' ? 'inset-' : ''}x${slug(e.offset.x)}-y${slug(e.offset.y)}-b${slug(e.radius)}${
+    spread ? `-s${slug(spread)}` : ''
+  }-a${Math.round(e.color.a * 100)}-${hex}`;
+}
+
+// Inventario: nome do token -> { valor, id do primeiro no que usa o efeito }.
+function shadowInventory(root: unknown): Map<string, { value: string; nodeId: string }> {
+  const map = new Map<string, { value: string; nodeId: string }>();
+  const walk = (o: unknown): void => {
+    if (!o || typeof o !== 'object') return;
+    const node = o as FigmaNode;
+    if (node.id !== undefined && Array.isArray(node.effects)) {
+      for (const e of node.effects as Effect[]) {
+        if (isShadow(e) && !map.has(shadowToken(e))) map.set(shadowToken(e), { value: expectedShadow(e), nodeId: node.id });
+      }
+    }
+    for (const v of Object.values(o)) walk(v);
+  };
+  walk(root);
+  return map;
 }
 
 describe('tokens de raio, sombra e spacing (T13)', () => {
   const file = loadFigmaFile();
+  const inventory = radiusInventory(file.document);
+  const RADII = [...inventory.uniform.entries()].sort((a, b) => a[0] - b[0]);
   const base = (prefix: string) =>
     parseDeclarations(readTokens()).filter((d) => d.name.startsWith(prefix) && !d.name.slice(2).includes('--') && d.value !== 'initial');
 
-  it.each(RADIUS_TOKENS)('tokens.css declara %s: %s com /* figma:%s */', (token, value, nodeId) => {
-    const decl = parseDeclarations(readTokens()).find((d) => d.name === token);
-    expect({ value: decl?.value, figma: decl?.figma }).toEqual({ value, figma: nodeId });
+  it('o file.json tem 29 raios uniformes distintos e as 5 Lacunas de cantos assimetricos', () => {
+    expect(RADII).toHaveLength(29);
+    expect([...inventory.asymmetric.keys()].sort()).toEqual(ASYMMETRIC_GAPS);
   });
 
-  it.each(RADIUS_TOKENS)('o no %2$s do file.json tem raio igual ao de %s', (token, value, nodeId) => {
-    const node = findNode(file.document, nodeId);
-    expect(node, `no ${nodeId} no file.json`).toBeDefined();
-    expect(`${nodeRadius(node as FigmaNode)}px`).toBe(value);
+  // O comentario figma: pode ser qualquer no que use o raio (representativo); o teste abaixo confere que ele existe e bate.
+  it.each(RADII)('tokens.css declara o raio %s (ex.: no %s) com figma:<nodeId>', (radius) => {
+    const decl = parseDeclarations(readTokens()).find((d) => d.name === radiusToken(radius));
+    expect({ value: decl?.value, hasFigma: Boolean(decl?.figma) }).toEqual({ value: radiusValue(radius), hasFigma: true });
+  });
+
+  it('inventario: o conjunto de --radius-* base == o conjunto de raios dos nos (nenhum faltando, nenhum inventado)', () => {
+    expect(base('--radius-').map((d) => d.name).sort()).toEqual(RADII.map(([r]) => radiusToken(r)).sort());
+  });
+
+  it('Lacunas de cantos assimetricos nao viram token', () => {
+    const names = base('--radius-').map((d) => d.name);
+    expect(names.filter((n) => /--radius-(tl|tr|br|bl|top|bottom|left|right)/.test(n))).toEqual([]);
   });
 
   it('todo --radius-* base declarado tem figma:<nodeId> existente cujo raio e igual ao valor', () => {
@@ -282,25 +421,69 @@ describe('tokens de raio, sombra e spacing (T13)', () => {
     const bad = radii
       .filter((d) => {
         const node = d.figma ? findNode(file.document, d.figma) : undefined;
-        return !node || `${nodeRadius(node)}px` !== d.value;
+        const r = node ? nodeRadius(node) : undefined;
+        return r === undefined || radiusValue(r) !== d.value || radiusToken(r) !== d.name;
       })
       .map((d) => d.name);
     expect(bad).toEqual([]);
   });
 
-  it('todo --shadow-* base declarado tem figma:<nodeId> existente com DROP_SHADOW igual ao valor', () => {
-    const bad = base('--shadow-')
-      .filter((d) => {
-        const node = d.figma ? findNode(file.document, d.figma) : undefined;
-        const shadows = (node?.effects ?? []).filter((e) => e.type === 'DROP_SHADOW' && e.visible !== false);
-        return shadows.length === 0 || shadows.map(expectedShadow).join(', ') !== d.value;
-      })
-      .map((d) => d.name);
-    expect(bad).toEqual([]);
+  describe('sombras', () => {
+    const SHADOWS = [...shadowInventory(file.document).entries()].map(([token, v]) => [token, v.value] as [string, string]);
+
+    it('o file.json tem 7 sombras distintas (todas DROP_SHADOW) e os nomes nao colidem', () => {
+      expect(SHADOWS).toHaveLength(7);
+    });
+
+    it.each(SHADOWS)('tokens.css declara %s: %s com figma:<nodeId>', (token, value) => {
+      const decl = parseDeclarations(readTokens()).find((d) => d.name === token);
+      expect({ value: decl?.value, hasFigma: Boolean(decl?.figma) }).toEqual({ value, hasFigma: true });
+    });
+
+    it('inventario: o conjunto de --shadow-* base == o conjunto de efeitos dos nos (nenhum faltando, nenhum inventado)', () => {
+      expect(base('--shadow-').map((d) => d.name).sort()).toEqual(SHADOWS.map(([t]) => t).sort());
+    });
+
+    it('todo --shadow-* base declarado tem figma:<nodeId> existente com um efeito de sombra igual ao valor e ao nome', () => {
+      const declared = base('--shadow-');
+      expect(declared.length, 'ao menos um --shadow-* declarado').toBeGreaterThan(0);
+      const bad = declared
+        .filter((d) => {
+          const node = d.figma ? findNode(file.document, d.figma) : undefined;
+          const effects = ((node?.effects ?? []) as Effect[]).filter(isShadow);
+          return !effects.some((e) => expectedShadow(e) === d.value && shadowToken(e) === d.name);
+        })
+        .map((d) => d.name);
+      expect(bad).toEqual([]);
+    });
   });
 
   it('--spacing: 1px declarado (ADR-04) sem comentario figma', () => {
     const decl = parseDeclarations(readTokens()).find((d) => d.name === '--spacing');
     expect({ value: decl?.value, figma: decl?.figma }).toEqual({ value: '1px', figma: undefined });
+  });
+});
+
+// Breakpoints (prompt.md §8): larguras de avaliacao 390 (mobile, base sem prefixo), 768 (tablet) e 1440 (desktop).
+// Sem origem no Figma (nao ha figma:); Figma mobile = 414 (desvio Q14).
+describe('breakpoints (prompt.md §8)', () => {
+  const decls = () => parseDeclarations(readTokens());
+
+  it('zera os breakpoints padrao do Tailwind (--breakpoint-*: initial)', () => {
+    // parseDeclarations nao reconhece o `*` do reset; confere no CSS cru.
+    expect(readTokens()).toMatch(/--breakpoint-\*\s*:\s*initial\s*;/);
+  });
+
+  it.each([
+    ['--breakpoint-tablet', '768px'],
+    ['--breakpoint-desktop', '1440px'],
+  ])('%s: %s sem comentario figma', (name, value) => {
+    const decl = decls().find((d) => d.name === name);
+    expect({ value: decl?.value, figma: decl?.figma }).toEqual({ value, figma: undefined });
+  });
+
+  it('so existem os breakpoints tablet e desktop', () => {
+    const names = decls().filter((d) => d.name.startsWith('--breakpoint-') && d.name !== '--breakpoint-*').map((d) => d.name);
+    expect(names.sort()).toEqual(['--breakpoint-desktop', '--breakpoint-tablet']);
   });
 });
