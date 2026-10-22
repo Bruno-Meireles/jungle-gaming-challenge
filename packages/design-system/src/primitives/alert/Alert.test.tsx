@@ -60,7 +60,7 @@ describe('Alert', () => {
       </>,
     );
     await expect.element(page.getByText('Erro', { exact: true })).toBeInTheDocument();
-    await expect.element(page.getByText('Informacao', { exact: true })).toBeInTheDocument();
+    await expect.element(page.getByText('Informação', { exact: true })).toBeInTheDocument();
     await expect.element(page.getByText('Sucesso', { exact: true })).toBeInTheDocument();
     const svgs = Array.from(document.querySelectorAll('svg'));
     expect(svgs).toHaveLength(3);

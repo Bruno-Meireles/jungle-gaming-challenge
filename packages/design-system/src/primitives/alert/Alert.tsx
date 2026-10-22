@@ -17,7 +17,7 @@ export type AlertProps = {
 
 const TONES = {
   error: { role: 'alert', label: 'Erro', border: 'border-error', icon: 'text-error' },
-  info: { role: 'status', label: 'Informacao', border: 'border-primary', icon: 'text-primary' },
+  info: { role: 'status', label: 'Informação', border: 'border-primary', icon: 'text-primary' },
   success: { role: 'status', label: 'Sucesso', border: 'border-success', icon: 'text-success' },
 } as const;
 
