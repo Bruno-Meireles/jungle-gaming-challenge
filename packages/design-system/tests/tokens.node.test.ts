@@ -260,11 +260,12 @@ describe('tokens de tipografia (T12, todos os estilos TEXT)', () => {
   });
 });
 
-// Raio, sombra e spacing (T13). Raios/sombras entram sob demanda; ADR-04: --spacing 1 unidade = 1px do Figma.
-const RADIUS_TOKENS: [token: string, value: string, nodeId: string][] = [
-  ['--radius-3', '3px', '70386:262'], // Button primario (Save Button), file.json:253196
-  ['--radius-5', '5px', '70381:242'], // Input (Email Input), file.json:193043
-];
+// Raio, sombra e spacing (T13, generalizado no GATE-TOKENS); ADR-04: --spacing 1 unidade = 1px do Figma.
+// Raio: todo `cornerRadius` distinto de nos (ou rectangleCornerRadii com 4 cantos iguais) vira `--radius-<valor>`,
+// valor arredondado a 2 casas, ponto decimal como `p` (2.118... -> `--radius-2p12`).
+const round2 = (n: number): number => Number(n.toFixed(2));
+const radiusToken = (r: number): string => `--radius-${String(round2(r)).replace('.', 'p')}`;
+const radiusValue = (r: number): string => `${round2(r)}px`;
 
 type FigmaNode = {
   id?: string;
@@ -291,6 +292,30 @@ function nodeRadius(node: FigmaNode): number | undefined {
   return r && r.every((v) => v === r[0]) ? r[0] : undefined;
 }
 
+// Inventario: raio (arredondado) -> id do primeiro no que o usa; cantos assimetricos (Lacunas) -> id do primeiro no.
+function radiusInventory(root: unknown): { uniform: Map<number, string>; asymmetric: Map<string, string> } {
+  const uniform = new Map<number, string>();
+  const asymmetric = new Map<string, string>();
+  const walk = (o: unknown): void => {
+    if (!o || typeof o !== 'object') return;
+    const node = o as FigmaNode;
+    if (node.id !== undefined) {
+      const r = nodeRadius(node);
+      if (r !== undefined) {
+        if (!uniform.has(round2(r))) uniform.set(round2(r), node.id);
+      } else if (node.rectangleCornerRadii && !asymmetric.has(node.rectangleCornerRadii.join(','))) {
+        asymmetric.set(node.rectangleCornerRadii.join(','), node.id);
+      }
+    }
+    for (const v of Object.values(o)) walk(v);
+  };
+  walk(root);
+  return { uniform, asymmetric };
+}
+
+// Lacunas: cantos assimetricos [tl,tr,br,bl] sem token (nao ha como expressa-los num unico `--radius-*`).
+const ASYMMETRIC_GAPS = ['0,3,3,0', '0,6,6,0', '14,0,0,14', '31,31,0,0', '40,40,0,0'];
+
 // `<x>px <y>px <blur>px rgba(r, g, b, a)` esperado para um DROP_SHADOW do Figma.
 function expectedShadow(e: NonNullable<FigmaNode['effects']>[number]): string {
   const c = (v: number) => Math.round(v * 255);
@@ -300,18 +325,29 @@ function expectedShadow(e: NonNullable<FigmaNode['effects']>[number]): string {
 
 describe('tokens de raio, sombra e spacing (T13)', () => {
   const file = loadFigmaFile();
+  const inventory = radiusInventory(file.document);
+  const RADII = [...inventory.uniform.entries()].sort((a, b) => a[0] - b[0]);
   const base = (prefix: string) =>
     parseDeclarations(readTokens()).filter((d) => d.name.startsWith(prefix) && !d.name.slice(2).includes('--') && d.value !== 'initial');
 
-  it.each(RADIUS_TOKENS)('tokens.css declara %s: %s com /* figma:%s */', (token, value, nodeId) => {
-    const decl = parseDeclarations(readTokens()).find((d) => d.name === token);
-    expect({ value: decl?.value, figma: decl?.figma }).toEqual({ value, figma: nodeId });
+  it('o file.json tem 29 raios uniformes distintos e as 5 Lacunas de cantos assimetricos', () => {
+    expect(RADII).toHaveLength(29);
+    expect([...inventory.asymmetric.keys()].sort()).toEqual(ASYMMETRIC_GAPS);
   });
 
-  it.each(RADIUS_TOKENS)('o no %2$s do file.json tem raio igual ao de %s', (token, value, nodeId) => {
-    const node = findNode(file.document, nodeId);
-    expect(node, `no ${nodeId} no file.json`).toBeDefined();
-    expect(`${nodeRadius(node as FigmaNode)}px`).toBe(value);
+  // O comentario figma: pode ser qualquer no que use o raio (representativo); o teste abaixo confere que ele existe e bate.
+  it.each(RADII)('tokens.css declara o raio %s (ex.: no %s) com figma:<nodeId>', (radius) => {
+    const decl = parseDeclarations(readTokens()).find((d) => d.name === radiusToken(radius));
+    expect({ value: decl?.value, hasFigma: Boolean(decl?.figma) }).toEqual({ value: radiusValue(radius), hasFigma: true });
+  });
+
+  it('inventario: o conjunto de --radius-* base == o conjunto de raios dos nos (nenhum faltando, nenhum inventado)', () => {
+    expect(base('--radius-').map((d) => d.name).sort()).toEqual(RADII.map(([r]) => radiusToken(r)).sort());
+  });
+
+  it('Lacunas de cantos assimetricos nao viram token', () => {
+    const names = base('--radius-').map((d) => d.name);
+    expect(names.filter((n) => /--radius-(tl|tr|br|bl|top|bottom|left|right)/.test(n))).toEqual([]);
   });
 
   it('todo --radius-* base declarado tem figma:<nodeId> existente cujo raio e igual ao valor', () => {
@@ -320,7 +356,8 @@ describe('tokens de raio, sombra e spacing (T13)', () => {
     const bad = radii
       .filter((d) => {
         const node = d.figma ? findNode(file.document, d.figma) : undefined;
-        return !node || `${nodeRadius(node)}px` !== d.value;
+        const r = node ? nodeRadius(node) : undefined;
+        return r === undefined || radiusValue(r) !== d.value || radiusToken(r) !== d.name;
       })
       .map((d) => d.name);
     expect(bad).toEqual([]);
