@@ -1,0 +1,21 @@
+export const ptBR = {
+  title: 'Ainda não disponível — Kurio',
+  description: 'Esta funcionalidade ainda não está disponível na Kurio.',
+  heading: 'Ainda não disponível',
+  bodyGeneric: 'Esta área ainda não está disponível.',
+  bodyFeature: '{{name}} ainda não está disponível.',
+  back: 'Voltar para o início',
+  features: {
+    creators: 'Criadores',
+    learn: 'Aprenda',
+    auth: 'Entrar',
+    'nft-detail': 'Detalhe do NFT',
+    cart: 'Carrinho',
+    favorites: 'Favoritos',
+    journal: 'Diário',
+    newsletter: 'Newsletter',
+    footer: 'Rodapé',
+    social: 'Redes sociais',
+    scan: 'Escanear',
+  },
+};

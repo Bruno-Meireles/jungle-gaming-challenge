@@ -367,7 +367,7 @@ M1
 - [x] 6 `AppProviders` e idioma: RED `6f4c6cd` (5 falhas por ausência do comportamento), GREEN (5/5; app 167/167; typecheck e lint limpos). Desvio: `i18next.d.ts` (CustomTypeOptions) adiado para os namespaces reais; chaves tipadas passam a ser exigidas quando houver o primeiro namespace (item 7)
 - [x] 7 shell E2E: RED `1ec9bf5` (8 falhas: locator ausente, título e lang errados; servidor de pé), GREEN (E2E 8/8 em 1440 e 390 pelo CLI; app 175/175; typecheck, lint e build limpos; no-docker 9/9). Desvios: `use-document-meta` em `shared/hooks` (lint proíbe react em `shared/lib`); chaves tipadas (CustomTypeOptions) adiadas para o item 7b
 - [x] 7b chaves de i18n tipadas: RED `4af4a83` (3× TS2578; AppProviders.test e locales-parity ajustados por dependerem de namespace inexistente/indexação por string, mesmo comportamento), GREEN (`i18next.d.ts`; typecheck/lint limpos; app 175/175; build ok; E2E shell 8/8). Nota: `defaultNS` tipado como união dos namespaces (só tipagem)
-- [ ] 8 rotas stub, 404 e `/unavailable` E2E
+- [x] 8 rotas stub, 404 e `/unavailable` E2E: RED `c3c4e16` (22 falhas: heading não encontrado e link de volta ausente), GREEN (E2E rotas+shell 30/30 em 1440 e 390; app 179/179; typecheck, lint e build limpos). Textos inventados pelo code-writer a conferir: meta descriptions, corpo do 404 e rótulos de favorites/journal/newsletter/footer/social/scan
 - [ ] Docs M1: `design.md` §10, ADR-16/17/21, dependências instaladas
 
 M2
