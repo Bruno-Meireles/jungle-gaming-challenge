@@ -316,11 +316,44 @@ function radiusInventory(root: unknown): { uniform: Map<number, string>; asymmet
 // Lacunas: cantos assimetricos [tl,tr,br,bl] sem token (nao ha como expressa-los num unico `--radius-*`).
 const ASYMMETRIC_GAPS = ['0,3,3,0', '0,6,6,0', '14,0,0,14', '31,31,0,0', '40,40,0,0'];
 
-// `<x>px <y>px <blur>px rgba(r, g, b, a)` esperado para um DROP_SHADOW do Figma.
-function expectedShadow(e: NonNullable<FigmaNode['effects']>[number]): string {
+// Sombra: todo efeito DROP_SHADOW/INNER_SHADOW visivel e distinto vira `--shadow-<nome>` com valor
+// `[inset ]Xpx Ypx Rpx [Spx] rgba(r, g, b, a)` (numeros a 2 casas; spread omitido quando 0).
+// Nome: x<X>-y<Y>-b<blur>[-s<spread>]-a<alfa%>-<hex6 da cor, minusculo>; `n` = negativo, `p` = ponto decimal.
+type Effect = NonNullable<FigmaNode['effects']>[number] & { spread?: number };
+const isShadow = (e: Effect): boolean => (e.type === 'DROP_SHADOW' || e.type === 'INNER_SHADOW') && e.visible !== false;
+
+function expectedShadow(e: Effect): string {
   const c = (v: number) => Math.round(v * 255);
-  const a = Number(e.color.a.toFixed(2));
-  return `${e.offset.x}px ${e.offset.y}px ${e.radius}px rgba(${c(e.color.r)}, ${c(e.color.g)}, ${c(e.color.b)}, ${a})`;
+  const spread = e.spread ?? 0;
+  return `${e.type === 'INNER_SHADOW' ? 'inset ' : ''}${round2(e.offset.x)}px ${round2(e.offset.y)}px ${round2(e.radius)}px${
+    spread ? ` ${round2(spread)}px` : ''
+  } rgba(${c(e.color.r)}, ${c(e.color.g)}, ${c(e.color.b)}, ${round2(e.color.a)})`;
+}
+
+function shadowToken(e: Effect): string {
+  const slug = (n: number) => String(round2(n)).replace('-', 'n').replace('.', 'p');
+  const hex = toHex(e.color).slice(1).toLowerCase();
+  const spread = e.spread ?? 0;
+  return `--shadow-${e.type === 'INNER_SHADOW' ? 'inset-' : ''}x${slug(e.offset.x)}-y${slug(e.offset.y)}-b${slug(e.radius)}${
+    spread ? `-s${slug(spread)}` : ''
+  }-a${Math.round(e.color.a * 100)}-${hex}`;
+}
+
+// Inventario: nome do token -> { valor, id do primeiro no que usa o efeito }.
+function shadowInventory(root: unknown): Map<string, { value: string; nodeId: string }> {
+  const map = new Map<string, { value: string; nodeId: string }>();
+  const walk = (o: unknown): void => {
+    if (!o || typeof o !== 'object') return;
+    const node = o as FigmaNode;
+    if (node.id !== undefined && Array.isArray(node.effects)) {
+      for (const e of node.effects as Effect[]) {
+        if (isShadow(e) && !map.has(shadowToken(e))) map.set(shadowToken(e), { value: expectedShadow(e), nodeId: node.id });
+      }
+    }
+    for (const v of Object.values(o)) walk(v);
+  };
+  walk(root);
+  return map;
 }
 
 describe('tokens de raio, sombra e spacing (T13)', () => {
@@ -363,15 +396,34 @@ describe('tokens de raio, sombra e spacing (T13)', () => {
     expect(bad).toEqual([]);
   });
 
-  it('todo --shadow-* base declarado tem figma:<nodeId> existente com DROP_SHADOW igual ao valor', () => {
-    const bad = base('--shadow-')
-      .filter((d) => {
-        const node = d.figma ? findNode(file.document, d.figma) : undefined;
-        const shadows = (node?.effects ?? []).filter((e) => e.type === 'DROP_SHADOW' && e.visible !== false);
-        return shadows.length === 0 || shadows.map(expectedShadow).join(', ') !== d.value;
-      })
-      .map((d) => d.name);
-    expect(bad).toEqual([]);
+  describe('sombras', () => {
+    const SHADOWS = [...shadowInventory(file.document).entries()].map(([token, v]) => [token, v.value] as [string, string]);
+
+    it('o file.json tem 7 sombras distintas (todas DROP_SHADOW) e os nomes nao colidem', () => {
+      expect(SHADOWS).toHaveLength(7);
+    });
+
+    it.each(SHADOWS)('tokens.css declara %s: %s com figma:<nodeId>', (token, value) => {
+      const decl = parseDeclarations(readTokens()).find((d) => d.name === token);
+      expect({ value: decl?.value, hasFigma: Boolean(decl?.figma) }).toEqual({ value, hasFigma: true });
+    });
+
+    it('inventario: o conjunto de --shadow-* base == o conjunto de efeitos dos nos (nenhum faltando, nenhum inventado)', () => {
+      expect(base('--shadow-').map((d) => d.name).sort()).toEqual(SHADOWS.map(([t]) => t).sort());
+    });
+
+    it('todo --shadow-* base declarado tem figma:<nodeId> existente com um efeito de sombra igual ao valor e ao nome', () => {
+      const declared = base('--shadow-');
+      expect(declared.length, 'ao menos um --shadow-* declarado').toBeGreaterThan(0);
+      const bad = declared
+        .filter((d) => {
+          const node = d.figma ? findNode(file.document, d.figma) : undefined;
+          const effects = ((node?.effects ?? []) as Effect[]).filter(isShadow);
+          return !effects.some((e) => expectedShadow(e) === d.value && shadowToken(e) === d.name);
+        })
+        .map((d) => d.name);
+      expect(bad).toEqual([]);
+    });
   });
 
   it('--spacing: 1px declarado (ADR-04) sem comentario figma', () => {
