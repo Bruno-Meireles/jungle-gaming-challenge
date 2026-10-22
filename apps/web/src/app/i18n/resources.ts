@@ -1,4 +1,5 @@
 import type { Messages } from '../../shared/lib/i18n/locale-parity';
+import { nftLocales } from '../../entities/nft';
 import { pageHomeLocales } from '../../pages/home';
 import { pageNotFoundLocales } from '../../pages/not-found';
 import { pageUnavailableLocales } from '../../pages/unavailable';
@@ -11,6 +12,7 @@ export type Resources = { 'pt-BR': Record<string, Messages>; en: Record<string, 
 export const ptBRResources = {
   shared: sharedLocales['pt-BR'],
   header: headerLocales['pt-BR'],
+  nft: nftLocales['pt-BR'],
   footer: footerLocales['pt-BR'],
   pageHome: pageHomeLocales['pt-BR'],
   pageUnavailable: pageUnavailableLocales['pt-BR'],
@@ -20,6 +22,7 @@ export const ptBRResources = {
 const enResources = {
   shared: sharedLocales.en,
   header: headerLocales.en,
+  nft: nftLocales.en,
   footer: footerLocales.en,
   pageHome: pageHomeLocales.en,
   pageUnavailable: pageUnavailableLocales.en,

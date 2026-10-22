@@ -31,7 +31,13 @@ describe('normalizeCatalogSearch', () => {
 
   it('omite valores iguais ao default', () => {
     expect(
-      normalizeCatalogSearch({ tab: 'all', sort: 'recent', page: 1, collections: [], networks: [] }),
+      normalizeCatalogSearch({
+        tab: 'all',
+        sort: 'recent',
+        page: 1,
+        collections: [],
+        networks: [],
+      }),
     ).toEqual({});
   });
 
@@ -79,7 +85,10 @@ describe('normalizeCatalogSearch', () => {
   );
 
   it('compara min e max como bigint: 1.10 e 1.1 sao iguais e preservados', () => {
-    expect(normalizeCatalogSearch({ min: '1.10', max: '1.1' })).toEqual({ min: '1.10', max: '1.1' });
+    expect(normalizeCatalogSearch({ min: '1.10', max: '1.1' })).toEqual({
+      min: '1.10',
+      max: '1.1',
+    });
   });
 
   it('min > max descarta os dois', () => {

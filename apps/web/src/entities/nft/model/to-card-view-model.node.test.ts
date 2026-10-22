@@ -54,7 +54,9 @@ describe('toCardViewModel', () => {
 
   it('preserva 18 casas e milhar sem passar por Number', () => {
     const tiny = nft({ price: parseEth('0.000000000000000001') });
-    expect(toCardViewModel(tiny, { locale: 'pt-BR', t }).priceLabel).toBe('0,000000000000000001 ETH');
+    expect(toCardViewModel(tiny, { locale: 'pt-BR', t }).priceLabel).toBe(
+      '0,000000000000000001 ETH',
+    );
     const big = nft({ price: parseEth('12345.5') });
     expect(toCardViewModel(big, { locale: 'en', t }).priceLabel).toBe('12,345.5 ETH');
   });
@@ -66,7 +68,14 @@ describe('toCardViewModel', () => {
 
   it('nao expoe width, height nem dados de dominio internos', () => {
     const vm = toCardViewModel(nft(), { locale: 'en', t });
-    expect(Object.keys(vm).sort()).toEqual(['href', 'id', 'image', 'isRare', 'priceLabel', 'title']);
+    expect(Object.keys(vm).sort()).toEqual([
+      'href',
+      'id',
+      'image',
+      'isRare',
+      'priceLabel',
+      'title',
+    ]);
     expect(Object.keys(vm.image).sort()).toEqual(['alt', 'src']);
   });
 });
