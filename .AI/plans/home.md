@@ -386,7 +386,7 @@ M3
 - [ ] 19 `withFilterChange` e `toApiParams`
 - [ ] 20 `nftKeys`
 - [ ] 21 `toCardViewModel`
-- [ ] 22 sucesso E2E
+- [x] 22 sucesso E2E: E2E 8/8 (desktop-1440 e mobile-390; suíte e2e completa 38/38), typecheck e lint limpos, node 368/368, browser 375/375. Ver Execução
 
 M4
 - [ ] 23a DS `RangeSlider.getValueText`
@@ -440,3 +440,12 @@ Desvios do plano no M1:
 
 - **Item 15 (fixtures):** `apps/web/src/mocks/fixtures/nfts.ts` (45 itens, tabela de linhas mais um construtor). **Desvio/Lacuna (imagens):** o Figma tem só 4 image fills distintos; os 37 itens sintéticos (nomes e slugs inventados, p.ex. `amber-fox-021`) usam, cada um, uma cópia em `public/nfts/<slug>.webp` de um dos 8 WebP existentes (rotação por índice), pois o teste exige `/nfts/<id>.webp` existente. Preços dos itens do Figma sem valor no plano (Cosmic Bloom 0.85, Violet Nomad 2.40, Ivory Baron 3.15, Golden Beat 0.45, Golden Signal 0.75) e quais itens são raros (índices 2, 6, 12, 19, 28, 36) foram escolhidos pelo code-writer: o Figma/plano não os definem. Extremos `0.000000000000000001` e `12.30`, mais `1.10` e `0.02`, estão em itens sintéticos.
 - **Item 21 (toCardViewModel):** criado o namespace `nft` (`entities/nft/config/locales`, exportado por `entities/nft/index.ts` como `nftLocales`, registrado em `app/i18n/resources.ts` e `i18next.d.ts`) com `nft:image.alt = {{title}}`, e `shared:eth.amount = {{amount}} ETH` nos dois idiomas. `CatalogSearch.collections/networks` são `readonly` (o teste do item 20 passa tuplas `as const`). `CatalogQuery` é redeclarado no domínio (`catalog-query.ts`), pois `entities` não pode importar `mocks`; é estruturalmente igual ao de `mocks/catalog`.
+
+- **Item 22 (GREEN da Home visível):** MSW (`mocks/handlers/{catalog,highlights}.ts`, `browser.ts`, `clock.ts` com `MOCK_NOW`; `public/mockServiceWorker.js` por `msw init --save=false`; `.env.production` com `VITE_ENABLE_MOCKS=true`, liberado no `.gitignore`), `app/bootstrap/enable-mocks.ts`, rota `/` com `homeSearchSchema`, `useCatalogQuery` e `NftCardView` em `entities/nft`, `widgets/catalog` (`CatalogResults`: status com contagem plural, skeletons, vazio, erro com retry), `pages/home` compondo. Capturas: `scratchpad/home-1440.png` e `home-390.png`. Desvios:
+  - **Mocks vs. render:** a UI renderiza sem esperar o worker (esperar quebrava o teste do skip link do shell: `load` disparava antes do React); enquanto o worker sobe, `onlineManager.setOnline(false)` pausa as buscas e libera ao final.
+  - **`vitest.config.ts`:** o projeto `unit` (browser) passou a excluir `src/**/*.node.test.ts` (4 testes node falhavam por rodarem no browser; erro anterior ao item 22, não visto nas execuções só do projeto node).
+  - `retry` e `staleTime` ficam no `QueryClient` (ADR-20), não repetidos no hook.
+  - `stubRoute` ficou genérico (`<P extends string>`) para `Link to="/nfts/$nftId"` ser tipado.
+  - **Risco:** o parser de search padrão do TanStack converte `min=1.5`/`q=123` em `number` (perde precisão em 18 casas e descarta pelo `normalizeCatalogSearch`); tratar com `parseSearch` próprio no M4 (itens 23/24).
+  - Cenários `catalog-flaky`/`catalog-out-of-order` mantêm contador por carga da página; testes msw/node dos handlers não criados (cobertos pelo E2E).
+  - Skeleton: região `status` "Carregando NFTs" + `aria-busy`; layout 3 col (≥1440) e 2 col sem sidebar/hero (próximos passos).

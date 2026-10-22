@@ -1,11 +1,14 @@
 import { createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
-import { HomePage } from '../../pages/home';
+import { HomePage, homeSearchSchema } from '../../pages/home';
 import { NotFoundPage } from '../../pages/not-found';
 import { UnavailablePage, unavailableSearchSchema } from '../../pages/unavailable';
 import { RootLayout } from '../layouts/RootLayout';
 
 const rootRoute = createRootRoute({ component: RootLayout, notFoundComponent: NotFoundPage });
-const homeRoute = createRoute({ getParentRoute: () => rootRoute, path: '/', component: HomePage });
+const homeRoute = createRoute({ getParentRoute: () => rootRoute, path: '/',
+  validateSearch: homeSearchSchema,
+  component: HomePage,
+});
 const unavailableRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/unavailable',
@@ -16,7 +19,7 @@ const unavailableRoute = createRoute({
   },
 });
 
-function stubRoute(path: string, feature: string) {
+function stubRoute<P extends string>(path: P, feature: string) {
   return createRoute({
     getParentRoute: () => rootRoute,
     path,

@@ -6,6 +6,7 @@ declare module 'i18next' {
       'shared',
       'header',
       'nft',
+      'catalog',
       'footer',
       'pageHome',
       'pageUnavailable',

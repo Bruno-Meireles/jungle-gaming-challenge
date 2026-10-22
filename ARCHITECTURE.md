@@ -65,3 +65,5 @@ Registro de decisões duradouras e desvios (formato: contexto, decisão, alterna
 - Alvos de toque abaixo de 24×24 (WCAG 2.2, 2.5.8): `DialogClose` (18×18) e o botão do `PasswordInput` (20×20). Decidir se o projeto adota WCAG 2.2 AA; o Figma desenha esses tamanhos.
 - `eslint-plugin-storybook` instalado e não configurado.
 - Overlay do Dialog: derivado da cor-base das sombras do DS (sem fonte no Figma).
+
+**ADR-16 (adendo, item 22 da Home): bootstrap dos mocks.** `msw 2.15.0` já instalado; `public/mockServiceWorker.js` gerado por `msw init` (sem `--save`). `app/bootstrap/enable-mocks.ts` importa `mocks/browser` dinamicamente só com `VITE_ENABLE_MOCKS=true` (`.env.production` versionado com `true`, exceção no `.gitignore`). A UI não espera o worker: as buscas do TanStack Query ficam pausadas via `onlineManager` até ele iniciar. Sem dependência nova.

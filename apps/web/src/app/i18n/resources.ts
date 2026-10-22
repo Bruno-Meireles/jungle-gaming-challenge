@@ -4,6 +4,7 @@ import { pageHomeLocales } from '../../pages/home';
 import { pageNotFoundLocales } from '../../pages/not-found';
 import { pageUnavailableLocales } from '../../pages/unavailable';
 import { sharedLocales } from '../../shared/config';
+import { catalogLocales } from '../../widgets/catalog';
 import { footerLocales } from '../../widgets/footer';
 import { headerLocales } from '../../widgets/header';
 
@@ -13,6 +14,7 @@ export const ptBRResources = {
   shared: sharedLocales['pt-BR'],
   header: headerLocales['pt-BR'],
   nft: nftLocales['pt-BR'],
+  catalog: catalogLocales['pt-BR'],
   footer: footerLocales['pt-BR'],
   pageHome: pageHomeLocales['pt-BR'],
   pageUnavailable: pageUnavailableLocales['pt-BR'],
@@ -23,6 +25,7 @@ const enResources = {
   shared: sharedLocales.en,
   header: headerLocales.en,
   nft: nftLocales.en,
+  catalog: catalogLocales.en,
   footer: footerLocales.en,
   pageHome: pageHomeLocales.en,
   pageUnavailable: pageUnavailableLocales.en,

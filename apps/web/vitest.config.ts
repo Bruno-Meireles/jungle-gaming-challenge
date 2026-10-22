@@ -14,6 +14,7 @@ export default defineConfig({
         test: {
           name: 'unit',
           include: ['src/**/*.test.{ts,tsx}'],
+          exclude: ['src/**/*.node.test.ts'],
           browser: {
             enabled: true,
             connectTimeout: 180_000,
