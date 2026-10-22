@@ -15,9 +15,9 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   tags: ['golden'],
   render: (args) => (
-    <div className="flex w-80 flex-col gap-2 bg-surface-card p-6">
+    <div className="flex w-320 flex-col gap-8 bg-surface-card p-24">
       <Label {...args} />
-      <input id="label-story-input" className="h-10 rounded-5 border border-secondary bg-transparent px-3" />
+      <input id="label-story-input" className="h-40 rounded-5 border border-secondary bg-transparent px-12" />
     </div>
   ),
 };
@@ -26,12 +26,12 @@ export const Required: Story = {
   tags: ['golden'],
   args: { required: true, htmlFor: 'label-story-required' },
   render: (args) => (
-    <div className="flex w-80 flex-col gap-2 bg-surface-card p-6">
+    <div className="flex w-320 flex-col gap-8 bg-surface-card p-24">
       <Label {...args} />
       <input
         id="label-story-required"
         required
-        className="h-10 rounded-5 border border-secondary bg-transparent px-3"
+        className="h-40 rounded-5 border border-secondary bg-transparent px-12"
       />
     </div>
   ),
