@@ -12,7 +12,7 @@ import { Alert } from './Alert';
 describe('Alert', () => {
   it('tom error usa role=alert (assertivo)', async () => {
     await render(<Alert tone="error">Pagamento recusado</Alert>);
-    await expect.element(page.getByRole('alert')).toHaveTextContent('Pagamento recusado');
+    await expect.element(page.getByRole('alert').getByText('Pagamento recusado')).toBeVisible();
   });
 
   it('tons info e success usam role=status (polido)', async () => {
@@ -22,8 +22,8 @@ describe('Alert', () => {
         <Alert tone="success">Pedido criado</Alert>
       </>,
     );
-    await expect.element(page.getByRole('status').first()).toHaveTextContent('Frete calculado');
-    await expect.element(page.getByRole('status').nth(1)).toHaveTextContent('Pedido criado');
+    await expect.element(page.getByRole('status').first().getByText('Frete calculado')).toBeVisible();
+    await expect.element(page.getByRole('status').nth(1).getByText('Pedido criado')).toBeVisible();
     expect(page.getByRole('alert').elements()).toHaveLength(0);
   });
 
