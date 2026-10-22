@@ -57,6 +57,22 @@ describe('Pagination - comportamento', () => {
   });
 });
 
+describe('Pagination - nomes recebidos por props', () => {
+  /* As props label/nextLabel ainda nao existem no tipo: objeto frouxo so aqui; o T6 troca por uso direto. */
+  const extra = { label: 'Pagination', nextLabel: 'Next' } as Record<string, string>;
+
+  it('expoe label e nextLabel recebidos em pagina intermediaria', async () => {
+    await render(<Pagination page={2} pageCount={4} getItemProps={getItemProps} {...extra} />);
+    await expect.element(screen.getByRole('navigation', { name: 'Pagination' })).toBeInTheDocument();
+    await expect.element(screen.getByRole('link', { name: 'Next' })).toHaveAttribute('href', '#pagina-3');
+  });
+
+  it('na ultima pagina "Next" continua exposto com aria-disabled="true"', async () => {
+    await render(<Pagination page={4} pageCount={4} getItemProps={getItemProps} {...extra} />);
+    await expect.element(screen.getByRole('link', { name: 'Next' })).toHaveAttribute('aria-disabled', 'true');
+  });
+});
+
 describe('PaginationLink - asChild', () => {
   it('renderiza <a> por padrao com data-slot', async () => {
     await render(<PaginationLink href="#x">Item</PaginationLink>);
