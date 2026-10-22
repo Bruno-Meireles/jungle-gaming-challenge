@@ -30,6 +30,7 @@ function read(id, prop, refId) {
   switch (prop) {
     case 'w': return b.width;
     case 'h': return b.height;
+    case 'count': return n.children.length;
     case 'gap': return n.itemSpacing ?? 0;
     case 'padL': return n.paddingLeft ?? 0;
     case 'padT': return n.paddingTop ?? 0;
@@ -204,9 +205,13 @@ const spec = {
 
   // Grade
   'grid.w': ['70342:2830', 'w'],
+  'grid.cols': ['70342:2802', 'count'],
   'grid.col.w': ['70342:2678', 'w'],
   'grid.gap.col': ['70342:2802', 'gap'],
   'grid.gap.row': ['70342:2828', 'gap'],
+  'gridM.cols': ['70395:242', 'count'],
+  'gridM.w': ['70395:242', 'w'],
+  'gridM.col.w': ['70395:243', 'w'],
   'gridM.gap.col': ['70395:242', 'gap'],
   'gridM.gap.row': ['70395:243', 'gap'],
   'gridM.colR.offset': ['70395:244', 'padT'],

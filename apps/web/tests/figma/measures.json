@@ -824,6 +824,12 @@
     "prop": "w",
     "source": "docs/figma/file.json:12719"
   },
+  "grid.cols": {
+    "value": 3,
+    "node": "70342:2802",
+    "prop": "count",
+    "source": "docs/figma/file.json:14071"
+  },
   "grid.col.w": {
     "value": 258,
     "node": "70342:2678",
@@ -841,6 +847,24 @@
     "node": "70342:2828",
     "prop": "gap",
     "source": "docs/figma/file.json:14065"
+  },
+  "gridM.cols": {
+    "value": 2,
+    "node": "70395:242",
+    "prop": "count",
+    "source": "docs/figma/file.json:279695"
+  },
+  "gridM.w": {
+    "value": 366,
+    "node": "70395:242",
+    "prop": "w",
+    "source": "docs/figma/file.json:279695"
+  },
+  "gridM.col.w": {
+    "value": 175,
+    "node": "70395:243",
+    "prop": "w",
+    "source": "docs/figma/file.json:279701"
   },
   "gridM.gap.col": {
     "value": 16,
