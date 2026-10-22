@@ -13,6 +13,7 @@ export default defineConfig({
   forbidOnly: true,
   reporter: [['html', { open: 'never' }], ['list']],
   expect: {
+    timeout: 20_000, // Docker sob carga renderiza o Storybook devagar; nao afeta a tolerancia da captura
     toHaveScreenshot: {
       animations: 'disabled',
       caret: 'hide',
