@@ -31,6 +31,7 @@ export default defineConfig({
           include: ['src/**/*.test.{ts,tsx}'],
           exclude: ['src/**/*.stories.{ts,tsx}'],
           setupFiles: ['src/test/setup.ts'],
+          testTimeout: 30_000, // cold start em checkout limpo roda 3 Chromium em paralelo
           browser: {
             enabled: true,
             connectTimeout: 180_000,
@@ -46,6 +47,7 @@ export default defineConfig({
         optimizeDeps: { include: ['react/jsx-dev-runtime', ...radixDeps, ...runtimeDeps] },
         test: {
           name: 'storybook',
+          testTimeout: 30_000,
           browser: {
             enabled: true,
             connectTimeout: 180_000,
