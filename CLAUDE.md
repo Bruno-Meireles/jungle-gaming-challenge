@@ -14,6 +14,7 @@ Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado co
 - **Telas** são desenvolvidas e validadas com **Playwright**, usando o **Playwright CLI** (não o MCP) para economizar tokens; além disso há E2E determinísticos.
 - **Monorepo** com dois pacotes: o app e o **design system**. Ferramenta pretendida: pnpm workspaces + Turborepo (ainda não criada; confirmar com o usuário antes de instalar).
 - **App web** (requisitos adicionais do usuário, valem desde a primeira feature): **i18n desde o momento zero** (pt-BR e inglês, nenhum texto hardcoded; o design system não embute texto de interface) e **melhores práticas de código e componentização**. Detalhes em `.AI/standards/i18n-quality.md`.
+- **Proibido Docker (regra do usuário, 2026-10-22):** não use Docker em desenvolvimento, testes ou validações, nem sugira ou solicite seu uso, nem o ponha em scripts automáticos, planos ou docs como caminho recomendado. Docker só pode ser usado quando o usuário mandar explicitamente. Toda execução é local (Node pelo `.nvmrc`, Playwright e Vitest nativos). Não precisa desinstalar o Docker da máquina.
 - Código que o usuário disser estar "em desenvolvimento" no protótipo ou neste arquivo deve ser ignorado.
 - Copilot descumpriu regras no protótipo: na inicialização, siga estas regras à risca e não crie scaffolding além do pedido.
 
