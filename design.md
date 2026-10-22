@@ -186,10 +186,9 @@ Produzidos depois desta proposta: `docs/discovery.md` (matriz requisito→featur
 | # | Feature | Entrega principal | Depende de |
 |---|---|---|---|
 | F0a | `design-system-i18n` | DS sem texto de interface embutido (rótulos como props), guarda por teste, stories/testes atualizados, baselines inalteradas | DS |
-| F0b | `app-shell` | providers (Query, Router, **i18n**), router base, regras FSD **e de qualidade/i18n** no lint, seletor de idioma, deploy preview | F0a |
-| F1 | `mock-platform` | MSW REST (erros por código, sem texto de UI), cenários, persistência/reset, **spike do Socket.IO** | F0b |
-| F2 | `shared-api` + `session-auth` | Axios, erro padrão, login/cadastro/logout/expiração, guards | F1 |
-| F3 | `catalog` | Início: busca, filtros, ordenação, paginação na URL, skeleton | F2 |
+| F0b + F3 | `home` (plano único, ADR-15/16) | app-shell mínimo (providers Query/Router/**i18n**, router base, regras FSD **e de qualidade/i18n** no lint, seletor de idioma), Axios mínimo, mock MSW do catálogo e a Início responsiva (busca, filtros, ordenação, paginação na URL, skeleton); build de demonstração com mocks | F0a |
+| F1 | `mock-platform` | amplia os mocks da Home: erros por código, demais cenários do enunciado §6, persistência/reset, ≥ 2 usuários, **spike do Socket.IO** | home |
+| F2 | `session-auth` | erro padrão e interceptors, login/cadastro/logout/expiração, guards (o Axios e o `shared/api` nascem na Home) | F1 |
 | F4 | `nft-detail` + `favorites` | Detalhe, galeria, edição, quantidade, favorito otimista | F3 |
 | F5 | `cart` | Carrinho, cupom, resumo, merge de visitante | F4 |
 | F6 | `checkout` + `orders` | Pagamento, carteira/rede, idempotência, recibo | F5 |
