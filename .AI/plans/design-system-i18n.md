@@ -181,7 +181,27 @@ Biblioteca de i18n, providers, chaves e locales, seletor de idioma, `<html lang>
 - [x] G2.c lint barra import de i18n: RED `22472e5` (3 falhas por asserção), GREEN (21/21, typecheck e lint limpos, lint da raiz verde)
 - [x] G1.m e G2.m mutações: `aria-label="Fechar"` em DialogClose.tsx reprovado por G1 (`DialogClose.tsx:13:aria-label=Fechar`); `new Intl.NumberFormat()` reprovado por G2.b (`linha 28: Intl`); `i18next` via `JG_DS_PACKAGE_JSON` reprovado por G2.a (`dependencies:i18next`); revertido, 186/186 verdes, árvore limpa
 - [x] R1: grep em `node_modules/.pnpm/@radix-ui+react-{dialog,select,slider}/dist/index.mjs`: dialog e select só usam `aria-labelledby`, sem texto; slider tem fallback `getLabel` ("Minimum"/"Maximum", `index.mjs:645-649`) usado só quando falta `aria-label`, e o `RangeSlider` sempre passa `aria-label={thumbLabels[i]}` (tupla obrigatória), então nenhum texto embutido chega ao usuário
-- [ ] Docs: D1 README (Textos e i18n), D2 design-system.md §3, D3 ADR-14 em ARCHITECTURE.md, D4 design.md, D5 i18n-quality.md
-- [ ] V `pnpm verify` e diff de baselines vazio
+- [x] Docs: D1 `e56f30a`, D2 `d785c2d`, D3 `09d05bf`, D4 `043b79e`, D5 `0386569`
+- [x] V `pnpm verify` (9 de 10 tarefas verdes; ver Execução para o timeout do golden), suíte visual isolada 296 passed / 7 skipped, diff de baselines vazio
 
 Regra de execução (pedido do usuário): um commit semântico por etapa (RED, GREEN, docs separados), no padrão do histórico.
+
+## Execução
+
+Itens G1 e T1–T6: executados antes desta revisão, com RED e GREEN nos hashes do Progresso (G1 verde: 83 testes; `tsc` limpo). Itens executados nesta rodada, cada um com RED verificado por reexecução e commit próprio:
+
+| Item | RED (falha por asserção) | GREEN |
+|---|---|---|
+| G2.a | `a2416ad`: 8 falhas `expected [] to deeply equal ['dependencies:<lib>']`, 13 anteriores verdes | `9696f4d`: 21/21; typecheck e lint limpos; diff só em `FORBIDDEN_EXACT`/`FORBIDDEN_SCOPES` |
+| G2.b | `ac22f61`: 6 falhas `expected [] to have a length of 1`, 76 verdes (stub devolve `[]`) | `058e1bb`: 82/82 (186 com G2.a e G1); typecheck e lint limpos; só `helpers/locale-apis.ts` mudou |
+| G2.c | `22472e5`: 3 falhas `expected [] to include 'no-restricted-imports'`, 18 verdes | `ba9e258`: 21/21; typecheck, lint do DS e da raiz limpos; diff só em `dsForbiddenImports` |
+
+Mutações (evidência): `aria-label="Fechar"` em `DialogClose.tsx` reprovado por G1 (`DialogClose.tsx:13:aria-label=Fechar`); `new Intl.NumberFormat()` reprovado por G2.b (`linha 28: Intl`); `i18next` em cópia do `package.json` (`JG_DS_PACKAGE_JSON`) reprovado por G2.a (`dependencies:i18next`). Tudo revertido, 186/186 verdes, árvore limpa. R1 resolvido (grep em Radix, Progresso). Docs D1–D5 commitadas.
+
+E2E por viewport: a feature não tem tela nem fluxo novo (plano §5); os três viewports estão cobertos pelo golden, 296 passed / 7 skipped isolado, `git diff --stat` de `golden/__screenshots__` vazio (A6).
+
+### Desvios do plano
+- **G2.a:** `FORBIDDEN_EXACT`/`FORBIDDEN_SCOPES` vivem no próprio arquivo de teste, não em código de produção; o GREEN alterou só essas duas constantes (nenhuma asserção). Previsto no plano ("ampliar as duas listas").
+- **G2.b:** o detector também reporta acesso por colchetes com string literal (`x['toLocaleString']`), além do pedido.
+- **G2.c:** o helper do arquivo de teste chama-se `lint`, não `lintText`.
+- **`pnpm verify`:** 9 de 10 tarefas verdes; `test:visual` falhou em `patterns-formfield--default` (1440 e 390) por `Test timeout of 30000ms exceeded` no primeiro teste de cada projeto sob carga (o tablet passou a mesma peça em 33 s). Sem diferença de pixel. Reexecução da peça: 3 passed em ~3 s; suíte visual isolada: 296 passed. Nenhum timeout foi alterado e nenhuma baseline mexida. Fragilidade de cold start em paralelo já conhecida (commits `8a9c5f3`, `b7350c1`, `3584628`); `verify` completo verde de uma vez não foi demonstrado.
