@@ -12,8 +12,8 @@ export type QuantityStepperProps = {
   max: number;
   onValueChange: (value: number) => void;
   label: string;
-  decrementLabel?: string;
-  incrementLabel?: string;
+  decrementLabel: string;
+  incrementLabel: string;
 };
 
 const buttonClass = cn(
@@ -29,8 +29,8 @@ export function QuantityStepper({
   max,
   onValueChange,
   label,
-  decrementLabel = 'Diminuir',
-  incrementLabel = 'Aumentar',
+  decrementLabel,
+  incrementLabel,
 }: QuantityStepperProps) {
   return (
     <div

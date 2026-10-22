@@ -14,7 +14,7 @@ const meta = {
       </div>
     ),
   ],
-  args: { label: 'Quantidade', value: 2, min: 1, max: 5, onValueChange: () => {} },
+  args: { label: 'Quantidade', decrementLabel: 'Diminuir', incrementLabel: 'Aumentar', value: 2, min: 1, max: 5, onValueChange: () => {} },
 } satisfies Meta<typeof QuantityStepper>;
 
 export default meta;

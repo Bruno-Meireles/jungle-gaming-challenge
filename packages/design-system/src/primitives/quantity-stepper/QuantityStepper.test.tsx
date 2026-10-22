@@ -12,12 +12,12 @@ afterEach(async () => {
 
 function Controlled({ min = 1, max = 5, start = 2 }: { min?: number; max?: number; start?: number }) {
   const [value, setValue] = useState(start);
-  return <QuantityStepper label="Quantidade" value={value} min={min} max={max} onValueChange={setValue} />;
+  return <QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={value} min={min} max={max} onValueChange={setValue} />;
 }
 
 describe('QuantityStepper - comportamento', () => {
   it('expoe um grupo com nome e botoes Diminuir/Aumentar com nomes acessiveis', async () => {
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
     await expect.element(page.getByRole('group', { name: 'Quantidade' })).toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Diminuir' })).toBeInTheDocument();
     await expect.element(page.getByRole('button', { name: 'Aumentar' })).toBeInTheDocument();
@@ -41,21 +41,21 @@ describe('QuantityStepper - comportamento', () => {
 
   it('aumentar chama onValueChange(value + 1)', async () => {
     const calls: number[] = [];
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
     await page.getByRole('button', { name: 'Aumentar' }).click();
     expect(calls).toEqual([3]);
   });
 
   it('diminuir chama onValueChange(value - 1)', async () => {
     const calls: number[] = [];
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
     await page.getByRole('button', { name: 'Diminuir' }).click();
     expect(calls).toEqual([1]);
   });
 
   it('no min o botao Diminuir fica desabilitado e nao dispara', async () => {
     const calls: number[] = [];
-    await render(<QuantityStepper label="Quantidade" value={1} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={1} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
     const dec = page.getByRole('button', { name: 'Diminuir' });
     await expect.element(dec).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Aumentar' })).toBeEnabled();
@@ -65,7 +65,7 @@ describe('QuantityStepper - comportamento', () => {
 
   it('no max o botao Aumentar fica desabilitado e nao dispara', async () => {
     const calls: number[] = [];
-    await render(<QuantityStepper label="Quantidade" value={5} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={5} min={1} max={5} onValueChange={(n) => calls.push(n)} />);
     const inc = page.getByRole('button', { name: 'Aumentar' });
     await expect.element(inc).toBeDisabled();
     await expect.element(page.getByRole('button', { name: 'Diminuir' })).toBeEnabled();
@@ -74,7 +74,7 @@ describe('QuantityStepper - comportamento', () => {
   });
 
   it('o valor aparece em <output> com aria-live=polite', async () => {
-    await render(<QuantityStepper label="Quantidade" value={3} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={3} min={1} max={5} onValueChange={() => {}} />);
     const out = page.getByRole('status');
     await expect.element(out).toHaveTextContent('3');
     const el = out.element();
@@ -122,7 +122,7 @@ const DISABLED_BG = 'rgb(85, 50, 31)';
 
 describe('QuantityStepper - medidas, estados e a11y', () => {
   it('botoes medem 33x49.5, raio 33, fundo primary e borda 1px ink', async () => {
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
     const dec = page.getByRole('button', { name: 'Diminuir' });
     await expect.element(dec).toBeInTheDocument();
     for (const name of ['Diminuir', 'Aumentar']) {
@@ -140,7 +140,7 @@ describe('QuantityStepper - medidas, estados e a11y', () => {
   });
 
   it('glifos sao svg aria-hidden: menos 15.4x2.2 e mais 15.4x15.4 em ink', async () => {
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
     const dec = page.getByRole('button', { name: 'Diminuir' });
     await expect.element(dec).toBeInTheDocument();
     const minus = dec.element().querySelector('svg');
@@ -156,7 +156,7 @@ describe('QuantityStepper - medidas, estados e a11y', () => {
   });
 
   it('valor em 20/28 regular foreground e gap 12 entre os itens', async () => {
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
     const out = page.getByRole('status');
     await expect.element(out).toBeInTheDocument();
     const cs = getComputedStyle(out.element());
@@ -173,14 +173,14 @@ describe('QuantityStepper - medidas, estados e a11y', () => {
   });
 
   it('hover troca o fundo para primary-hover', async () => {
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
     const inc = page.getByRole('button', { name: 'Aumentar' });
     await inc.hover();
     await expect.poll(() => getComputedStyle(inc.element()).backgroundColor).toBe(PRIMARY_HOVER);
   });
 
   it('foco por teclado mostra outline 2px focus', async () => {
-    await render(<QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
     const dec = page.getByRole('button', { name: 'Diminuir' });
     await expect.element(dec).toBeInTheDocument();
     await userEvent.tab();
@@ -192,7 +192,7 @@ describe('QuantityStepper - medidas, estados e a11y', () => {
   });
 
   it('desabilitado usa tokens disabled e cursor not-allowed', async () => {
-    await render(<QuantityStepper label="Quantidade" value={1} min={1} max={5} onValueChange={() => {}} />);
+    await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={1} min={1} max={5} onValueChange={() => {}} />);
     const dec = page.getByRole('button', { name: 'Diminuir' });
     await expect.element(dec).toBeDisabled();
     const cs = getComputedStyle(dec.element());
@@ -203,9 +203,9 @@ describe('QuantityStepper - medidas, estados e a11y', () => {
   it('nao tem violacoes de acessibilidade (axe) no meio e nos limites', async () => {
     const { container } = await render(
       <>
-        <QuantityStepper label="Quantidade" value={2} min={1} max={5} onValueChange={() => {}} />
-        <QuantityStepper label="No minimo" value={1} min={1} max={5} onValueChange={() => {}} />
-        <QuantityStepper label="No maximo" value={5} min={1} max={5} onValueChange={() => {}} />
+        <QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />
+        <QuantityStepper label="No minimo" decrementLabel="Diminuir" incrementLabel="Aumentar" value={1} min={1} max={5} onValueChange={() => {}} />
+        <QuantityStepper label="No maximo" decrementLabel="Diminuir" incrementLabel="Aumentar" value={5} min={1} max={5} onValueChange={() => {}} />
       </>,
     );
     await expect.element(page.getByRole('group', { name: 'No maximo' })).toBeInTheDocument();
