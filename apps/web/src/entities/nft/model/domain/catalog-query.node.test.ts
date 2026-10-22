@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeCatalogSearch } from './catalog-query';
+import { normalizeCatalogSearch, toApiParams, withFilterChange } from './catalog-query';
 
 /*
  * Assinatura sob teste (puro, sem React/Axios/TanStack):
@@ -11,6 +11,14 @@ import { normalizeCatalogSearch } from './catalog-query';
  *     min?: string; max?: string; page?: number;
  *   };
  *   normalizeCatalogSearch(raw: Readonly<Record<string, unknown>>): CatalogSearch
+ *
+
+ * withFilterChange(search: CatalogSearch, patch: Partial<CatalogSearch>): CatalogSearch
+ *   aplica o patch (valor undefined remove a chave), zera page se o patch tocar q, tab, sort,
+ *   collections, networks, min ou max, e devolve a forma canonica (defaults omitidos).
+ * toApiParams(search: CatalogSearch): CatalogQuery  (mesma forma de mocks/catalog queryCatalog)
+ *   CatalogQuery = { search?; view; sort; collections; networks; minPriceEth?; maxPriceEth?; page }
+ *   com defaults preenchidos: view all, sort recent, page 1, arrays [].
  *
  * Saida canonica: default omitido (tab 'all', sort 'recent', page 1, arrays vazios),
  * chaves invalidas descartadas, nunca lanca.
@@ -89,5 +97,88 @@ describe('normalizeCatalogSearch', () => {
 
   it('descarta chaves desconhecidas', () => {
     expect(normalizeCatalogSearch({ foo: 'bar', q: 'x' })).toEqual({ q: 'x' });
+  });
+});
+
+describe('withFilterChange', () => {
+  it.each([
+    ['q', { q: 'ape' }],
+    ['tab', { tab: 'trending' }],
+    ['sort', { sort: 'popular' }],
+    ['collections', { collections: ['music'] }],
+    ['networks', { networks: ['polygon'] }],
+    ['min', { min: '0.5' }],
+    ['max', { max: '9' }],
+  ] as const)('mudar %s zera page', (_name, patch) => {
+    const result = withFilterChange({ page: 3 }, patch);
+    expect(result.page).toBeUndefined();
+    expect(result).toMatchObject(patch);
+  });
+
+  it('mudar so page preserva page e os filtros', () => {
+    expect(withFilterChange({ q: 'ape', page: 2 }, { page: 4 })).toEqual({ q: 'ape', page: 4 });
+  });
+
+  it('preserva os demais filtros ao mudar um', () => {
+    expect(withFilterChange({ q: 'ape', tab: 'new', page: 2 }, { sort: 'price-asc' })).toEqual({
+      q: 'ape',
+      tab: 'new',
+      sort: 'price-asc',
+    });
+  });
+
+  it('valor undefined no patch remove a chave', () => {
+    expect(withFilterChange({ q: 'ape', page: 2 }, { q: undefined })).toEqual({});
+  });
+
+  it('valor igual ao default no patch fica omitido', () => {
+    expect(withFilterChange({ sort: 'price-asc' }, { sort: 'recent' })).toEqual({});
+  });
+
+  it('nao muta a entrada', () => {
+    const input = { q: 'ape', page: 2 };
+    withFilterChange(input, { q: 'x' });
+    expect(input).toEqual({ q: 'ape', page: 2 });
+  });
+});
+
+describe('toApiParams', () => {
+  it('preenche os defaults quando a busca esta vazia', () => {
+    expect(toApiParams({})).toEqual({
+      view: 'all',
+      sort: 'recent',
+      collections: [],
+      networks: [],
+      page: 1,
+    });
+  });
+
+  it('mapeia q para search, tab para view, min/max para minPriceEth/maxPriceEth', () => {
+    expect(
+      toApiParams({
+        q: 'nomad',
+        tab: 'trending',
+        sort: 'price-desc',
+        collections: ['music'],
+        networks: ['polygon', 'solana'],
+        min: '0.02',
+        max: '12.30',
+        page: 2,
+      }),
+    ).toEqual({
+      search: 'nomad',
+      view: 'trending',
+      sort: 'price-desc',
+      collections: ['music'],
+      networks: ['polygon', 'solana'],
+      minPriceEth: '0.02',
+      maxPriceEth: '12.30',
+      page: 2,
+    });
+  });
+
+  it('nao emite chaves de busca nem de preco quando ausentes', () => {
+    const params = toApiParams({ tab: 'new' });
+    expect(Object.keys(params).sort()).toEqual(['collections', 'networks', 'page', 'sort', 'view']);
   });
 });
