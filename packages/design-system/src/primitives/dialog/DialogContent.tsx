@@ -27,7 +27,7 @@ function DialogPanel({ className, children, onCloseAutoFocus, ...props }: Dialog
     <>
       <DialogPrimitive.Overlay
         data-slot="dialog-overlay"
-        className="fixed inset-0 bg-[rgba(10,6,4,0.45)]"
+        className="fixed inset-0 bg-overlay"
       />
       <DialogPrimitive.Content
         data-slot="dialog-content"

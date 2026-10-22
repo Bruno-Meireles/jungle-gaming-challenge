@@ -58,7 +58,8 @@
   --color-disabled-bg: var(--color-border-soft);
   --color-disabled-text: var(--color-secondary);
   --color-link: var(--color-text-accent);
-  /* Lacuna: --color-overlay (o Figma nao tem fill translucido; ver docs/design-tokens.md) */
+  /* Derivado (NAO e Figma: nenhum fill translucido no file.json): cor-base das sombras do DS (#0A0604) com alfa 0.45. */
+  --color-overlay: rgba(10, 6, 4, 0.45); /* derived:shadow-base */
 
   /* tipografia: 1 token por estilo TEXT do Figma (59) */
   --text-body-14-bold-lh-auto: 14px; /* figma:70321:344 */

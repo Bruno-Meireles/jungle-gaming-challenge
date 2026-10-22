@@ -182,7 +182,7 @@ Tailwind v4 nao tem tema de border-width; usar valores arbitrarios (`border-[1.5
 
 - **Text/Primary** (estilo FILL): sem hex resolvivel no file.json (Lacuna Q11); sem token.
 - **Cantos assimetricos** (sem token `--radius-*`; usar classes por canto quando o componente exigir): `0,3,3,0` (70402:3334), `0,6,6,0` (I70493:2519;70491:1239), `14,0,0,14` (22:1346), `31,31,0,0` (70396:242), `40,40,0,0` (70397:245) — ordem [tl,tr,br,bl].
-- **`--color-overlay`**: o file.json nao tem nenhum fill SOLID translucido (nem no Order Confirmation Modal 11:4385; o frame "Page Content (behind overlay)" so e nome); sem token.
+- **`--color-overlay`**: o file.json nao tem nenhum fill SOLID translucido (nem no Order Confirmation Modal 11:4385). Token DERIVADO (`/* derived:shadow-base */`): `rgba(10, 6, 4, 0.45)`, a cor-base das sombras do DS (#0A0604) com alfa 0.45; usado pelo overlay do Dialog (`bg-overlay`). Nao e valor do Figma.
 - **`--color-surface-raised`** ja e cor Figma (70323:313); nao ha alias duplicado. `--color-success` tambem e cor Figma.
 - **`--color-link`**: alias de `--color-text-accent` (Forgot Link 70381:244 e 70399:242); "Signup/Login Link" usam Text/Secondary — evidencia mista, ver componentes.
 - **Contraste**: `--color-disabled-text` x `--color-disabled-bg` = 3.94:1 (< 4.5; texto desabilitado e isento do WCAG 1.4.3). `--color-error` x ink = 4.39:1: nao usar como cor de texto.
