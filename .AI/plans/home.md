@@ -361,7 +361,7 @@ Login, cadastro, sessão e interceptors (F2); detalhe, favoritos (F4); carrinho 
 M1
 - [x] 1 `resolveLocale`: RED `b562e22` (9 falhas por asserção, esperado en recebido pt-BR), GREEN (19/19; node 24/24; typecheck e lint limpos)
 - [x] 2 paridade pt-BR/en: RED `adb28bb` (6 falhas por asserção), GREEN (8/8; node 32/32; typecheck e lint limpos)
-- [ ] 3 lint FSD
+- [x] 3 lint FSD: RED `97489b9` (40 falhas por asserção), GREEN (91/91 node do app; lint do DS e lint-boundary 21/21; typecheck e lint limpos). Limitação: regras casam só imports relativos e profundidade até 5 pastas; estender se o app adotar alias
 - [ ] 4 lint i18n
 - [ ] 5 lint de qualidade
 - [ ] 6 `AppProviders` e idioma

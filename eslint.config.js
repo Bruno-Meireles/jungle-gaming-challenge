@@ -22,6 +22,112 @@ const siblingSliceDeepImport = {
   message: 'Importe o slice irmão pelo index.ts (ex.: ../button), não por arquivos internos.',
 };
 
+// ---- apps/web: FSD (ADR-21), só com regras do núcleo ----
+// no-restricted-imports não faz merge entre blocos `files`: cada bloco repete todos os padrões que lhe cabem.
+const WEB_SRC = 'apps/web/src';
+const WEB_EXT = '{ts,tsx}';
+const WEB_LAYERS = ['shared', 'entities', 'features', 'widgets', 'pages', 'app'];
+const MAX_DEPTH = 5;
+
+const webDsEntrypointOnly = {
+  group: ['@jg/design-system/src', '@jg/design-system/src/*', '@jg/design-system/dist', '@jg/design-system/dist/*'],
+  message: 'Importe apenas do entrypoint público @jg/design-system (ou @jg/design-system/styles.css).',
+};
+
+const webMocksOnlyInBootstrap = {
+  regex: String.raw`(^|/)mocks(/|$)`,
+  message: 'A camada de mocks só pode ser importada por app/bootstrap.',
+};
+
+const webFrameworkFree = {
+  group: [
+    'react',
+    'react/*',
+    'axios',
+    'axios/*',
+    '@tanstack/*',
+    'msw',
+    'msw/*',
+    'i18next',
+    'i18next/*',
+    'react-i18next',
+    'react-i18next/*',
+  ],
+  message: 'Domínio e shared/lib não podem depender de React, Axios, TanStack, MSW ou i18next.',
+};
+
+const webTestFiles = ['**/*.{test,spec}.{ts,tsx}', '**/tests/**'];
+
+function webLayerPatterns(layer, depth) {
+  const index = WEB_LAYERS.indexOf(layer);
+  const upper = WEB_LAYERS.slice(index + 1);
+  const lowerSlices = WEB_LAYERS.slice(1, index); // shared tem segmentos; deep import só vale para slices
+  const patterns = [webDsEntrypointOnly];
+  if (upper.length > 0) {
+    patterns.push({
+      regex: String.raw`^(\.\./)+(${upper.join('|')})(/|$)`,
+      message: `A camada ${layer} não pode importar de camadas superiores (${upper.join(', ')}).`,
+    });
+  }
+  if (lowerSlices.length > 0) {
+    patterns.push({
+      regex: String.raw`^(\.\./)+(${lowerSlices.join('|')})/[^/]+/`,
+      message: 'Acesse o slice pelo index.ts (ex.: entities/nft), não por arquivos internos.',
+    });
+  }
+  if (layer !== 'shared' && layer !== 'app') {
+    patterns.push(
+      {
+        regex: String.raw`^(\.\./)+${layer}(/|$)`,
+        message: 'Slices da mesma camada não podem importar entre si.',
+      },
+      {
+        regex: String.raw`^(\.\./){${depth + 1}}[^./]`,
+        message: 'Slices da mesma camada não podem importar entre si.',
+      },
+    );
+  }
+  return patterns;
+}
+
+function webBlock(files, patterns) {
+  return {
+    files,
+    ignores: webTestFiles,
+    rules: { 'no-restricted-imports': ['error', { patterns }] },
+  };
+}
+
+const webLayerBlocks = WEB_LAYERS.flatMap((layer) => {
+  if (layer === 'shared' || layer === 'app') {
+    return [webBlock([`${WEB_SRC}/${layer}/**/*.${WEB_EXT}`], [...webLayerPatterns(layer, 0), webMocksOnlyInBootstrap])];
+  }
+  return Array.from({ length: MAX_DEPTH + 1 }, (_, depth) =>
+    webBlock(
+      [`${WEB_SRC}/${layer}/*/${'*/'.repeat(depth)}*.${WEB_EXT}`],
+      [...webLayerPatterns(layer, depth), webMocksOnlyInBootstrap],
+    ),
+  );
+});
+
+// Declarados depois dos blocos de camada para vencerem nos arquivos sobrepostos.
+const webDomainBlocks = [
+  webBlock(
+    [`${WEB_SRC}/shared/lib/**/*.${WEB_EXT}`],
+    [...webLayerPatterns('shared', 0), webMocksOnlyInBootstrap, webFrameworkFree],
+  ),
+  ...WEB_LAYERS.filter((layer) => layer !== 'shared' && layer !== 'app').flatMap((layer) =>
+    Array.from({ length: 4 }, (_, extra) =>
+      webBlock(
+        [`${WEB_SRC}/${layer}/*/model/domain/${'*/'.repeat(extra)}*.${WEB_EXT}`],
+        [...webLayerPatterns(layer, 2 + extra), webMocksOnlyInBootstrap, webFrameworkFree],
+      ),
+    ),
+  ),
+];
+
+const webBootstrapBlock = webBlock([`${WEB_SRC}/app/bootstrap/**/*.${WEB_EXT}`], webLayerPatterns('app', 0));
+
 export default tseslint.config(
   { ignores: ['**/dist/**', '**/storybook-static/**', '**/playwright-report/**', '**/test-results/**'] },
   js.configs.recommended,
@@ -92,14 +198,12 @@ export default tseslint.config(
       'no-restricted-imports': [
         'error',
         {
-          patterns: [
-            {
-              group: ['@jg/design-system/src', '@jg/design-system/src/*', '@jg/design-system/dist', '@jg/design-system/dist/*'],
-              message: 'Importe apenas do entrypoint público @jg/design-system (ou @jg/design-system/styles.css).',
-            },
-          ],
+          patterns: [webDsEntrypointOnly],
         },
       ],
     },
   },
+  ...webLayerBlocks,
+  ...webDomainBlocks,
+  webBootstrapBlock,
 );
