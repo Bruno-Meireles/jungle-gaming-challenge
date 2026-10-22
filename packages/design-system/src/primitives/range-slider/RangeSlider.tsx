@@ -5,6 +5,7 @@ export type RangeSliderProps = {
   step: number;
   onValueChange: (value: [number, number]) => void;
   thumbLabels: [string, string];
+  disabled?: boolean;
 };
 
 export function RangeSlider(props: RangeSliderProps) {
