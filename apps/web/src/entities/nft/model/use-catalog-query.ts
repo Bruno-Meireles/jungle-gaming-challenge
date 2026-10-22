@@ -14,3 +14,5 @@ export function useCatalogQuery(search: CatalogSearch) {
     placeholderData: keepPreviousData,
   });
 }
+
+export type CatalogQueryResult = ReturnType<typeof useCatalogQuery>;

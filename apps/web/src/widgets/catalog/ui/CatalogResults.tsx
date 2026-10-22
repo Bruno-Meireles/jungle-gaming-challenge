@@ -1,14 +1,13 @@
 import { Alert, Button, LiveRegion, NftCardSkeleton } from '@jg/design-system';
 import { useTranslation } from 'react-i18next';
 
-import { NftCardView, useCatalogQuery, type CatalogSearch } from '../../../entities/nft';
+import { NftCardView, type CatalogQueryResult } from '../../../entities/nft';
 
 const SKELETON_KEYS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'] as const;
 const GRID = 'grid grid-cols-2 gap-x-16 gap-y-24 tablet:gap-x-24 tablet:gap-y-32 desktop:grid-cols-3';
 
-export function CatalogResults({ search }: { search: CatalogSearch }) {
+export function CatalogResults({ query }: { query: CatalogQueryResult }) {
   const { t } = useTranslation('catalog');
-  const query = useCatalogQuery(search);
   const { data } = query;
 
   if (data === undefined && query.isError) {

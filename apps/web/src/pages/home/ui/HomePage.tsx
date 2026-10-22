@@ -1,19 +1,16 @@
-import { getRouteApi } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { useDocumentMeta } from '../../../shared/hooks';
 import { PageContainer } from '../../../shared/ui';
-import { CatalogResults } from '../../../widgets/catalog';
+import { Catalog } from '../../../widgets/catalog';
 import { FilterSheet, FilterSidebar } from '../../../widgets/filter-panel';
 import { FeaturedNft } from '../../../widgets/featured-nft';
 import { Hero } from '../../../widgets/hero';
 
-const homeRoute = getRouteApi('/');
 const CATALOG_ID = 'catalog';
 
 export function HomePage() {
   const { t } = useTranslation('pageHome');
   useDocumentMeta({ title: t('title'), description: t('description') });
-  const search = homeRoute.useSearch();
   return (
     <PageContainer className="pt-16 pb-24 tablet:pt-32 tablet:pb-32">
       <FilterSheet className="mb-16 flex justify-end desktop:hidden" />
@@ -24,7 +21,7 @@ export function HomePage() {
           <FeaturedNft />
         </div>
         <div id={CATALOG_ID} tabIndex={-1} className="outline-none">
-          <CatalogResults search={search} />
+          <Catalog />
         </div>
       </div>
     </PageContainer>

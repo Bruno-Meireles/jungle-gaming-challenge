@@ -1,5 +1,7 @@
 export const ptBR = {
+  title: 'Resultados',
   listLabel: 'NFTs',
+  pagination: { label: 'Paginação', next: 'Próxima página' },
   count_one: '{{count}} NFT',
   count_other: '{{count}} NFTs',
   loading: 'Carregando NFTs',
