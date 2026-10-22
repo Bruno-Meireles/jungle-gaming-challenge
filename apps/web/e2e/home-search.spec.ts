@@ -48,13 +48,18 @@ test.describe('home: busca', () => {
     await expect(count(page, '45 NFTs')).toBeVisible();
   });
 
-  test('Esc fecha o campo e devolve o foco ao botao (so no 1440)', async ({ page }) => {
-    test.skip(isMobile(page), 'em 390 o campo e permanente');
+  test('Esc fecha o campo e devolve o foco ao botao (1440); em 390 o campo e permanente', async ({ page }) => {
     await page.goto('/');
     const field = await openSearch(page);
+    await field.focus();
     await expect(field).toBeFocused();
 
     await page.keyboard.press('Escape');
+
+    if (isMobile(page)) {
+      await expect(field).toBeVisible();
+      return;
+    }
 
     const toggle = page.getByRole('button', { name: 'Buscar' });
     await expect(field).toBeHidden();
