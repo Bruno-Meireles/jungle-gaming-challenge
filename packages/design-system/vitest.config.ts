@@ -33,6 +33,7 @@ export default defineConfig({
           setupFiles: ['src/test/setup.ts'],
           browser: {
             enabled: true,
+            connectTimeout: 180_000,
             headless: true,
             provider: playwright(),
             viewport: { width: 1440, height: 900 },
@@ -47,6 +48,7 @@ export default defineConfig({
           name: 'storybook',
           browser: {
             enabled: true,
+            connectTimeout: 180_000,
             headless: true,
             provider: playwright(),
             instances: [{ browser: 'chromium' }],

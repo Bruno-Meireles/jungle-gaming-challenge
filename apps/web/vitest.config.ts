@@ -16,6 +16,7 @@ export default defineConfig({
           include: ['src/**/*.test.{ts,tsx}'],
           browser: {
             enabled: true,
+            connectTimeout: 180_000,
             headless: true,
             provider: playwright(),
             viewport: { width: 1440, height: 900 },
