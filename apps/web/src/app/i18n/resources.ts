@@ -4,6 +4,7 @@ import { pageHomeLocales } from '../../pages/home';
 import { pageNotFoundLocales } from '../../pages/not-found';
 import { pageUnavailableLocales } from '../../pages/unavailable';
 import { sharedLocales } from '../../shared/config';
+import { filtersLocales } from '../../features/catalog-filters';
 import { languageLocales } from '../../features/language-switch';
 import { catalogLocales } from '../../widgets/catalog';
 import { featuredLocales } from '../../widgets/featured-nft';
@@ -22,6 +23,7 @@ export const ptBRResources = {
   hero: heroLocales['pt-BR'],
   featured: featuredLocales['pt-BR'],
   language: languageLocales['pt-BR'],
+  filters: filtersLocales['pt-BR'],
   pageHome: pageHomeLocales['pt-BR'],
   pageUnavailable: pageUnavailableLocales['pt-BR'],
   pageNotFound: pageNotFoundLocales['pt-BR'],
@@ -36,6 +38,7 @@ const enResources = {
   hero: heroLocales.en,
   featured: featuredLocales.en,
   language: languageLocales.en,
+  filters: filtersLocales.en,
   pageHome: pageHomeLocales.en,
   pageUnavailable: pageUnavailableLocales.en,
   pageNotFound: pageNotFoundLocales.en,

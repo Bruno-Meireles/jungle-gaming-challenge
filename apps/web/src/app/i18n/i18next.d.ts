@@ -11,6 +11,7 @@ declare module 'i18next' {
       'hero',
       'featured',
       'language',
+      'filters',
       'pageHome',
       'pageUnavailable',
       'pageNotFound',
