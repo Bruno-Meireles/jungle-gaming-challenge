@@ -71,7 +71,8 @@ describe('RadioGroup - medidas', () => {
     const cs = getComputedStyle(a.element());
     const rect = a.element().getBoundingClientRect();
     expect([rect.width, rect.height]).toEqual([16, 16]);
-    expect(cs.borderTopLeftRadius).toBe('9999px');
+    // rounded-full computa um valor enorme (calc(infinity * 1px)); circular = raio >= metade do lado.
+    expect(parseFloat(cs.borderTopLeftRadius)).toBeGreaterThanOrEqual(8);
     expect(cs.borderTopWidth).toBe('1.2px');
     expect(cs.borderTopColor).toBe(PRIMARY);
     const dot = a.element().querySelector('[data-slot="radio-indicator"]') as HTMLElement;
