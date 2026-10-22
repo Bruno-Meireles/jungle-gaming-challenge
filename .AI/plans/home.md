@@ -366,7 +366,7 @@ M1
 - [x] 5 lint de qualidade: RED `35461f3` (10 falhas por asserção) + correção do teste (off-by-one em `functionOfLines`; caso `switch-exhaustiveness-check` retirado por ser type-aware e inviável com `lintText` de arquivos virtuais: exaustividade fica por `assertNever` + `tsc`, desvio do ADR-21), GREEN (node 133/133; typecheck, lint do app e do DS limpos; lint-boundary/test-hygiene 57/57)
 - [x] 6 `AppProviders` e idioma: RED `6f4c6cd` (5 falhas por ausência do comportamento), GREEN (5/5; app 167/167; typecheck e lint limpos). Desvio: `i18next.d.ts` (CustomTypeOptions) adiado para os namespaces reais; chaves tipadas passam a ser exigidas quando houver o primeiro namespace (item 7)
 - [x] 7 shell E2E: RED `1ec9bf5` (8 falhas: locator ausente, título e lang errados; servidor de pé), GREEN (E2E 8/8 em 1440 e 390 pelo CLI; app 175/175; typecheck, lint e build limpos; no-docker 9/9). Desvios: `use-document-meta` em `shared/hooks` (lint proíbe react em `shared/lib`); chaves tipadas (CustomTypeOptions) adiadas para o item 7b
-- [ ] 7b chaves de i18n tipadas (CustomTypeOptions; `t()` com chave inexistente falha no tsc)
+- [x] 7b chaves de i18n tipadas: RED `4af4a83` (3× TS2578; AppProviders.test e locales-parity ajustados por dependerem de namespace inexistente/indexação por string, mesmo comportamento), GREEN (`i18next.d.ts`; typecheck/lint limpos; app 175/175; build ok; E2E shell 8/8). Nota: `defaultNS` tipado como união dos namespaces (só tipagem)
 - [ ] 8 rotas stub, 404 e `/unavailable` E2E
 - [ ] Docs M1: `design.md` §10, ADR-16/17/21, dependências instaladas
 
