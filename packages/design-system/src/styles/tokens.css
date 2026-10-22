@@ -314,6 +314,15 @@
   --radius-37: 37px; /* figma:I70492:696;70491:795 */
   --radius-40: 40px; /* figma:14:5226 */
 
+  /* sombras: 1 token por efeito distinto; nome = x/y/blur[/spread]/alpha% (n=negativo, p=ponto decimal); sufixo -c<r_g_b> quando a cor nao e a base rgb(10, 6, 4) */
+  --shadow-x0-y0-b20-a45-0a0604: 0px 0px 20px rgba(10, 6, 4, 0.45); /* figma:I70492:696;70491:1237 */
+  --shadow-x0-y6p6-b19p8-sn3p3-a15-140d0a: 0px 6.6px 19.8px -3.3px rgba(20, 13, 10, 0.15); /* figma:70410:4190 */
+  --shadow-x0-y4-b12-sn2-a15-140d0a: 0px 4px 12px -2px rgba(20, 13, 10, 0.15); /* figma:70402:3303 */
+  --shadow-x0-yn10-b30-a45-0a0604: 0px -10px 30px rgba(10, 6, 4, 0.45); /* figma:15:5504 */
+  --shadow-x0-y6-b20-a45-0a0604: 0px 6px 20px rgba(10, 6, 4, 0.45); /* figma:16:657 */
+  --shadow-x0-y20-b20-a45-0a0604: 0px 20px 20px rgba(10, 6, 4, 0.45); /* figma:16:987 */
+  --shadow-x0-y0-b40-a45-0a0604: 0px 0px 40px rgba(10, 6, 4, 0.45); /* figma:16:858 */
+
   /* ADR-04: 1 unidade de spacing = 1px do Figma (p-16 = 16px) */
   --spacing: 1px;
 }

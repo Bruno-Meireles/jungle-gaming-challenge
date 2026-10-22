@@ -274,10 +274,11 @@ type FigmaNode = {
   effects?: { type: string; visible?: boolean; color: { r: number; g: number; b: number; a: number }; offset: { x: number; y: number }; radius: number }[];
 };
 
-// Percorre o document ate achar o no com o id (undefined se nao existir).
+// Percorre o document ate achar o no com o id (undefined se nao existir). So conta objetos com `type`:
+// o file.json repete alguns ids (ex.: I70492:696;70491:1237) em objetos que nao sao nos.
 function findNode(root: unknown, id: string): FigmaNode | undefined {
   if (!root || typeof root !== 'object') return undefined;
-  if ((root as FigmaNode).id === id) return root as FigmaNode;
+  if ((root as FigmaNode).id === id && typeof (root as { type?: unknown }).type === 'string') return root as FigmaNode;
   for (const v of Object.values(root)) {
     const found = findNode(v, id);
     if (found) return found;
