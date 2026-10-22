@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import '../../test/entry.css';
-import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage } from './index';
+import { expectNoA11yViolations } from '../../test/axe';
+import { Breadcrumb,BreadcrumbItem, BreadcrumbLink, BreadcrumbPage } from './index';
 
 function Trail() {
   return (
@@ -109,5 +110,13 @@ describe('Breadcrumb - medidas', () => {
     const list = document.querySelector('[data-slot="breadcrumb-list"]') as HTMLElement;
     expect(getComputedStyle(list).display).toBe('flex');
     expect(getComputedStyle(list).columnGap).toBe('8px');
+  });
+});
+
+describe('Breadcrumb - acessibilidade', () => {
+  it('nao tem violacoes axe (links, pagina atual e separadores)', async () => {
+    const { container } = await render(<Trail />);
+    await expect.element(page.getByRole('navigation', { name: 'Trilha' })).toBeInTheDocument();
+    await expectNoA11yViolations(container);
   });
 });
