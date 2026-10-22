@@ -70,6 +70,18 @@ describe('Alert', () => {
     }
   });
 
+  it('expoe o toneLabel recebido (sr-only) em vez de um texto fixo', async () => {
+    // Provisorio: toneLabel ainda nao esta no tipo; o T4 o torna prop obrigatoria e substitui isto por uso direto.
+    const extra = { toneLabel: 'Error' } as Record<string, string>;
+    await render(
+      <Alert tone="error" {...extra}>
+        Falha
+      </Alert>,
+    );
+    await expect.element(page.getByText('Error', { exact: true })).toBeInTheDocument();
+    expect(page.getByText('Erro', { exact: true }).elements()).toHaveLength(0);
+  });
+
   it('tom error tem contorno de 1px na cor --color-error', async () => {
     await render(<Alert tone="error">Falha</Alert>);
     const cs = getComputedStyle(page.getByRole('alert').element());
