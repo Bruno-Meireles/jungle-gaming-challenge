@@ -1,28 +1,10 @@
 import { httpClient, getJson } from '../../../shared/api/http-client';
-import {
-  catalogPageDtoSchema,
-  type CatalogPageDto,
-  type NftSummaryDto,
-} from '../../../shared/api/contracts/nfts';
-import { parseEth } from '../../../shared/lib/eth/eth';
+import { catalogPageDtoSchema, type CatalogPageDto } from '../../../shared/api/contracts/nfts';
 import type { CatalogPage } from '../model/domain/catalog-page';
 import type { CatalogQuery } from '../model/domain/catalog-query';
-import type { NftSummary } from '../model/domain/nft';
+import { toNftSummary } from './to-nft-summary';
 
 export const CATALOG_PAGE_SIZE = 9;
-
-function toNftSummary(dto: NftSummaryDto): NftSummary {
-  return {
-    id: dto.id,
-    title: dto.title,
-    collectionId: dto.collectionId,
-    networkId: dto.networkId,
-    price: parseEth(dto.priceEth),
-    image: dto.image,
-    rarity: dto.rarity,
-    listedAt: dto.listedAt,
-  };
-}
 
 function toCatalogPage(dto: CatalogPageDto): CatalogPage {
   return {
