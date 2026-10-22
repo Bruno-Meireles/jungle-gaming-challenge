@@ -67,7 +67,8 @@ describe('Dialog - comportamento', () => {
       await userEvent.tab({ shift: true });
       expect(inside()).toBe(true);
     }
-    expect(document.activeElement).not.toBe(page.getByRole('button', { name: 'Abrir entrada' }).element());
+    // o botao de fundo fica aria-hidden (nao e achado por role) e nao pode receber o foco
+    expect(document.activeElement).not.toBe(page.getByText('Abrir entrada').element());
   });
 
   it('Esc fecha e devolve o foco ao botao que abriu', async () => {

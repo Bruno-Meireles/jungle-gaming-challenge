@@ -1,13 +1,7 @@
-import type { ReactNode } from 'react';
+import * as DialogPrimitive from '@radix-ui/react-dialog';
 
-export type DialogProps = {
-  open?: boolean;
-  defaultOpen?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  children?: ReactNode;
-};
+export type DialogProps = React.ComponentProps<typeof DialogPrimitive.Root>;
 
 export function Dialog(props: DialogProps) {
-  void props;
-  return null;
+  return <DialogPrimitive.Root {...props} />;
 }
