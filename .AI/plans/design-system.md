@@ -55,7 +55,7 @@ Q2 versões fixas exatas revalidadas no registro; Q3 Playwright auto-hospedado (
   src/test/{axe.ts,figma.ts}   helpers (fora do build)
   assets/fonts/RobotoMono-{Regular,Medium,Bold}.woff2, OFL.txt
   tests/*.node.test.ts
-  golden/{golden.spec.ts,motion.spec.ts,manifest.ts,__screenshots__/<platform>/<project>/*.png}
+  golden/{golden.spec.ts,motion.spec.ts,stories.ts,__screenshots__/<platform>/<project>/*.png}
   .storybook/{main.ts,preview.tsx,storybook.css}
   vitest.config.ts (projects: node | unit | storybook), playwright.config.ts
   tsconfig.json, tsconfig.build.json, scripts/copy-assets.mjs, README.md
@@ -93,7 +93,7 @@ Componentes burros: sem regra de negócio, rede, router, cache. Dinheiro chega p
 | Script | Raiz | DS | web |
 |---|---|---|---|
 | dev | `turbo run dev` | `tsc -p tsconfig.build.json -w` | `vite` |
-| build | `turbo run build` | `tsc -p tsconfig.build.json && node scripts/copy-assets.mjs` | `tsc -b && vite build` |
+| build | `turbo run build` | `tsc -p tsconfig.build.json && node scripts/copy-assets.mjs` | `tsc -b && vite build` (restaurado após a revisão: o app mínimo tem `index.html`, `main.tsx`, `App.tsx`) |
 | typecheck | `turbo run typecheck` | `tsc --noEmit` | `tsc --noEmit` |
 | lint | `turbo run lint` | `eslint .` | `eslint .` |
 | format / format:check | `prettier --write .` / `--check` | – | – |
@@ -149,7 +149,7 @@ NftCard { title; priceLabel; image:{src,alt}; badge?; action?; link? }, NftCardS
 | A2 | app resolve `@jg/design-system` pelo workspace | T1 |
 | A3 | DS importando app/libs de dados, primitive importando pattern, deep import no app falham no lint | T3–T6 |
 | A4 | `.only`/`.skip`/`.fixme` falham no lint | T7 |
-| A5 | só `.`, `styles.css`, `tokens.css`, `fonts/*` exportados | T8 |
+| A5 | só `.`, `styles.css`, `tokens.css`, `fonts/*` e `package.json` exportados | T8 |
 | A6 | toda cor/tipo/raio/sombra tem origem no `file.json`; paleta padrão do Tailwind não gera classe | T9–T13 |
 | A7 | Roboto Mono 400/500/700 carrega sem rede | T14–T15 |
 | A8 | foco por teclado visível em todo interativo | sub-itens `foco` |

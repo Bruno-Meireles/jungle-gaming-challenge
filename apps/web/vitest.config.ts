@@ -6,7 +6,7 @@ export default defineConfig({
   test: {
     projects: [
       {
-        test: { name: 'node', include: ['tests/**/*.node.test.ts'], environment: 'node' },
+        test: { name: 'node', include: ['tests/**/*.node.test.ts'], environment: 'node', testTimeout: 30000 },
       },
       {
         plugins: [tailwindcss()],

@@ -27,8 +27,8 @@
     "test": "vitest run",
     "storybook": "storybook dev -p 6006 --no-open",
     "storybook:build": "storybook build -o storybook-static",
-    "test:visual": "playwright test",
-    "test:visual:update": "playwright test --update-snapshots=changed",
+    "test:visual": "node ../../tools/visual.mjs",
+    "test:visual:update": "node ../../tools/visual.mjs --update-snapshots=changed",
     "test:visual:docker": "node ../../tools/visual-docker.mjs"
   },
   "peerDependencies": {
