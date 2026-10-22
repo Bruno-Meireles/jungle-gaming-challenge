@@ -360,7 +360,7 @@ Login, cadastro, sessão e interceptors (F2); detalhe, favoritos (F4); carrinho 
 
 M1
 - [x] 1 `resolveLocale`: RED `b562e22` (9 falhas por asserção, esperado en recebido pt-BR), GREEN (19/19; node 24/24; typecheck e lint limpos)
-- [ ] 2 paridade pt-BR/en
+- [x] 2 paridade pt-BR/en: RED `adb28bb` (6 falhas por asserção), GREEN (8/8; node 32/32; typecheck e lint limpos)
 - [ ] 3 lint FSD
 - [ ] 4 lint i18n
 - [ ] 5 lint de qualidade
