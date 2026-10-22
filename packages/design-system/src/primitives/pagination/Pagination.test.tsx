@@ -39,10 +39,16 @@ describe('Pagination - comportamento', () => {
 
   it('na ultima pagina "Próxima" fica desabilitada e nao navega', async () => {
     await render(<Pagination page={4} pageCount={4} getItemProps={getItemProps} />);
-    const next = screen.getByLabelText('Próxima');
+    /* <a> sem href tem papel generico e proibe aria-label (axe aria-prohibited-attr): o desabilitado usa role="link" + aria-disabled. */
+    const next = screen.getByRole('link', { name: 'Próxima' });
     await expect.element(next).toHaveAttribute('aria-disabled', 'true');
     await expect.element(next).not.toHaveAttribute('href');
-    await expect.element(screen.getByRole('link', { name: 'Próxima' })).not.toBeInTheDocument();
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.tab();
+    await userEvent.tab();
+    expect(document.activeElement).not.toBe(next.element());
   });
 
   it('repassa className e props ao <nav>', async () => {
