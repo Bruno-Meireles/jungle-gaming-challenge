@@ -1,6 +1,6 @@
 // Testes de tipo: checados só pelo `tsc` (não casam com os padrões do Vitest).
 // Cada `@ts-expect-error` prova que omitir a prop de rótulo deixa de compilar.
-import { Alert, Breadcrumb, BreadcrumbItem, BreadcrumbPage, DialogClose, PasswordInput, QuantityStepper, SheetClose } from '../src';
+import { Alert, Breadcrumb, BreadcrumbItem, BreadcrumbPage, DialogClose, Pagination, PasswordInput, QuantityStepper, SheetClose } from '../src';
 
 export const _t1 = () => (
   <>
@@ -81,5 +81,15 @@ export const _t5 = () => (
         <BreadcrumbPage>Pagamento</BreadcrumbPage>
       </BreadcrumbItem>
     </Breadcrumb>
+  </>
+);
+
+export const _t6 = () => (
+  <>
+    <Pagination page={1} pageCount={3} label="Paginação" nextLabel="Próxima" />
+    {/* @ts-expect-error Pagination exige label (sem default) */}
+    <Pagination page={1} pageCount={3} nextLabel="Próxima" />
+    {/* @ts-expect-error Pagination exige nextLabel (sem default) */}
+    <Pagination page={1} pageCount={3} label="Paginação" />
   </>
 );
