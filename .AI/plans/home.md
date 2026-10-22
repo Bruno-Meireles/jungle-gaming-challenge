@@ -423,15 +423,15 @@ M7
 
 ### M1: shell, i18n e lint (concluído, aguardando revisão)
 
-Itens 1–8 e 7b executados em RED→GREEN com commit próprio (hashes no Progresso). Verificação final do marco ( na raiz, local, sem Docker, 9/9 tarefas): DS 73 arquivos / 989 testes, app 12 arquivos / 179 testes, E2E 30 passed nos projetos desktop-1440 e mobile-390 (shell e rotas, pelo Playwright CLI), typecheck, lint e build limpos. Nenhum E2E de tablet-768 neste marco (sem specs @tablet).
+Itens 1–8 e 7b executados em RED→GREEN com commit próprio (hashes no Progresso). Verificação final do marco (`pnpm verify` na raiz, local, sem Docker, 9/9 tarefas, 80 s): DS 73 arquivos / 989 testes, app 12 arquivos / 179 testes, E2E 30 passed nos projetos desktop-1440 e mobile-390 (shell e rotas, pelo Playwright CLI), typecheck, lint e build limpos. Nenhum E2E de tablet-768 neste marco (sem specs @tablet).
 
 Desvios do plano no M1:
-- **Versões de i18n:**  e  no lugar de 26.5.5 e 17.1.2 (as novas violam ; sem exceção à política). ADR-17.
-- **Lint:**  fora (type-aware, inviável com  de arquivos virtuais); exaustividade por  + . Regras de camada casam só imports relativos e até 5 pastas de profundidade. ADR-21.
-- **Item 5:** o teste foi corrigido após o GREEN (off-by-one em ; caso type-aware retirado) com commit próprio ().
-- **Item 7b adicionado** (chaves de i18n tipadas, exigência de );  e  ajustados por dependerem de namespace inexistente.
--  em  e  em .
+- **Versões de i18n:** `i18next 26.4.6` e `react-i18next 17.0.20` no lugar de 26.5.5 e 17.1.2 (as novas violam `minimumReleaseAge`; sem exceção à política). ADR-17.
+- **Lint:** `switch-exhaustiveness-check` fora (type-aware, inviável com `lintText` de arquivos virtuais); exaustividade por `assertNever` + `tsc`. Regras de camada casam só imports relativos e até 5 pastas de profundidade. ADR-21.
+- **Item 5:** o teste foi corrigido após o GREEN (off-by-one em `functionOfLines`; caso type-aware retirado) com commit próprio (`578be21`).
+- **Item 7b adicionado** (chaves de i18n tipadas, exigência de `.AI/standards/i18n-quality.md`); `AppProviders.test` e `locales-parity` ajustados por dependerem de namespace inexistente.
+- `use-document-meta` em `shared/hooks` (o lint proíbe React em `shared/lib`) e `SkipLink` em `shared/ui`.
 - **A conferir:** textos criados pelo code-writer no item 8 (meta descriptions, corpo do 404, rótulos de favorites/journal/newsletter/footer/social/scan).
-- **Dívida anterior:** 78 arquivos fora do Prettier no repositório (), fora do .
-- **Aviso:** na primeira execução com cache frio,  falhou uma vez com 'Invalid hook call' (reotimização de dependências do Vitest); não reproduziu nas execuções seguintes. Vigiar.
+- **Dívida anterior:** 78 arquivos fora do Prettier no repositório (`pnpm format:check`), fora do `verify`.
+- **Aviso:** na primeira execução com cache frio, `App.test.tsx` falhou uma vez com "Invalid hook call" (reotimização de dependências do Vitest); não reproduziu nas execuções seguintes. Vigiar.
 
