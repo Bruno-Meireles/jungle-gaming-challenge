@@ -1,6 +1,6 @@
 // Testes de tipo: checados só pelo `tsc` (não casam com os padrões do Vitest).
 // Cada `@ts-expect-error` prova que omitir a prop de rótulo deixa de compilar.
-import { Alert, DialogClose, PasswordInput, QuantityStepper, SheetClose } from '../src';
+import { Alert, Breadcrumb, BreadcrumbItem, BreadcrumbPage, DialogClose, PasswordInput, QuantityStepper, SheetClose } from '../src';
 
 export const _t1 = () => (
   <>
@@ -65,5 +65,21 @@ export const _t4 = () => (
     </Alert>
     {/* @ts-expect-error Alert exige toneLabel (sem default) */}
     <Alert tone="info">texto</Alert>
+  </>
+);
+
+export const _t5 = () => (
+  <>
+    <Breadcrumb label="Trilha">
+      <BreadcrumbItem>
+        <BreadcrumbPage>Pagamento</BreadcrumbPage>
+      </BreadcrumbItem>
+    </Breadcrumb>
+    {/* @ts-expect-error Breadcrumb exige label (sem default) */}
+    <Breadcrumb>
+      <BreadcrumbItem>
+        <BreadcrumbPage>Pagamento</BreadcrumbPage>
+      </BreadcrumbItem>
+    </Breadcrumb>
   </>
 );
