@@ -131,7 +131,7 @@ describe('FormField - medida', () => {
         <Input />
       </FormField>,
     );
-    await expect.element(page.getByLabelText('E-mail')).toBeRequired();
+    await expect.element(page.getByRole('textbox', { name: 'E-mail' })).toBeRequired();
     const star = document.querySelector('[data-slot="label-required"]') as HTMLElement;
     expect(getComputedStyle(star).color).toBe(CORAL);
   });
