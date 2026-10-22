@@ -12,7 +12,7 @@ export function HeroCopy({ onExplore }: { onExplore: () => void }) {
         </p>
         <h1 className="text-body-large-18-bold-lh-24 uppercase text-foreground tablet:text-heading-28-bold desktop:text-display-43-bold">
           <span className="tablet:hidden">{t('title.short')}</span>
-          <span className="hidden tablet:inline">{t('title.long')}</span>
+          <span className="hidden whitespace-pre-line tablet:inline">{t('title.long')}</span>
         </h1>
         <p className="text-caption-12-regular-lh-16 text-text-secondary tablet:max-w-557 tablet:text-body-14-regular-lh-24">
           <span className="tablet:hidden">{t('text.short')}</span>

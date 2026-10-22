@@ -18,7 +18,7 @@ export function Hero({ exploreTargetId }: { exploreTargetId: string }) {
   return (
     <section
       aria-label={t('hero:label')}
-      className="relative flex items-center gap-16 rounded-12 bg-linear-to-br from-primary/20 to-primary/5 p-16 tablet:min-h-300 tablet:gap-24 tablet:rounded-0 tablet:bg-none tablet:p-0 desktop:h-450 desktop:gap-110 desktop:pl-40"
+      className="relative flex items-center gap-16 rounded-12 bg-linear-to-br from-primary/20 to-primary/5 px-16 pb-32 pt-16 tablet:min-h-300 tablet:gap-24 tablet:rounded-0 tablet:bg-none tablet:p-0 desktop:h-450 desktop:gap-110 desktop:pl-40"
     >
       <HeroCopy onExplore={explore} />
       {active ? (

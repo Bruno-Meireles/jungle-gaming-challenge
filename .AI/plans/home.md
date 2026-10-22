@@ -403,7 +403,7 @@ M5
 - [ ] 31 vazio E2E
 - [ ] 32 erro e retry E2E
 - [ ] 33 atualização em segundo plano E2E
-- [ ] 34 destaques E2E
+- [x] 34 destaques E2E: RED `c6c3187`, GREEN (spec 24/24; suíte E2E 62/62; node+browser 378/378; typecheck e lint limpos). Ver Execução
 
 M6
 - [ ] 35 i18n E2E
@@ -449,3 +449,19 @@ Desvios do plano no M1:
   - **Risco:** o parser de search padrão do TanStack converte `min=1.5`/`q=123` em `number` (perde precisão em 18 casas e descarta pelo `normalizeCatalogSearch`); tratar com `parseSearch` próprio no M4 (itens 23/24).
   - Cenários `catalog-flaky`/`catalog-out-of-order` mantêm contador por carga da página; testes msw/node dos handlers não criados (cobertos pelo E2E).
   - Skeleton: região `status` "Carregando NFTs" + `aria-busy`; layout 3 col (≥1440) e 2 col sem sidebar/hero (próximos passos).
+
+### Item 34 (GREEN: destaques, header completo)
+
+Entregue:  (, , ,  extraído),  (Select do DS, namespace ),  (marca, nav "Principal", carrinho sem contador, Entrar),  (carrossel manual, pontos com , sem autoplay nem transição),  (só ≥1440),  com  () e /ícones em . Capturas:  e .
+
+Desvios e lacunas (Figma × implementado):
+- **Mobile:** o frame não tem header; foi mantido um header compacto (marca, carrinho, Entrar) porque o spec exige a marca no banner. Sem nav e sem seletor de idioma abaixo de 768/1440 (idioma só no header ≥1440 até o rodapé existir, Q8). Busca (ícone no header desktop; campo no mobile) e barra inferior ficam para os itens 27 e M6.
+- **Hero mobile:** a imagem secundária sobreposta (58x58) e o fundo (círculos/gradiente do grupo 14:5290) não foram replicados; gradiente aproximado por  (stops do Figma não mapeados em tokens). Desktop: o vetor 2:104 não tem fill, então sem fundo.
+- **Pontos:** áreas de toque de 24 px (WCAG 2.5.8) com marca de 8 px; passo de 24 px no lugar de 16 px do Figma. Posição dos pontos em tablet (768) derivada.
+- **Tablet (768–1439):** hero com imagem 300 px e título 28 px, derivados (sem frame, Q11).
+- **Header:** ícones de carrinho e Entrar desenhados à mão (a geometria dos vetores do Figma não foi extraída); ícone de busca omitido; o botão Entrar usa o Button do DS com ajustes (h-35, raio 6, 16/500) sobre o primary md (h-40, raio 3); contador do carrinho omitido (menores do plano). Mercado e Início apontam para ; só Início fica ativo.
+- **Destaque lateral:** o Figma tem formas decorativas (retângulos 30/31/32) não replicadas; fundo por gradiente aproximado. Filtros ainda não existem, então a coluna lateral só tem o destaque (no Figma fica abaixo dos filtros).
+- **Título do hero** usa 
+ em chave i18n com  para reproduzir a quebra do Figma.
+- Observado fora do escopo deste item (nas capturas): contagem "45 NFTs" visível acima da grade (o Figma não tem), ausência de abas/ordenação/filtros/paginação (itens 23–28), preços longos quebram de linha no card de 390.
+- Arquivos não relacionados já modificados no working tree antes/durante a execução (, , ) não foram commitados.
