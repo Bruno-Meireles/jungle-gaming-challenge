@@ -375,7 +375,7 @@ M2
 - [x] 10 `formatEthAmount`: RED `e94d650` (21 falhas por asserção com o item 11), GREEN (node 226/226; typecheck e lint limpos)
 - [x] 11 `ethToSteps`/`stepsToEth`: RED `e94d650`, GREEN (junto do 10)
 - [x] 12 schemas zod: RED `4b3c810` (21 falhas por asserção), GREEN (node 252/252; typecheck e lint limpos). Desvios: ids de coleção/rede em `shared/api/contracts/ids.ts` (shared não importa de entities); `hero` inferido como array (`.length(3)`), não tupla
-- [ ] 13 `httpClient`
+- [x] 13 `httpClient`: RED `4ec5b15` (10 falhas por asserção; contrato de `getJson` ajustado para objeto de requisição por causa do max-params 3; msw/node intercepta o Axios, R1 descartado), GREEN (node 263/263; typecheck e lint limpos)
 - [ ] 14 `queryCatalog`
 - [ ] 15 invariantes das fixtures (inclui imagens, Q13)
 - [ ] 16 `fetchCatalogPage`
