@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CartIcon, HeartIcon, HomeIcon, ScanIcon, UserIcon } from '../../../shared/ui';
 
 const ITEM =
-  'flex size-44 items-center justify-center text-text-secondary hover:text-text-accent data-[status=active]:text-text-accent [&>svg]:size-24';
+  'flex size-44 items-center justify-center text-text-secondary hover:text-text-accent data-[status=active]:text-text-accent [&>svg]:size-20';
 
 /*
  * Barra inferior so abaixo de 768 (Figma 14:5226, Tab Bar 70395:245: 414x126, fundo surface com sombra, botao central
@@ -20,7 +20,7 @@ export function BottomNav() {
         aria-label={t('label')}
         className="fixed inset-x-0 bottom-0 z-30 h-95 rounded-t-30 bg-surface-card shadow-[0_-10px_30px_rgba(10,6,4,0.45)]"
       >
-        <ul className="mx-auto flex h-full max-w-[414px] items-center justify-between px-26 pt-8">
+        <ul className="mx-auto flex h-full max-w-[414px] items-center justify-between px-24 pt-8">
           <li>
             <Link to="/" aria-label={t('home')} className={ITEM} activeOptions={{ exact: true }}>
               <HomeIcon />
@@ -36,7 +36,7 @@ export function BottomNav() {
               to="/unavailable"
               search={{ feature: 'scan' }}
               aria-label={t('scan')}
-              className="flex size-65 items-center justify-center rounded-full bg-linear-to-b from-primary-light to-primary text-ink [&>svg]:size-28"
+              className="flex size-65 items-center justify-center rounded-full bg-linear-to-b from-primary-light to-primary text-ink [&>svg]:h-24 [&>svg]:w-[26.82px]"
             >
               <ScanIcon />
             </Link>
