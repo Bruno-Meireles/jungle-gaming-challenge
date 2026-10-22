@@ -1,0 +1,39 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Estado atual
+
+Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado completo do desafio, fonte da verdade), `figma.md`, `.claude/agents/` e este arquivo. Não há código, `package.json` nem git ainda. O enunciado em `prompt.md` (seção `challenge`) define telas, contratos, MSW, Socket.IO, testes e metas de Lighthouse; não o amplie por suposição.
+
+## Regras obrigatórias (de `prompt.md`)
+
+- **TDD** em todo desenvolvimento: fase RED (teste falhando pelo motivo certo) antes da fase GREEN.
+- **Clean Architecture + Feature-Sliced Design**: camadas FSD `app > pages > widgets > features > entities > shared`, imports só para camadas inferiores, acesso a slices via `index.ts`. Domínio/use cases sem dependência de React, Axios, TanStack ou MSW.
+- **Três agentes** em `.claude/agents/`: `architect` (**Opus**), `test-writer` (**Sonnet**, RED), `code-writer` (**Sonnet**, GREEN). Fluxo por feature: architect → test-writer → code-writer.
+- **Telas** são desenvolvidas e validadas com **Playwright**, usando o **Playwright CLI** (não o MCP) para economizar tokens; além disso há E2E determinísticos.
+- **Monorepo** com dois pacotes: o app e o **design system**. Ferramenta pretendida: pnpm workspaces + Turborepo (ainda não criada; confirmar com o usuário antes de instalar).
+- Código que o usuário disser estar "em desenvolvimento" no protótipo ou neste arquivo deve ser ignorado.
+- Copilot descumpriu regras no protótipo: na inicialização, siga estas regras à risca e não crie scaffolding além do pedido.
+
+## Fluxo por feature
+
+Skills manuais em `.claude/skills/`: `/plan-create <feature>` (architect, grava `.AI/plans/<feature>.md` e espera aprovação) → `/plan-execute <feature>` (TDD RED com test-writer, GREEN com code-writer e validação E2E Playwright) → `/plan-execution-review <feature>` (verificações, aceite, TDD, arquitetura, enunciado, Figma). Referências visuais: `docs/figma/` (gerado por `node --env-file=.env tools/figma-extract.mjs`).
+
+## Protótipo de referência
+
+`C:\Users\opera\OneDrive\Documentos\Frontend -Marketplace-de-NFTs\Frontend-Marketplace-de-NFTs-1\` (Vite + React 19 + TanStack Router/Query + Axios + MSW + `@mswjs/socket.io-binding` + Tailwind 4 + Playwright). Use-o como base **com parcimônia, validando cada item** antes de reaproveitar. Pontos úteis: `src/mocks/` (handlers MSW), `src/shared/api/`, `e2e/`, fontes Roboto Mono em `public/fonts/`, `docs/agents/LEARNINGS.md`. Aviso do próprio protótipo: o handshake do `@mswjs/socket.io-binding` não conectou no navegador num teste inicial — tempo real só conta como funcional após teste com `socket.io-client` real.
+
+## Entregáveis exigidos (resumo do enunciado)
+
+`README.md` (setup, envs, credenciais fictícias, cenários/reset, comandos), `ARCHITECTURE.md` (contratos REST/eventos, sessão, carrinho, cache, reconciliação REST×Socket.IO, desvios do Figma), deploy público obrigatório (Vercel/Netlify/Cloudflare Pages) com mocks ativos no build, scripts para: dev com mocks, build, preview, typecheck, lint, Playwright e Lighthouse (3 medições, mediana; metas Perf ≥90, A11y ≥95, BP ≥95, SEO ≥90).
+
+Restrições que cruzam módulos: valores ETH como strings decimais (nunca float); mocks só na camada MSW (nenhuma resposta fictícia em componentes/hooks/Axios); eventos Socket.IO devem passar pelo `socket.io-client` e ser idempotentes/versionados; pedidos com chave de idempotência; logout limpa cache e subscriptions.
+
+## Comandos
+
+Ainda não existem. Quando o monorepo for criado, documente aqui os comandos reais (dev, build, typecheck, lint, teste único `playwright test <arquivo> -g "<nome>"`, Lighthouse) em vez de supô-los.
+
+## Padrões compartilhados
+
+`.AI/standards/` é a fonte única dos padrões usados por agentes e skills: `grounding.md` (evidência, lacunas, limites), `architecture.md` (Clean Architecture + FSD, estado, mocks) e `testing.md` (TDD e Playwright). Leia o que a tarefa tocar antes de agir.

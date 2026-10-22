@@ -1,0 +1,167 @@
+[
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "2:2",
+    "name": "Desktop / Início",
+    "box": {
+      "x": 0,
+      "y": 0,
+      "width": 1440,
+      "height": 3668
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "10:244",
+    "name": "Desktop / Detalhes do NFT",
+    "box": {
+      "x": 1640,
+      "y": 0,
+      "width": 1440,
+      "height": 2246.000244140625
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "11:1278",
+    "name": "Desktop / Carrinho de NFTs",
+    "box": {
+      "x": 3280,
+      "y": 0,
+      "width": 1440,
+      "height": 1754.0001220703125
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "11:2862",
+    "name": "Desktop / Pagamento",
+    "box": {
+      "x": 4920,
+      "y": 0,
+      "width": 1440,
+      "height": 1657
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "11:4385",
+    "name": "Desktop / Confirmação de Pedido",
+    "box": {
+      "x": 6560,
+      "y": -6,
+      "width": 1440,
+      "height": 1657
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "9:115",
+    "name": "Desktop / Login",
+    "box": {
+      "x": 0,
+      "y": 3900,
+      "width": 1440,
+      "height": 1981
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "9:1022",
+    "name": "Desktop / Cadastro",
+    "box": {
+      "x": 1640,
+      "y": 3900,
+      "width": 1440,
+      "height": 1981
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "9:1238",
+    "name": "Desktop / Perfil do Colecionador",
+    "box": {
+      "x": 3280,
+      "y": 3900,
+      "width": 1440,
+      "height": 1080
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "9:1670",
+    "name": "Desktop / Carteiras",
+    "box": {
+      "x": 4920,
+      "y": 3900,
+      "width": 1440,
+      "height": 1080
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "14:5226",
+    "name": "Mobile / Início",
+    "box": {
+      "x": 0,
+      "y": 6551,
+      "width": 414,
+      "height": 896
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "15:5536",
+    "name": "Mobile / Detalhes do NFT",
+    "box": {
+      "x": 554,
+      "y": 6551,
+      "width": 414,
+      "height": 896
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "16:360",
+    "name": "Mobile / Carrinho de NFTs",
+    "box": {
+      "x": 1108,
+      "y": 6551,
+      "width": 414,
+      "height": 896
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "16:748",
+    "name": "Mobile / Pagamento",
+    "box": {
+      "x": 1662,
+      "y": 6551,
+      "width": 414,
+      "height": 896
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "16:1022",
+    "name": "Mobile / Login",
+    "box": {
+      "x": 2216,
+      "y": 6551,
+      "width": 414,
+      "height": 896
+    }
+  },
+  {
+    "page": "Marketplace de NFTs GreenMint",
+    "id": "16:1228",
+    "name": "Mobile / Cadastro",
+    "box": {
+      "x": 2770,
+      "y": 6551,
+      "width": 414,
+      "height": 896
+    }
+  }
+]
