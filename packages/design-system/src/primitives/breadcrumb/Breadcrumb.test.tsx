@@ -65,6 +65,21 @@ describe('Breadcrumb - comportamento', () => {
   });
 });
 
+describe('Breadcrumb - rotulo recebido', () => {
+  it('expoe o nome recebido via label em nav', async () => {
+    // `label` ainda nao existe no tipo; o T5 troca este objeto frouxo por uso direto.
+    const extra = { label: 'Breadcrumb' } as Record<string, string>;
+    await render(
+      <Breadcrumb {...extra}>
+        <BreadcrumbItem>
+          <BreadcrumbPage>Pagamento</BreadcrumbPage>
+        </BreadcrumbItem>
+      </Breadcrumb>,
+    );
+    await expect.element(page.getByRole('navigation', { name: 'Breadcrumb' })).toBeInTheDocument();
+  });
+});
+
 /*
  * Medida (ADR-08) - trilha "Início / Mercado" (texto 10:290, docs/figma/file.json:42042; variantes
  * "Início / Mercado / Carrinho" 76356 e "/ Pagamento" 107123): um unico TEXT, Roboto Mono 700 15px,
