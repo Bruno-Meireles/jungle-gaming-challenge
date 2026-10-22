@@ -32,17 +32,17 @@ Rodar da raiz (`turbo`) ou em `packages/design-system`.
 | `pnpm typecheck` / `pnpm lint` | `tsc --noEmit` / ESLint |
 | `pnpm test` | Vitest: projetos `node` (guardas e tokens), `unit` (Chromium real) e `storybook` (cada story, com axe em modo erro) |
 | `pnpm storybook` / `pnpm storybook:build` | Storybook 10 em :6006 / estático em `storybook-static` |
-| `pnpm test:visual:docker` | **Gate** de regressão visual no Docker (Linux) |
+| `pnpm test:visual` | Gate de regressão visual (Playwright local); roda na validação final, não no `verify` |
 | `pnpm test:visual:update` | Atualiza baselines; só com revisão visual (veja a política abaixo) |
-| `pnpm verify` (raiz) | `lint typecheck test build storybook:build test:visual` |
+| `pnpm verify` (raiz) | `lint typecheck test build` (cotidiano, sem golden) |
 
-Observação: `test:visual` nativo só passa em Linux; no Windows/macOS use `test:visual:docker`, que exige o Docker em execução.
+Observação: o golden precisa de `pnpm storybook:build` antes e de baselines da própria plataforma; as versionadas hoje são `linux/`. Sem baseline da plataforma, `test:visual` falha (decisão sobre baselines locais pendente, ADR-15). Docker não é usado neste projeto.
 
 ## Política de baseline visual
 
-- As baselines ficam em `golden/__screenshots__/linux/{desktop-1440,tablet-768,mobile-390}/` e **só valem no ambiente canônico Linux/Docker** (imagem `mcr.microsoft.com/playwright`).
+- As baselines ficam em `golden/__screenshots__/linux/{desktop-1440,tablet-768,mobile-390}/` e só valem no Linux; nunca são atualizadas nem apagadas automaticamente.
 - O Playwright usa `updateSnapshots: 'none'`: uma baseline ausente ou diferente falha. Tolerância: `threshold 0.02`, `maxDiffPixelRatio 0.0005`.
-- Para atualizar: `pnpm storybook:build && pnpm test:visual:docker --update-snapshots=changed`, **abrir cada PNG alterado**, confirmar contra a intenção do Figma e commitar com justificativa.
+- Para atualizar: `pnpm storybook:build && pnpm test:visual:update`, **abrir cada PNG alterado**, confirmar contra a intenção do Figma e commitar com justificativa.
 - Stories entram no golden por tag: `golden`, `golden-hover`, `golden-focus`, `golden-page` (overlays em página inteira). Stories com `play` não são golden.
 - Fidelidade ao Figma é provada por **medidas** (testes com `getComputedStyle`/`getBoundingClientRect` citando `file.json:linha`), não por comparação de pixels com o PNG do Figma.
 
