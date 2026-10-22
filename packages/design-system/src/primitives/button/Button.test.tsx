@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-react';
 import '../../test/entry.css';
@@ -7,6 +7,11 @@ import { Button } from './Button';
 
 /* Cores dos tokens (docs/design-tokens.md): --color-primary-hover = --color-primary-light #DD9A5F. */
 const PRIMARY_HOVER = 'rgb(221, 154, 95)';
+
+/* O ponteiro fica onde o hover terminou e contamina a medida do teste seguinte (flake sob carga). */
+afterEach(async () => {
+  await userEvent.unhover(document.body);
+});
 
 describe('Button - comportamento', () => {
   it('renderiza um <button type="button"> com nome acessivel', async () => {
