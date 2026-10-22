@@ -372,8 +372,8 @@ M1
 
 M2
 - [x] 9 `parseEth`/`compareEth`/`toWei`: RED `89c970d` (29 falhas por asserção), GREEN (node 195/195; typecheck e lint limpos; sem Number/parseFloat/toFixed)
-- [ ] 10 `formatEthAmount`
-- [ ] 11 `ethToSteps`/`stepsToEth`
+- [x] 10 `formatEthAmount`: RED `e94d650` (21 falhas por asserção com o item 11), GREEN (node 226/226; typecheck e lint limpos)
+- [x] 11 `ethToSteps`/`stepsToEth`: RED `e94d650`, GREEN (junto do 10)
 - [ ] 12 schemas zod
 - [ ] 13 `httpClient`
 - [ ] 14 `queryCatalog`
