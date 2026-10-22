@@ -5,10 +5,10 @@ import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { cn } from '../../lib/cn';
 
 export type DialogCloseProps = Omit<React.ComponentProps<typeof DialogPrimitive.Close>, 'children'> & {
-  closeLabel?: string;
+  closeLabel: string;
 };
 
-export function DialogClose({ closeLabel = 'Fechar', className, ...props }: DialogCloseProps) {
+export function DialogClose({ closeLabel, className, ...props }: DialogCloseProps) {
   return (
     <DialogPrimitive.Close
       data-slot="dialog-close"

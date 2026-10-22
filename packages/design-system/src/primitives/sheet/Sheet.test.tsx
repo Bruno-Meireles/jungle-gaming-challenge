@@ -28,7 +28,7 @@ const Example = ({
           <input type="text" />
         </label>
         <button type="button">Aplicar</button>
-        <SheetClose />
+        <SheetClose closeLabel="Fechar" />
       </Sheet>
     </>
   );

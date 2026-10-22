@@ -26,7 +26,7 @@ const Example = ({ defaultOpen = false }: { defaultOpen?: boolean }) => {
             <input type="email" />
           </label>
           <button type="button">Continuar</button>
-          <DialogClose />
+          <DialogClose closeLabel="Fechar" />
         </DialogContent>
       </Dialog>
     </>

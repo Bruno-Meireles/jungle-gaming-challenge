@@ -27,7 +27,7 @@ function Example({ side, defaultOpen = false }: { side: 'bottom' | 'left' | 'rig
           <SheetTitle>Filtros</SheetTitle>
           <SheetDescription>Refine a lista de NFTs.</SheetDescription>
         </div>
-        <SheetClose />
+        <SheetClose closeLabel="Fechar" />
       </Sheet>
     </div>
   );

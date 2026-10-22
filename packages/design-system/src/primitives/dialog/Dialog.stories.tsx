@@ -31,7 +31,7 @@ function Example({ defaultOpen = false }: { defaultOpen?: boolean }) {
             <DialogTitle>Entrar</DialogTitle>
             <DialogDescription>Acesse sua conta de colecionador.</DialogDescription>
           </div>
-          <DialogClose />
+          <DialogClose closeLabel="Fechar" />
         </DialogContent>
       </Dialog>
     </div>
