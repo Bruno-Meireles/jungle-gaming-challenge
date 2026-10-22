@@ -8,6 +8,10 @@ const dsForbiddenImports = [
   { group: ['axios', 'axios/*'], message: 'O design system não pode depender de Axios.' },
   { group: ['msw', 'msw/*'], message: 'O design system não pode depender de MSW.' },
   { group: ['socket.io-client', 'socket.io-client/*'], message: 'O design system não pode depender de socket.io-client.' },
+  {
+    group: ['i18next', 'i18next/*', 'react-i18next', 'react-i18next/*', 'react-intl', 'react-intl/*', 'use-intl', 'use-intl/*', 'next-intl', 'next-intl/*', 'typesafe-i18n', 'typesafe-i18n/*', '@formatjs/*', '@lingui/*'],
+    message: 'O design system é agnóstico de idioma: não pode depender de lib de i18n (textos entram por props).',
+  },
   // Acesso a slices só via index.ts: 'primitives/x' e 'patterns/x' (nunca 'primitives/x/X').
   { group: ['**/primitives/*/*', '**/patterns/*/*'], message: 'Importe o slice pelo index.ts (ex.: primitives/button), não por arquivos internos.' },
 ];

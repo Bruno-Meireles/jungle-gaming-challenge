@@ -178,7 +178,7 @@ Biblioteca de i18n, providers, chaves e locales, seletor de idioma, `<html lang>
 - [x] T6.r + T6 Pagination: RED `cba4835`, `0ec1b49`; GREEN `b225086`
 - [x] G2.a package.json sem lib de i18n: RED `a2416ad` (8 falhas por asserção), GREEN (21/21, typecheck e lint limpos)
 - [x] G2.b src sem APIs de locale: RED `ac22f61` (6 falhas por asserção), GREEN (82/82; 186 com G2.a e G1; typecheck e lint limpos)
-- [ ] G2.c lint barra import de i18n
+- [x] G2.c lint barra import de i18n: RED `22472e5` (3 falhas por asserção), GREEN (21/21, typecheck e lint limpos, lint da raiz verde)
 - [ ] G1.m e G2.m mutações
 - [ ] R1: grep em Radix (dialog, select, slider) colado no log
 - [ ] Docs: D1 README (Textos e i18n), D2 design-system.md §3, D3 ADR-14 em ARCHITECTURE.md, D4 design.md, D5 i18n-quality.md
