@@ -1,14 +1,14 @@
 # Plano: verificacao-visual-final
 
-Autor do plano: `architect` (Opus), gravado por `/plan-create`. Infraestrutura de testes e processo, sem tela nova. Substitui a proposta `local-playwright-sem-docker` (baselines `win32` e fnm), que **não foi gravada** e está descartada por decisão do usuário.
+Autor do plano: `architect` (Opus), gravado por `/plan-create`. Infraestrutura de testes e processo, sem tela nova. Substitui a proposta `local-playwright-sem-docker` (baselines `win32` e fnm), que **não foi gravada** e está descartada por decisão do usuário. **Revisado em 2026-10-22:** a regra do `CLAUDE.md` proíbe Docker (só por ordem explícita); este plano não usa Docker em nenhum ponto.
 
 ## Decisões do usuário (2026-10-22)
 
 Decisão literal (mensagem do usuário em /plan-create):
 
-1. Durante o desenvolvimento, golden de imagem e Docker deixam de ser verificação obrigatória; saem do fluxo padrão e do `verify` cotidiano. Ficam comportamento, integração, acessibilidade, typecheck e lint.
+1. Durante o desenvolvimento, o golden de imagem deixa de ser verificação obrigatória (e Docker é proibido); saem do fluxo padrão e do `verify` cotidiano. Ficam comportamento, integração, acessibilidade, typecheck e lint.
 2. No DS, snapshots estáveis e relevantes de dados e estrutura renderizada para contratos de saída; sem snapshots indiscriminados, nunca como substitutos de teste de comportamento; consolidar após operações completas nos componentes e finalizar ao concluir o projeto.
-3. Golden de imagem do DS adiado para a etapa final, com Docker; baselines existentes preservadas, sem atualização automática nem exclusão.
+3. Golden de imagem do DS adiado para a etapa final, executado localmente (sem Docker); baselines existentes preservadas, sem atualização automática nem exclusão.
 4. Nas telas, Playwright CLI para fluxos e fidelidade ao Figma, sem aprovação de snapshot a cada alteração.
 5. Regressão visual das páginas (início, detalhe, carrinho e pagamento) preservada, com baselines versionadas e dados estáveis, consolidada na etapa final; snapshots de DOM não a substituem.
 6. Registrar em ADR; atualizar README, planos e scripts; não criar infraestrutura desnecessária.
@@ -38,7 +38,7 @@ Não se aplica: sem slice de app nem componente.
 |---|---|---|
 | Scripts | `package.json` (raiz) | `verify` perde `storybook:build test:visual`; nasce `verify:final` |
 | Turbo | `turbo.json` | nenhuma (`test:visual` segue com `dependsOn: ["storybook:build"]`) |
-| Ferramentas | `tools/visual.mjs`, `tools/visual-docker.mjs` | **nenhuma**; basta não chamá-las no `verify` |
+| Ferramentas | `tools/visual.mjs` | **feito**: roda o Playwright local; `tools/visual-docker.mjs` e `test:visual:docker` removidos (commit 85181a3) |
 | DS | `packages/design-system/package.json`, `playwright.config.ts` | nenhuma |
 | Guarda | `packages/design-system/tests/verify-scripts.node.test.ts` (novo) | projeto `node` do Vitest |
 | Docs | ver §3.5 | só texto |
@@ -56,7 +56,7 @@ Dependências permitidas: nenhuma nova (a guarda usa `node:fs` e `vitest`).
 | `test:visual`, `storybook:build` | iguais | iguais (uso manual ou final) |
 
 - `storybook:build` sai do `verify`: o único consumidor de `storybook-static` é o golden (`golden/golden.spec.ts:7-9`); o a11y das stories roda no projeto Vitest `storybook` (`vitest.config.ts:46-58`) sem build estático.
-- O golden roda **depois** do restante, em série, atacando a causa do timeout registrado (cold start do Docker disputando CPU com os Chromium do Vitest). Nenhum timeout é alterado.
+- O golden roda **depois** do restante, em série, atacando a causa do timeout registrado (evitar disputa de CPU com os Chromium do Vitest). Nenhum timeout é alterado.
 - `--force` evita que o cache do turbo "passe" o golden sem executar; **não verificado** em turbo 2.11.10: conferir com `--help` no GREEN de S2 e, se não existir, usar `--cache=local:r` ou retirar a flag, registrando o desvio.
 - `test:visual:update` só existe no DS e só é chamado à mão; S3 prova que nenhum agregador o chama.
 - Quando o app tiver E2E, `test:e2e` (só comportamento, sem `toHaveScreenshot`) entra no `verify`; a regressão das páginas entra em `verify:final`. Decisão dos planos dessas features.
@@ -74,8 +74,8 @@ Dependências permitidas: nenhuma nova (a guarda usa `node:fs` e `vitest`).
 **Condição de entrada:** F1 a F8 concluídas com início, detalhe, carrinho e pagamento implementados; DS sem mudança pendente; `pnpm verify` verde; `git status` limpo.
 
 **Conteúdo:**
-- (a) Golden do DS: `pnpm verify:final` no Docker `mcr.microsoft.com/playwright:v1.64.1-noble`. As 285 baselines só mudam por `test:visual:update` com revisão de cada PNG.
-- (b) Regressão das quatro páginas: spec do app em `apps/web/e2e/visual/`, baselines em `apps/web/e2e/visual/__screenshots__/linux/<project>/` (separadas das do DS); mesma política Linux/Docker e tolerância do ADR-07a salvo decisão em F9; 1440 e 390 obrigatórios, en conforme `design.md:122`, 768 se houver composição própria; dados estáveis: cenário MSW `default` com reset, `page.clock` fixo, imagens e fontes locais, `reducedMotion: 'reduce'`, `animations: 'disabled'`; pagamento com sessão fictícia do mock. Baselines do app só são criadas em F9. Generalizar `visual-docker.mjs` (fixo no DS) é decisão de F9.
+- (a) Golden do DS: `pnpm test:visual` local. As 285 baselines `linux/` ficam preservadas (nunca atualizadas nem apagadas automaticamente) mas não valem no Windows; como o enunciado §9 exige baselines versionadas, a estratégia local (por exemplo baselines por plataforma, geradas e revisadas localmente) é **decisão pendente do usuário**, sem Docker. `test:visual:update` só com revisão de cada PNG.
+- (b) Regressão das quatro páginas: spec do app em `apps/web/e2e/visual/`, baselines em `apps/web/e2e/visual/__screenshots__/linux/<project>/` (separadas das do DS); mesma política de baselines por plataforma decidida em (a) e tolerância do ADR-07a salvo decisão em F9; 1440 e 390 obrigatórios, en conforme `design.md:122`, 768 se houver composição própria; dados estáveis: cenário MSW `default` com reset, `page.clock` fixo, imagens e fontes locais, `reducedMotion: 'reduce'`, `animations: 'disabled'`; pagamento com sessão fictícia do mock. Baselines do app só são criadas em F9. Generalizar `visual-docker.mjs` (fixo no DS) é decisão de F9.
 - (c) Consolidação dos snapshots de DOM (§3.2).
 - (d) Lighthouse e README completo (F9, fora deste plano).
 
@@ -103,7 +103,7 @@ Anotar "(ajustado pelo ADR-15)", no precedente "alterado por design-system-i18n,
 
 - `package.json:20`: `verify` e novo `verify:final`.
 - `ARCHITECTURE.md`: ADR-15; notas no fim do ADR-07 (:19) e do ADR-07a (:21), sem reescrevê-los.
-- `packages/design-system/README.md`: `:35` ("Gate" vira validação final), `:37` (`verify`), linha de `verify:final`, `:39` (observação do Docker), seção de baseline `:41-47` ("só na validação final; nunca atualizadas automaticamente"), nova seção curta "Snapshots de DOM".
+- `packages/design-system/README.md`: `:35` ("Gate" vira validação final), `:37` (`verify`), linha de `verify:final`, `:39` (observação; Docker removido), seção de baseline `:41-47` ("só na validação final; nunca atualizadas automaticamente"), nova seção curta "Snapshots de DOM".
 - `.AI/plans/design-system.md` (só anotações): `:9`, `:83`, `:106`, `:148`, `:158`, `:164`, `:167`.
 - `design.md`: `:168` (§8) e linha F9 (`:198`).
 - `.AI/standards/testing.md`: `:10` (`vitest -u` sem revisão), `:23` (regressão visual na validação final), bloco "Verificação cotidiana × validação final" e critério de snapshot de DOM.
@@ -118,7 +118,7 @@ Anotar "(ajustado pelo ADR-15)", no precedente "alterado por design-system-i18n,
 
 | # | Critério observável | Prova |
 |---|---|---|
-| A1 | `pnpm verify` não executa `storybook:build`, `test:visual` nem Docker | S1 e dry run (V1) |
+| A1 | `pnpm verify` não executa `storybook:build`, `test:visual` nem Docker | S1 (**feito**: `no-docker.node.test.ts`) e dry run (V1) |
 | A2 | `verify:final` existe e roda `verify` e depois `test:visual` sem update | S2 e V1 |
 | A3 | Nenhum agregador chama `--update-snapshots` ou `vitest -u`; só o DS `test:visual:update` contém `--update-snapshots` | S3 |
 | A4 | `lint`, `typecheck`, `test`, `build` não dependem de `storybook:build` nem `test:visual` no turbo | S4 |
@@ -133,7 +133,7 @@ Todos em `packages/design-system/tests/verify-scripts.node.test.ts`, unitário n
 
 | # | Teste | RED |
 |---|---|---|
-| S1 | `verify` cotidiano não contém `test:visual`, `storybook:build`, `docker` nem `--update-snapshots` | real hoje (`package.json:20`) |
+| S1 | `verify` cotidiano não contém `test:visual`, `storybook:build`, `docker` nem `--update-snapshots` | **feito**: RED `c2ad3ba`, GREEN `85181a3` |
 | S2 | `verify:final` existe, contém `pnpm verify` antes de `test:visual`, sem `update` | real (script não existe) |
 | S3 | nenhum script além de `test:visual:update` (raiz, DS, web) atualiza snapshots (`--update-snapshots`, ` -u`, `--update`) | guarda; prova por mutação com variável de ambiente (padrão `JG_DS_PACKAGE_JSON`) |
 | S4 | `dependsOn` de `lint`, `typecheck`, `test`, `build` em `turbo.json` sem `storybook:build`/`test:visual` | guarda; mutação |
@@ -147,22 +147,22 @@ Ordem: S1 RED→GREEN (muda `verify`); S2 RED→GREEN (`verify:final`, conferind
 ## 6. Riscos e lacunas remanescentes
 
 - **R1:** a regressão visual do DS fica sem detecção até F9. Mitigação: medidas (ADR-08), axe e snapshots de DOM consolidados.
-- **R2:** a dockerização do app em F9 pode exigir generalizar `visual-docker.mjs` (fixo em `packages/design-system`, `visual-docker.mjs:30-31`); custo em F9.
+- **R2:** a regressão visual do app em F9 exigirá baselines por plataforma e execução local da suíte do app, sem Docker.
 - **R3 (pré-existente):** a story golden `PasswordInput/Visible` tem `play`, contra o ADR-10; revisar na validação final.
 - **P1 (pendente, sem resposta):** ordem do próximo plano. A documentação conflita: `design.md:192` põe `catalog` depois de F2, enquanto `docs/discovery.md:52-61` e `docs/routes.md:58-59` preveem a Home com F0b mínimo e só o mock do catálogo. Não existe plano de Home nem de app-shell, e `apps/web` é só `<main/>`. Recomendação do `architect`: `/plan-create app-shell` (F0b) e depois `/plan-create home`, corrigindo `design.md` §10. Será perguntado ao criar o próximo plano; nada aqui o assume.
 - **P2 (pendente, sem resposta):** guia de gerenciador de versão (fnm/nvm/asdf). Fora deste plano; há `.nvmrc`, `engines` e `packageManager`.
 
 ## 7. Fora do escopo
 
-Executar o golden ou o Docker agora; atualizar, regenerar ou apagar baselines; criar snapshots de DOM ou o normalizador; alterar `tools/visual*.mjs`, `playwright.config.ts` ou timeouts; baselines `win32`, fnm ou remoção do Docker; spec de regressão visual do app e dockerização do app (F9); Lighthouse e README completo da entrega (F9); adicionar `@playwright/test` ou `test:e2e` ao app; reescrever histórico (`executions/*`, Progresso/Execução); implementar F0b ou Home.
+Executar o golden agora; atualizar, regenerar ou apagar baselines; criar snapshots de DOM ou o normalizador; alterar `playwright.config.ts` ou timeouts; fnm; decidir a estratégia de baselines por plataforma (pendente do usuário); spec de regressão visual do app (F9); Lighthouse e README completo da entrega (F9); adicionar `@playwright/test` ou `test:e2e` ao app; reescrever histórico (`executions/*`, Progresso/Execução); implementar F0b ou Home.
 
 ## 8. Decisões para ARCHITECTURE.md
 
-**ADR-15 Verificação cotidiana sem regressão visual; golden e regressão das páginas na validação final.** Contexto: o `verify` incluía `storybook:build test:visual`, que no Windows delega ao Docker (ADR-07); o cold start do container estourou 30 s dentro do `verify` completo (`design-system-i18n.md`, seção Execução) embora a suíte isolada passe (296 passed, 7 skipped); isso tornou cada alteração pequena lenta e instável, com impacto no prazo; o render difere entre sistemas, por isso as baselines só valem em Linux; o usuário decidiu em 2026-10-22 tirar a regressão de imagem do fluxo cotidiano. Decisão: (1) `verify` = `lint typecheck test build`: comportamento, integração, axe, tipos e lint, sem Docker nem Storybook estático; (2) `verify:final` = `verify` seguido de `test:visual --force` em série, a validação de entrega, com o golden do DS no Docker e, a partir de F9, a regressão visual de início, detalhe, carrinho e pagamento com baselines Linux versionadas e dados estáveis; (3) baselines existentes preservadas, nunca atualizadas nem apagadas automaticamente, `test:visual:update` só manual e com revisão; (4) nas telas, fidelidade ao Figma por captura do Playwright CLI e testes de medida, sem aprovação de snapshot; (5) no DS, snapshots de DOM normalizados só para contratos de saída estáveis, consolidados por componente após operações completas e finalizados em F9, sem substituir testes de comportamento nem a regressão visual; (6) uma guarda node falha se o `verify` cotidiano voltar a chamar golden, Docker ou `--update-snapshots`. Descartado: baselines por plataforma (`win32`) com fnm (duplica baselines e o render do Windows não é determinístico entre máquinas); remover o Docker (perde o ambiente canônico das 285 baselines); manter o golden no `verify` com timeout maior (aumentar timeout não é correção, `testing.md:25`); serviço externo de regressão visual (já descartado). Consequências: a regressão visual do DS não é detectada no dia a dia (mitigação: medidas, axe e snapshots de DOM); o gate visual por componente de `design-system.md` passa a valer só na entrega; F9 ganha golden, regressão das páginas e consolidação dos snapshots. Reversão: se até F9 uma regressão visual escapar e gerar retrabalho real, ou se o Docker rodar a suíte em menos de 2 minutos sem timeout, reavaliar a volta de `test:visual` ao `verify`. Notas a acrescentar sem reescrever: no ADR-07 "Ajustado pelo ADR-15: deixa de ser gate do `verify` cotidiano; roda em `verify:final`"; no ADR-07a "Ajustado pelo ADR-15: a tolerância vale na validação final; regenerar baseline só nessa etapa, com revisão".
+**ADR-15 Sem Docker; verificação cotidiana sem regressão visual; golden e regressão das páginas na validação final, local.** Contexto: o `verify` incluía `storybook:build test:visual`, que no Windows delegava ao Docker (ADR-07); o cold start do container estourou 30 s dentro do `verify` completo (suíte isolada: 296 passed, 7 skipped), o que tornou cada alteração pequena lenta e instável, com impacto no prazo; o render difere entre sistemas, então as 285 baselines `linux/` não valem fora do Linux. O usuário decidiu em 2026-10-22: Docker é proibido em desenvolvimento, testes e validações, salvo ordem explícita (regra no `CLAUDE.md`), e a regressão de imagem sai do fluxo cotidiano. Decisão: (1) `verify` = `lint typecheck test build` (comportamento, integração, axe, tipos, lint), sem Docker nem Storybook estático; (2) `tools/visual.mjs` roda o Playwright local em qualquer SO e `tools/visual-docker.mjs` e `test:visual:docker` foram removidos; (3) as baselines existentes são preservadas, nunca atualizadas nem apagadas automaticamente, e `test:visual:update` é só manual com revisão de cada PNG; (4) o golden do DS e a regressão visual de início, detalhe, carrinho e pagamento (exigência do enunciado §9, que continua valendo) são consolidados na validação final, executados localmente; como obter baselines válidas na máquina de desenvolvimento (por plataforma, geradas e revisadas localmente) é decisão pendente do usuário; (5) nas telas, fidelidade ao Figma por captura do Playwright CLI e testes de medida, sem aprovação de snapshot a cada alteração; (6) no DS, snapshots de DOM normalizados só para contratos de saída estáveis, sem substituir testes de comportamento; (7) guarda node (`no-docker.node.test.ts`) falha se qualquer script, `tools/*.mjs` ou o `verify` voltar a citar Docker ou o golden. Descartado: Docker (proibido); golden no `verify` com timeout maior (aumentar timeout não é correção); serviço externo de regressão visual. Consequências: a regressão visual não é detectada no dia a dia (mitigação: medidas ADR-08, axe, snapshots de DOM); `pnpm test:visual` falha numa plataforma sem baseline própria até a decisão pendente; o gate visual por componente de `design-system.md` passa a valer só na entrega. Reversão: se uma regressão visual escapar até a entrega e gerar retrabalho real, reavaliar o `test:visual` no `verify`.
 
 ## Progresso
 
-- [ ] S1 `verify` cotidiano sem golden, storybook estático, Docker nem update
+- [x] S1 `verify` cotidiano sem golden, storybook estático, Docker nem update (`tests/no-docker.node.test.ts`: RED `c2ad3ba`, GREEN `85181a3`)
 - [ ] S2 `verify:final` (conferir `--force` no turbo 2.11.10)
 - [ ] S3 nenhum script além de `test:visual:update` atualiza snapshots (+ mutação)
 - [ ] S4 tarefas cotidianas do turbo sem dependência do golden (+ mutação)
