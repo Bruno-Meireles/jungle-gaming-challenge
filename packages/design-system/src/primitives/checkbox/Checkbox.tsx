@@ -13,15 +13,16 @@ export function Checkbox({ className, ...props }: CheckboxProps) {
     <CheckboxPrimitive.Root
       data-slot="checkbox"
       className={cn(
-        'flex size-16 shrink-0 items-center justify-center rounded-3 border-[1.5px] border-primary bg-transparent p-0',
+        'flex size-16 shrink-0 items-center justify-center rounded-full border-[1.5px] border-primary bg-transparent p-0 text-ink',
         'data-[state=checked]:bg-primary data-[state=indeterminate]:bg-primary',
         'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus',
-        'disabled:cursor-not-allowed disabled:opacity-50',
+        'disabled:cursor-not-allowed disabled:border-disabled-text disabled:bg-disabled-bg disabled:text-disabled-text',
+        'disabled:data-[state=checked]:bg-disabled-bg disabled:data-[state=indeterminate]:bg-disabled-bg',
         className,
       )}
       {...props}
     >
-      <CheckboxPrimitive.Indicator className="flex items-center justify-center text-ink">
+      <CheckboxPrimitive.Indicator className="flex items-center justify-center">
         <svg
           aria-hidden="true"
           width="12"
