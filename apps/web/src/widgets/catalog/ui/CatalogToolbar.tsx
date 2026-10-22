@@ -9,7 +9,7 @@ import { CatalogViewTabsList } from '../../../features/catalog-view-tabs';
 export function CatalogToolbar() {
   const { search, update } = useCatalogSearch();
   return (
-    <div className="mb-24 flex items-start justify-between gap-16 tablet:mb-32">
+    <div className="mb-16 flex items-start justify-between gap-16 tablet:mb-32">
       <div className="-m-4 min-w-0 overflow-x-auto p-4">
         <CatalogViewTabsList />
       </div>

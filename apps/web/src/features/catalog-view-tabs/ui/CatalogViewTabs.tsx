@@ -29,9 +29,9 @@ export function CatalogViewTabs({ value, onChange, children }: CatalogViewTabsPr
 export function CatalogViewTabsList() {
   const { t } = useTranslation('viewTabs');
   return (
-    <TabsList aria-label={t('label')} className="gap-20">
+    <TabsList aria-label={t('label')} className="gap-16 desktop:gap-20">
       {VIEW_IDS.map((id) => (
-        <TabsTrigger key={id} value={id}>
+        <TabsTrigger key={id} value={id} className="desktop:text-body-15-medium desktop:data-[state=active]:text-body-15-medium">
           {t(`options.${id}`)}
         </TabsTrigger>
       ))}
