@@ -32,6 +32,7 @@ test.describe('home: paginacao e historico', () => {
     const first = await titles(page);
     await pagination(page).getByRole('link', { name: '2', exact: true }).click();
     await expect(page).toHaveURL((url) => url.searchParams.get('page') === '2');
+    await expect(cards(page)).toHaveCount(6);
     const second = await titles(page);
 
     await page.reload();

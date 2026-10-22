@@ -82,11 +82,19 @@ test.describe('home: filtros', () => {
     expect(Number(urlMin)).toBeCloseTo(minValue, 10);
     if (isMobile(page)) await expect(panel).toBeHidden();
 
+    // espera o fim do carregamento (placeholder anterior sai) antes de ler os cards
+    await expect(page.locator('[aria-busy="true"]')).toHaveCount(0);
     await expect(cards(page).first()).toBeVisible();
-    const texts = await cards(page).allTextContents();
-    expect(texts.length).toBeGreaterThan(0);
-    for (const text of texts) {
-      const price = valueOf(/(\d+,\d+) ETH/.exec(text)?.[0] ?? null);
+    const total = await cards(page).count();
+    expect(total).toBeGreaterThan(0);
+    for (let i = 0; i < total; i += 1) {
+      const card = cards(page).nth(i);
+      const title = (await card.getByRole('link').innerText()).trim();
+      // preco lido por card, sem o titulo (que pode terminar em digitos, ex.: "#009")
+      const rest = (await card.innerText()).replace(title, '');
+      const match = /(\d+,\d+) ETH/.exec(rest);
+      expect(match, `preco no card "${title}"`).not.toBeNull();
+      const price = valueOf(match?.[0] ?? null);
       expect(price).toBeGreaterThanOrEqual(minValue);
       expect(price).toBeLessThanOrEqual(12.29);
     }
