@@ -90,3 +90,5 @@ export async function getJson<T>(client: HttpClient, req: GetJsonRequest<T>): Pr
   }
   return parsed.data;
 }
+
+export const httpClient = createHttpClient();
