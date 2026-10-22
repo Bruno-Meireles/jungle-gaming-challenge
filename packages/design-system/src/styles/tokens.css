@@ -283,9 +283,36 @@
   --text-tiny-11-medium--font-weight: 500;
   --text-tiny-11-medium--letter-spacing: 0;
 
-  /* raios */
+  /* raios: 1 token por cornerRadius distinto (29); cantos assimetricos = Lacuna, ver docs/design-tokens.md */
+  --radius-0: 0px; /* figma:5:112 */
+  --radius-2p12: 2.12px; /* figma:I70492:696;70491:1280 */
   --radius-3: 3px; /* figma:70386:262 */
+  --radius-4: 4px; /* figma:70342:2820 */
   --radius-5: 5px; /* figma:70381:242 */
+  --radius-6: 6px; /* figma:I70522:3240;70504:3015;70486:524 */
+  --radius-7: 7px; /* figma:70410:3799 */
+  --radius-8: 8px; /* figma:70353:239 */
+  --radius-10: 10px; /* figma:70410:4124 */
+  --radius-11: 11px; /* figma:11:1177 */
+  --radius-12: 12px; /* figma:70395:240 */
+  --radius-13: 13px; /* figma:4:280 */
+  --radius-14: 14px; /* figma:70410:4122 */
+  --radius-15: 15px; /* figma:4:137 */
+  --radius-16: 16px; /* figma:I70522:3671;70504:3225 */
+  --radius-17: 17px; /* figma:4:423 */
+  --radius-17p5: 17.5px; /* figma:70410:4156 */
+  --radius-18: 18px; /* figma:4:428 */
+  --radius-20: 20px; /* figma:70402:3303 */
+  --radius-22: 22px; /* figma:70410:3798 */
+  --radius-24: 24px; /* figma:70342:2673 */
+  --radius-25: 25px; /* figma:9:1581 */
+  --radius-29: 29px; /* figma:70410:3800 */
+  --radius-30: 30px; /* figma:14:5291 */
+  --radius-31: 31px; /* figma:16:402 */
+  --radius-32: 32px; /* figma:15:5689 */
+  --radius-33: 33px; /* figma:70410:4190 */
+  --radius-37: 37px; /* figma:I70492:696;70491:795 */
+  --radius-40: 40px; /* figma:14:5226 */
 
   /* ADR-04: 1 unidade de spacing = 1px do Figma (p-16 = 16px) */
   --spacing: 1px;
