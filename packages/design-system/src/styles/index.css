@@ -1,3 +1,6 @@
 @import './tokens.css';
 @import './fonts.css';
 @import './base.css';
+
+/* Em dist/styles este caminho aponta para dist/: o Tailwind do consumidor varre o JS publicado. */
+@source "../";
