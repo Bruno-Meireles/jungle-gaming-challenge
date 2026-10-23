@@ -2,6 +2,7 @@ import axios, { type AxiosInstance, type AxiosResponse, isAxiosError, isCancel }
 import type { ZodType } from 'zod';
 
 import { ApiError } from './api-error';
+import { SESSION_TOKEN_STORAGE_KEY } from './contracts/auth';
 import { apiErrorBodySchema } from './contracts/error';
 
 export type HttpClient = AxiosInstance;
@@ -31,11 +32,25 @@ export function serializeParams(params: Record<string, unknown>): string {
     .join('&');
 }
 
+function readStoredToken(): string | null {
+  try {
+    return typeof localStorage === 'undefined' ? null : localStorage.getItem(SESSION_TOKEN_STORAGE_KEY);
+  } catch {
+    return null;
+  }
+}
+
 export function createHttpClient(options?: { baseURL?: string }): HttpClient {
-  return axios.create({
+  const client = axios.create({
     baseURL: options?.baseURL ?? '/api',
     paramsSerializer: { serialize: serializeParams },
   });
+  client.interceptors.request.use((config) => {
+    const token = readStoredToken();
+    if (token) config.headers.set('Authorization', `Bearer ${token}`);
+    return config;
+  });
+  return client;
 }
 
 export interface GetJsonRequest<T> {
@@ -51,8 +66,9 @@ function normalizeResponseError(status: number, data: unknown): ApiError {
     return new ApiError({
       status,
       code: body.data.code,
-      transient: body.data.code !== 'validation_failed',
+      transient: body.data.code === 'service_unavailable' || body.data.code === 'internal_error',
       fieldErrors: body.data.fieldErrors,
+      fields: body.data.fields,
     });
   }
   if (status >= 500) {
@@ -61,7 +77,7 @@ function normalizeResponseError(status: number, data: unknown): ApiError {
   return new ApiError({ status, code: 'validation_failed', transient: false });
 }
 
-function normalizeError(error: unknown): unknown {
+export function normalizeError(error: unknown): unknown {
   if (error instanceof ApiError || !isAxiosError(error)) {
     return error;
   }
@@ -84,6 +100,38 @@ async function request<T>(client: HttpClient, req: GetJsonRequest<T>): Promise<A
 
 export async function getJson<T>(client: HttpClient, req: GetJsonRequest<T>): Promise<T> {
   const response = await request(client, req);
+  const parsed = req.schema.safeParse(response.data);
+  if (!parsed.success) {
+    throw new ApiError({ status: response.status, code: 'invalid_response', transient: false });
+  }
+  return parsed.data;
+}
+
+export interface SendJsonRequest<T> {
+  method: 'post' | 'put' | 'patch' | 'delete';
+  path: string;
+  body?: unknown;
+  schema?: ZodType<T>;
+  headers?: Record<string, string>;
+  signal?: AbortSignal;
+}
+
+export function sendJson<T>(client: HttpClient, req: SendJsonRequest<T> & { schema: ZodType<T> }): Promise<T>;
+export function sendJson(client: HttpClient, req: Omit<SendJsonRequest<never>, 'schema'>): Promise<undefined>;
+export async function sendJson<T>(client: HttpClient, req: SendJsonRequest<T>): Promise<T | undefined> {
+  let response: AxiosResponse<unknown>;
+  try {
+    response = await client.request<unknown>({
+      method: req.method,
+      url: req.path,
+      data: req.body,
+      headers: req.headers,
+      signal: req.signal,
+    });
+  } catch (error) {
+    throw normalizeError(error);
+  }
+  if (!req.schema) return undefined;
   const parsed = req.schema.safeParse(response.data);
   if (!parsed.success) {
     throw new ApiError({ status: response.status, code: 'invalid_response', transient: false });

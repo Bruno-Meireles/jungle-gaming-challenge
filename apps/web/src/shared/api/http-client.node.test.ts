@@ -60,6 +60,12 @@ describe('getJson', () => {
     });
   });
 
+  it('preserva session_invalid em 401 para a recuperacao da sessao', async () => {
+    server.use(http.get(`${BASE}/auth/session`, () => HttpResponse.json({ code: 'session_invalid' }, { status: 401 })));
+    const error = await failure(getJson(client, { path: '/auth/session', schema }));
+    expect(error).toMatchObject({ status: 401, code: 'session_invalid', transient: false });
+  });
+
   it('normaliza 500 internal_error como transitorio', async () => {
     server.use(http.get(`${BASE}/e500`, () => HttpResponse.json({ code: 'internal_error' }, { status: 500 })));
     const error = await failure(getJson(client, { path: '/e500', schema }));

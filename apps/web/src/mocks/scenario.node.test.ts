@@ -25,15 +25,31 @@ describe('readScenario', () => {
     'catalog-flaky',
     'catalog-slow',
     'catalog-out-of-order',
+    'auth_network_error',
+    'auth_server_error',
   ])('aceita o cenario da whitelist %s', (id) => {
     expect(SCENARIO_IDS).toContain(id);
     expect(readScenario(storageWith(id))).toBe(id);
   });
 
-  it('expoe exatamente os seis cenarios do plano', () => {
+  it('expoe os cenarios do catalogo e os dois cenarios de auth', () => {
     expect([...SCENARIO_IDS].sort()).toEqual(
-      ['catalog-empty', 'catalog-error', 'catalog-flaky', 'catalog-out-of-order', 'catalog-slow', 'default'],
+      [
+        'auth_network_error',
+        'auth_server_error',
+        'catalog-empty',
+        'catalog-error',
+        'catalog-flaky',
+        'catalog-out-of-order',
+        'catalog-slow',
+        'default',
+      ],
     );
+  });
+
+  it('inclui cenarios deterministas de falha de rede e servidor para auth', () => {
+    expect(SCENARIO_IDS).toContain('auth_network_error');
+    expect(SCENARIO_IDS).toContain('auth_server_error');
   });
 
   it.each(['', 'unknown', 'DEFAULT', 'catalog-empty ', '__proto__', 'constructor'])(

@@ -7,6 +7,8 @@ export const SCENARIO_IDS = [
   'catalog-flaky',
   'catalog-slow',
   'catalog-out-of-order',
+  'auth_network_error',
+  'auth_server_error',
 ] as const;
 
 export type ScenarioId = (typeof SCENARIO_IDS)[number];

@@ -21,12 +21,14 @@ export class ApiError extends Error {
   code: ApiErrorCode;
   transient: boolean;
   fieldErrors?: Record<string, 'invalid'>;
+  fields?: ('email' | 'username')[];
 
   constructor(init: {
     status: number | null;
     code: ApiErrorCode;
     transient: boolean;
     fieldErrors?: Record<string, 'invalid'>;
+    fields?: ('email' | 'username')[];
   }) {
     super(init.code);
     this.name = 'ApiError';
@@ -34,6 +36,7 @@ export class ApiError extends Error {
     this.code = init.code;
     this.transient = init.transient;
     this.fieldErrors = init.fieldErrors;
+    this.fields = init.fields;
   }
 }
 
