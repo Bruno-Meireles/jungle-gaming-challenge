@@ -9,7 +9,7 @@ import { queryCatalog } from './query-catalog';
 /*
  * Assinatura sob teste (funcao pura, sem relogio nem I/O):
  *
- *   queryCatalog(catalog: readonly NftSummaryDto[], query: CatalogQuery, now: string): CatalogPageDto
+ *   queryCatalog(catalog: readonly NftSummaryDto[], query: CatalogQuery): CatalogPageDto
  *
  *   type CatalogQuery = {
  *     search?: string; view: ViewId; sort: SortId;
@@ -17,13 +17,12 @@ import { queryCatalog } from './query-catalog';
  *     minPriceEth?: string; maxPriceEth?: string; page: number;
  *   };
  *
- * `now` e o MOCK_NOW em ISO. `pageSize` e fixo em 9 e vem no resultado.
- * `new` = listedAt nos 30 dias anteriores a `now`; `trending` = popularity >= 80.
+ * `pageSize` e fixo em 9 e vem no resultado.
+ * `view` nao filtra: `new` = ordenado por data de lancamento e `trending` = por popularidade
+ * (a ordem vem de `sort`, cujo default depende da aba: ids.ts `defaultSortForView`).
  * Empates de ordenacao desempatam por `id` ascendente.
  * Facetas de colecao e rede listam todos os ids conhecidos (zero incluido).
  */
-
-const NOW = '2026-06-30T12:00:00.000Z';
 
 let seq = 0;
 function nft(overrides: Partial<NftSummaryDto> = {}): NftSummaryDto {
@@ -67,8 +66,8 @@ describe('queryCatalog', () => {
     const none = nft({ id: 'c', title: 'Outro' });
     const catalog = [byTitle, byCollection, none];
 
-    expect(ids(queryCatalog(catalog, query({ search: 'eMeRaLd' }), NOW).items)).toEqual(['a']);
-    expect(ids(queryCatalog(catalog, query({ search: 'PHOTO' }), NOW).items)).toEqual(['b']);
+    expect(ids(queryCatalog(catalog, query({ search: 'eMeRaLd' })).items)).toEqual(['a']);
+    expect(ids(queryCatalog(catalog, query({ search: 'PHOTO' })).items)).toEqual(['b']);
   });
 
   it('combina com OR dentro da dimensao e AND entre dimensoes', () => {
@@ -78,10 +77,10 @@ describe('queryCatalog', () => {
     const d = nft({ id: 'd', collectionId: 'utility', networkId: 'ethereum' });
     const catalog = [a, b, c, d];
 
-    const or = queryCatalog(catalog, query({ collections: ['music', 'gaming'], sort: 'popular' }), NOW);
+    const or = queryCatalog(catalog, query({ collections: ['music', 'gaming'], sort: 'popular' }));
     expect(ids(or.items).sort()).toEqual(['a', 'b', 'c']);
 
-    const and = queryCatalog(catalog, query({ collections: ['music', 'gaming'], networks: ['ethereum', 'polygon'] }), NOW);
+    const and = queryCatalog(catalog, query({ collections: ['music', 'gaming'], networks: ['ethereum', 'polygon'] }));
     expect(ids(and.items).sort()).toEqual(['a', 'b']);
     expect(and.totalItems).toBe(2);
   });
@@ -92,25 +91,27 @@ describe('queryCatalog', () => {
     const twelve = nft({ id: 'twelve', priceEth: '12.30' });
     const catalog = [low, nine, twelve];
 
-    const range = queryCatalog(catalog, query({ minPriceEth: '9.5', maxPriceEth: '12.30' }), NOW);
+    const range = queryCatalog(catalog, query({ minPriceEth: '9.5', maxPriceEth: '12.30' }));
     expect(ids(range.items).sort()).toEqual(['nine', 'twelve']);
 
-    const onlyMin = queryCatalog(catalog, query({ minPriceEth: '10' }), NOW);
+    const onlyMin = queryCatalog(catalog, query({ minPriceEth: '10' }));
     expect(ids(onlyMin.items)).toEqual(['twelve']);
 
-    const onlyMax = queryCatalog(catalog, query({ maxPriceEth: '0.020' }), NOW);
+    const onlyMax = queryCatalog(catalog, query({ maxPriceEth: '0.020' }));
     expect(ids(onlyMax.items)).toEqual(['low']);
   });
 
-  it('view new mantem so os listados nos 30 dias antes de now e trending so popularity >= 80', () => {
+  it('as abas new e trending nao filtram: todas listam o mesmo conjunto (so a ordem muda)', () => {
     const recent = nft({ id: 'recent', listedAt: '2026-06-10T00:00:00.000Z', popularity: 5 });
     const old = nft({ id: 'old', listedAt: '2026-05-01T00:00:00.000Z', popularity: 79 });
-    const hot = nft({ id: 'hot', listedAt: '2026-05-01T00:00:00.000Z', popularity: 80 });
+    const hot = nft({ id: 'hot', listedAt: '2026-04-01T00:00:00.000Z', popularity: 80 });
     const catalog = [recent, old, hot];
 
-    expect(ids(queryCatalog(catalog, query({ view: 'all' }), NOW).items).sort()).toEqual(['hot', 'old', 'recent']);
-    expect(ids(queryCatalog(catalog, query({ view: 'new' }), NOW).items)).toEqual(['recent']);
-    expect(ids(queryCatalog(catalog, query({ view: 'trending' }), NOW).items)).toEqual(['hot']);
+    for (const view of ['all', 'new', 'trending'] as const) {
+      const page = queryCatalog(catalog, query({ view }));
+      expect(ids(page.items).sort()).toEqual(['hot', 'old', 'recent']);
+      expect(page.totalItems).toBe(3);
+    }
   });
 
   it('ordena por recent, price-asc, price-desc e popular com desempate por id', () => {
@@ -119,12 +120,12 @@ describe('queryCatalog', () => {
     const c = nft({ id: 'c', listedAt: '2026-02-01T00:00:00.000Z', priceEth: '0.02', popularity: 50 });
     const catalog = [a, b, c];
 
-    expect(ids(queryCatalog(catalog, query({ sort: 'recent' }), NOW).items)).toEqual(['b', 'c', 'a']);
-    expect(ids(queryCatalog(catalog, query({ sort: 'price-asc' }), NOW).items)).toEqual(['c', 'b', 'a']);
-    expect(ids(queryCatalog(catalog, query({ sort: 'price-desc' }), NOW).items)).toEqual(['a', 'b', 'c']);
-    expect(ids(queryCatalog(catalog, query({ sort: 'popular' }), NOW).items)).toEqual(['b', 'c', 'a']);
+    expect(ids(queryCatalog(catalog, query({ sort: 'recent' })).items)).toEqual(['b', 'c', 'a']);
+    expect(ids(queryCatalog(catalog, query({ sort: 'price-asc' })).items)).toEqual(['c', 'b', 'a']);
+    expect(ids(queryCatalog(catalog, query({ sort: 'price-desc' })).items)).toEqual(['a', 'b', 'c']);
+    expect(ids(queryCatalog(catalog, query({ sort: 'popular' })).items)).toEqual(['b', 'c', 'a']);
 
-    const prices = queryCatalog(catalog, query({ sort: 'price-asc' }), NOW).items.map((i) => parseEth(i.priceEth));
+    const prices = queryCatalog(catalog, query({ sort: 'price-asc' })).items.map((i) => parseEth(i.priceEth));
     for (let i = 1; i < prices.length; i += 1) {
       expect(compareEth(prices[i - 1]!, prices[i]!)).toBe(-1);
     }
@@ -135,18 +136,18 @@ describe('queryCatalog', () => {
       nft({ id: `n-${String(i).padStart(2, '0')}`, listedAt: `2026-01-${String(i + 1).padStart(2, '0')}T00:00:00.000Z` }),
     );
 
-    const first = queryCatalog(catalog, query({ page: 1 }), NOW);
+    const first = queryCatalog(catalog, query({ page: 1 }));
     expect(first).toMatchObject({ page: 1, pageSize: 9, totalItems: 11, totalPages: 2 });
     expect(first.items).toHaveLength(9);
 
-    const beyond = queryCatalog(catalog, query({ page: 99 }), NOW);
+    const beyond = queryCatalog(catalog, query({ page: 99 }));
     expect(beyond.page).toBe(2);
     expect(beyond.items).toHaveLength(2);
     expect(ids(beyond.items)).toEqual(['n-01', 'n-00']);
   });
 
   it('resultado vazio tem totalPages 0 e itens vazios', () => {
-    const result = queryCatalog([nft()], query({ search: 'inexistente' }), NOW);
+    const result = queryCatalog([nft()], query({ search: 'inexistente' }));
     expect(result).toMatchObject({ items: [], totalItems: 0, totalPages: 0, pageSize: 9 });
   });
 
@@ -158,7 +159,7 @@ describe('queryCatalog', () => {
       nft({ id: 'd', collectionId: 'gaming', networkId: 'solana' }),
     ];
 
-    const result = queryCatalog(catalog, query({ collections: ['music'], networks: ['ethereum'] }), NOW);
+    const result = queryCatalog(catalog, query({ collections: ['music'], networks: ['ethereum'] }));
     expect(ids(result.items)).toEqual(['a']);
 
     const collectionCount = (id: CollectionId) => result.facets.collections.find((f) => f.id === id)?.count;
@@ -183,7 +184,7 @@ describe('queryCatalog', () => {
       nft({ id: 'b', title: 'Alpha', collectionId: 'gaming', priceEth: '50' }),
       nft({ id: 'c', title: 'Beta', collectionId: 'gaming', priceEth: '1' }),
     ];
-    const result = queryCatalog(catalog, query({ search: 'alpha', maxPriceEth: '2' }), NOW);
+    const result = queryCatalog(catalog, query({ search: 'alpha', maxPriceEth: '2' }));
     expect(result.facets.collections.find((f) => f.id === 'music')?.count).toBe(1);
     expect(result.facets.collections.find((f) => f.id === 'gaming')?.count).toBe(0);
   });
@@ -194,7 +195,7 @@ describe('queryCatalog', () => {
       nft({ id: 'b', priceEth: '12.30', collectionId: 'gaming' }),
       nft({ id: 'c', priceEth: '9.5', collectionId: 'gaming' }),
     ];
-    const result = queryCatalog(catalog, query({ collections: ['gaming'], minPriceEth: '9' }), NOW);
+    const result = queryCatalog(catalog, query({ collections: ['gaming'], minPriceEth: '9' }));
     expect(result.facets.priceRange).toEqual({ minEth: '0.000000000000000001', maxEth: '12.30' });
   });
 });

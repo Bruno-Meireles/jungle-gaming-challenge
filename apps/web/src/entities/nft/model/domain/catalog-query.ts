@@ -4,6 +4,7 @@ import {
   NETWORK_IDS,
   SORT_IDS,
   VIEW_IDS,
+  defaultSortForView,
 } from '../../../../shared/api/contracts/ids';
 import { compareEth, isEthDecimal, parseEth } from '../../../../shared/lib/eth/eth';
 
@@ -20,7 +21,14 @@ export type CatalogSearch = {
 
 const MAX_QUERY_LENGTH = 100;
 const DEFAULT_VIEW: ViewId = 'all';
-const DEFAULT_SORT: SortId = 'recent';
+
+function defaultSortFor(tab: ViewId | undefined): SortId {
+  return defaultSortForView(tab ?? DEFAULT_VIEW);
+}
+
+export function effectiveSort(search: CatalogSearch): SortId {
+  return search.sort ?? defaultSortFor(search.tab);
+}
 
 function pickEnum<T extends string>(allowed: readonly T[], value: unknown): T | undefined {
   return allowed.find((candidate) => candidate === value);
@@ -63,7 +71,7 @@ export function normalizeCatalogSearch(raw: Readonly<Record<string, unknown>>): 
   return {
     ...(q === undefined ? {} : { q }),
     ...(tab === undefined || tab === DEFAULT_VIEW ? {} : { tab }),
-    ...(sort === undefined || sort === DEFAULT_SORT ? {} : { sort }),
+    ...(sort === undefined || sort === defaultSortFor(tab) ? {} : { sort }),
     ...(collections.length === 0 ? {} : { collections }),
     ...(networks.length === 0 ? {} : { networks }),
     ...pickPriceRange(raw.min, raw.max),
@@ -97,7 +105,7 @@ export function toApiParams(search: CatalogSearch): CatalogQuery {
   return {
     ...(search.q === undefined ? {} : { search: search.q }),
     view: search.tab ?? DEFAULT_VIEW,
-    sort: search.sort ?? DEFAULT_SORT,
+    sort: effectiveSort(search),
     collections: search.collections ?? [],
     networks: search.networks ?? [],
     ...(search.min === undefined ? {} : { minPriceEth: search.min }),

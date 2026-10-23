@@ -91,6 +91,25 @@ describe('GET /api/nfts (catalogo)', () => {
     expect(searched.items.every((nft) => nft.title.toLowerCase().includes(term) || nft.collectionId.includes(term))).toBe(true);
   });
 
+  it('as abas listam o mesmo conjunto: new ordena por data e trending por popularidade', async () => {
+    const all = await catalog();
+    const novos = await catalog('?view=new');
+    const emAlta = await catalog('?view=trending');
+
+    expect(novos.totalItems).toBe(all.totalItems);
+    expect(emAlta.totalItems).toBe(all.totalItems);
+    const listed = novos.items.map((nft) => Date.parse(nft.listedAt));
+    expect(listed).toEqual([...listed].sort((a, b) => b - a));
+    const popularity = emAlta.items.map((nft) => nft.popularity);
+    expect(popularity).toEqual([...popularity].sort((a, b) => b - a));
+    expect(emAlta.items.map((nft) => nft.id)).not.toEqual(novos.items.map((nft) => nft.id));
+  });
+
+  it('sort explicito vence a ordem padrao da aba', async () => {
+    const asc = (await catalog('?view=trending&sort=price-asc')).items.map((nft) => Number(nft.priceEth));
+    expect(asc).toEqual([...asc].sort((a, b) => a - b));
+  });
+
   it('ignora parametros invalidos em vez de falhar', async () => {
     const page = await catalog('?sort=nope&view=nope&page=-4&minPriceEth=abc&collections=nope');
 

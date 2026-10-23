@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { normalizeCatalogSearch, toApiParams, withFilterChange } from './catalog-query';
+import { effectiveSort, normalizeCatalogSearch, toApiParams, withFilterChange } from './catalog-query';
 
 /*
  * Assinatura sob teste (puro, sem React/Axios/TanStack):
@@ -189,5 +189,34 @@ describe('toApiParams', () => {
   it('nao emite chaves de busca nem de preco quando ausentes', () => {
     const params = toApiParams({ tab: 'new' });
     expect(Object.keys(params).sort()).toEqual(['collections', 'networks', 'page', 'sort', 'view']);
+  });
+
+  it('a ordenacao padrao depende da aba: new recent, trending popular, all recent', () => {
+    expect(toApiParams({ tab: 'new' }).sort).toBe('recent');
+    expect(toApiParams({ tab: 'trending' }).sort).toBe('popular');
+    expect(toApiParams({}).sort).toBe('recent');
+  });
+
+  it('ordenacao explicita vence o padrao da aba', () => {
+    expect(toApiParams({ tab: 'trending', sort: 'recent' }).sort).toBe('recent');
+    expect(toApiParams({ tab: 'trending', sort: 'price-asc' }).sort).toBe('price-asc');
+  });
+});
+
+describe('ordenacao efetiva por aba', () => {
+  it('effectiveSort devolve o padrao da aba quando nao ha sort', () => {
+    expect(effectiveSort({})).toBe('recent');
+    expect(effectiveSort({ tab: 'trending' })).toBe('popular');
+    expect(effectiveSort({ tab: 'trending', sort: 'price-desc' })).toBe('price-desc');
+  });
+
+  it('na aba trending, recent e explicito e fica na URL; popular e o padrao e fica omitido', () => {
+    expect(normalizeCatalogSearch({ tab: 'trending', sort: 'recent' })).toEqual({ tab: 'trending', sort: 'recent' });
+    expect(normalizeCatalogSearch({ tab: 'trending', sort: 'popular' })).toEqual({ tab: 'trending' });
+    expect(normalizeCatalogSearch({ tab: 'new', sort: 'popular' })).toEqual({ tab: 'new', sort: 'popular' });
+  });
+
+  it('trocar de aba preserva o sort explicito', () => {
+    expect(withFilterChange({ sort: 'price-asc' }, { tab: 'trending' })).toEqual({ tab: 'trending', sort: 'price-asc' });
   });
 });

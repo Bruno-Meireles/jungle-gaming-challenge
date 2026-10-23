@@ -15,8 +15,6 @@ export type CatalogQuery = {
 };
 
 const PAGE_SIZE = 9;
-const NEW_WINDOW_MS = 30 * 24 * 60 * 60 * 1000;
-const TRENDING_MIN_POPULARITY = 80;
 
 type Predicate = (item: NftSummaryDto) => boolean;
 
@@ -26,18 +24,6 @@ function matchesSearch(search: string | undefined): Predicate {
   const term = search?.trim().toLowerCase() ?? '';
   if (term === '') return () => true;
   return (item) => item.title.toLowerCase().includes(term) || item.collectionId.toLowerCase().includes(term);
-}
-
-function matchesView(view: ViewId, now: string): Predicate {
-  const nowMs = Date.parse(now);
-  if (view === 'new') {
-    return (item) => {
-      const listed = Date.parse(item.listedAt);
-      return listed <= nowMs && listed >= nowMs - NEW_WINDOW_MS;
-    };
-  }
-  if (view === 'trending') return (item) => item.popularity >= TRENDING_MIN_POPULARITY;
-  return () => true;
 }
 
 function matchesPrice(min: string | undefined, max: string | undefined): Predicate {
@@ -83,8 +69,8 @@ function countBy<T extends string>(ids: readonly T[], items: readonly NftSummary
   return ids.map((id) => ({ id, count: items.filter((item) => pick(item) === id).length }));
 }
 
-export function queryCatalog(catalog: readonly NftSummaryDto[], query: CatalogQuery, now: string): CatalogPageDto {
-  const base = [matchesSearch(query.search), matchesView(query.view, now), matchesPrice(query.minPriceEth, query.maxPriceEth)];
+export function queryCatalog(catalog: readonly NftSummaryDto[], query: CatalogQuery): CatalogPageDto {
+  const base = [matchesSearch(query.search), matchesPrice(query.minPriceEth, query.maxPriceEth)];
   const byCollection = matchesAny(query.collections, (item) => item.collectionId);
   const byNetwork = matchesAny(query.networks, (item) => item.networkId);
   const apply = (predicates: readonly Predicate[]) => catalog.filter((item) => predicates.every((p) => p(item)));
