@@ -1,0 +1,14 @@
+node_modules
+.git
+.claude
+.AI
+.turbo
+logs
+docs
+**/test-results*
+**/playwright-report
+**/__screenshots__
+**/*-snapshots
+.env
+.env.*
+!apps/web/.env.production
