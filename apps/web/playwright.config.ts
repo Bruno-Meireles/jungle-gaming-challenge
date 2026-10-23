@@ -2,7 +2,9 @@ import { defineConfig, devices } from '@playwright/test';
 
 // PORT e PW_OUTPUT permitem rodar várias cópias (worktrees) em paralelo sem colisão.
 const PORT = Number(process.env.PORT ?? 5173);
-const BASE_URL = `http://127.0.0.1:${PORT}`;
+// E2E_BASE_URL aponta a mesma suite para uma URL publicada (ex.: deploy na Vercel); sem ela, sobe o servidor local.
+const REMOTE_URL = process.env.E2E_BASE_URL;
+const BASE_URL = REMOTE_URL ?? `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
@@ -34,7 +36,7 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 } },
     },
   ],
-  webServer: {
+  webServer: REMOTE_URL ? undefined : {
     // E2E_PREVIEW=1 roda a mesma suite contra o build otimizado (vite preview), como no deploy.
     command: process.env.E2E_PREVIEW
       ? `pnpm exec vite preview --host 127.0.0.1 --port ${PORT} --strictPort`
