@@ -13,3 +13,5 @@ storybook-static/
 __screenshots__/**/*.diff.png
 .claude/worktrees/
 logs/
+
+.vercel
