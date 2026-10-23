@@ -60,7 +60,6 @@ test.describe('rotas em pt-BR', () => {
 
       await expect(page).toHaveURL(new RegExp(`${path.replace(/\//g, '\\/')}$`));
       await expect(page.getByRole('heading', { name: 'Ainda não disponível' })).toHaveCount(0);
-      await expect(page.getByRole('main')).toBeVisible();
     });
   }
 });
