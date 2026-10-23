@@ -30,7 +30,7 @@ describe.each(['pt-BR', 'en'] as Locale[])('EditionPicker (%s)', (locale) => {
 
   it('edicao esgotada fica desabilitada e traz o texto Esgotada', async () => {
     await mount();
-    await expect.element(page.getByRole('radio', { name: new RegExp(t.limited(1)) })).toBeDisabled();
+    await expect.element(page.getByRole('radio', { name: new RegExp(`${t.limited(1)}(?![0-9])`) })).toBeDisabled();
     await expect.element(page.getByText(t.soldOut)).toBeVisible();
   });
 

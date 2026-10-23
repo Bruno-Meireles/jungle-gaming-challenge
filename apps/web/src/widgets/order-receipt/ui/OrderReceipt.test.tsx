@@ -60,14 +60,14 @@ describe('OrderReceipt (pt-BR)', () => {
 describe('OrderStatusPanel (pt-BR)', () => {
   it('pendente: role=status, sem texto de sucesso', async () => {
     await renderCheckoutUi(<OrderStatusPanel state={{ kind: 'pending' }} onRetry={() => {}} />);
-    await expect.element(page.getByRole('status')).toHaveTextContent('Aguardando a confirmação do pagamento');
+    await expect.element(page.getByRole('status')).toMatchTextContent('Aguardando a confirmação do pagamento');
     expect(page.getByText(/confirmad[oa]\b/i).query()).toBeNull();
     expect(page.getByRole('alert').query()).toBeNull();
   });
 
   it('recusado: role=alert e link Voltar ao pagamento para /checkout', async () => {
     await renderCheckoutUi(<OrderStatusPanel state={{ kind: 'refused' }} onRetry={() => {}} />);
-    await expect.element(page.getByRole('alert')).toHaveTextContent('Pagamento recusado');
+    await expect.element(page.getByRole('alert')).toMatchTextContent('Pagamento recusado');
     await expect.element(page.getByRole('link', { name: 'Voltar ao pagamento' })).toHaveAttribute('href', '/checkout');
   });
 
@@ -79,7 +79,7 @@ describe('OrderStatusPanel (pt-BR)', () => {
   it('erro: alerta e botao Tentar novamente chama onRetry', async () => {
     const onRetry = vi.fn();
     await renderCheckoutUi(<OrderStatusPanel state={{ kind: 'error' }} onRetry={onRetry} />);
-    await expect.element(page.getByRole('alert')).toHaveTextContent('Não foi possível carregar o pedido');
+    await expect.element(page.getByRole('alert')).toMatchTextContent('Não foi possível carregar o pedido');
     await page.getByRole('button', { name: 'Tentar novamente' }).click();
     expect(onRetry).toHaveBeenCalledTimes(1);
   });

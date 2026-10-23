@@ -37,7 +37,7 @@ const BUTTON = {
 describe.each(['pt-BR', 'en'] as const)('CheckoutNotice (%s)', (locale) => {
   it.each(Object.keys(NOTICES[locale]) as (keyof (typeof NOTICES)['pt-BR'])[])('aviso %s e um role=alert traduzido', async (notice) => {
     await renderCheckoutUi(<CheckoutNotice notice={notice} />, locale);
-    await expect.element(page.getByRole('alert')).toHaveTextContent(NOTICES[locale][notice]);
+    await expect.element(page.getByRole('alert')).toMatchTextContent(NOTICES[locale][notice]);
   });
 
   it('sem aviso nao renderiza alerta', async () => {

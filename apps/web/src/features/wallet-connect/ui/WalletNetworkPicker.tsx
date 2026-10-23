@@ -31,7 +31,7 @@ function ConnectionActions({ props }: { props: WalletNetworkPickerProps }) {
   if (connection.status === 'connected') {
     return (
       <>
-        <Alert tone="success" toneLabel={t('connected')}>
+        <Alert tone="success" toneLabel="">
           {t('connected')}
         </Alert>
         <Button variant="outline" onClick={onChangeWallet}>

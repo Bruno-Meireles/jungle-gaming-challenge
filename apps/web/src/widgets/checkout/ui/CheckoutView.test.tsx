@@ -44,9 +44,11 @@ describe('CheckoutView (duble da porta)', () => {
     const controller = makeController({ placeOrder: vi.fn(() => gate.promise) });
     const onPlaced = vi.fn();
     await renderCheckoutUi(<CheckoutView controller={controller} onPlaced={onPlaced} onSessionExpired={() => {}} />);
+    // O rotulo muda para 'Validando cotacao...' apos o 1o clique: os cliques seguintes miram o unico botao da tela.
+    const button = page.getByRole('button');
     await confirm().click({ force: true });
-    await confirm().click({ force: true });
-    await confirm().click({ force: true });
+    await button.click({ force: true });
+    await button.click({ force: true });
     await expect.poll(() => (controller.placeOrder as ReturnType<typeof vi.fn>).mock.calls.length).toBe(1);
     expect(controller.revalidate).toHaveBeenCalledTimes(1);
     gate.resolve({ ok: true, orderId: 'ord-1' });
@@ -81,7 +83,7 @@ describe('CheckoutView (duble da porta)', () => {
     }
     await renderCheckoutUi(<Host />);
     await confirm().click();
-    await expect.element(page.getByRole('alert')).toHaveTextContent('A cotação mudou. Revise os valores e confirme novamente.');
+    await expect.element(page.getByRole('alert')).toMatchTextContent('A cotação mudou. Revise os valores e confirme novamente.');
     expect(placeOrder).not.toHaveBeenCalled();
     await confirm().click();
     await expect.poll(() => onPlaced.mock.calls).toEqual([['ord-2']]);
@@ -92,7 +94,7 @@ describe('CheckoutView (duble da porta)', () => {
     const controller = makeController({ revalidate: vi.fn(async () => Promise.reject(new Error('network'))) });
     await renderCheckoutUi(<CheckoutView controller={controller} onPlaced={() => {}} onSessionExpired={() => {}} />);
     await confirm().click();
-    await expect.element(page.getByRole('alert')).toHaveTextContent('Não foi possível validar a cotação. Tente novamente.');
+    await expect.element(page.getByRole('alert')).toMatchTextContent('Não foi possível validar a cotação. Tente novamente.');
     await expect.element(confirm()).not.toHaveAttribute('aria-disabled', 'true');
   });
 
@@ -106,7 +108,7 @@ describe('CheckoutView (duble da porta)', () => {
     });
     await renderCheckoutUi(<CheckoutView controller={controller} onPlaced={() => {}} onSessionExpired={() => {}} />);
     await confirm().click();
-    await expect.element(page.getByRole('status')).toHaveTextContent('Recuperando seu pedido');
+    await expect.element(page.getByRole('status')).toMatchTextContent(/Recuperando seu pedido/);
     gate.resolve({ ok: true, orderId: 'ord-1' });
   });
 
@@ -114,7 +116,7 @@ describe('CheckoutView (duble da porta)', () => {
     const controller = makeController({ placeOrder: vi.fn(async (): Promise<PlaceOrderResult> => ({ ok: false, reason: 'unavailable' })) });
     await renderCheckoutUi(<CheckoutView controller={controller} onPlaced={() => {}} onSessionExpired={() => {}} />);
     await confirm().click();
-    await expect.element(page.getByRole('alert')).toHaveTextContent('Algum item não está mais disponível. Revise seu carrinho.');
+    await expect.element(page.getByRole('alert')).toMatchTextContent('Algum item não está mais disponível. Revise seu carrinho.');
   });
 
   it('session_expired chama onSessionExpired e nao onPlaced', async () => {

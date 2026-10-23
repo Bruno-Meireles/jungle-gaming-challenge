@@ -76,7 +76,7 @@ describe('WalletNetworkPicker (pt-BR)', () => {
 
   it('recusada: role=alert e permite tentar de novo', async () => {
     await renderCheckoutUi(<WalletNetworkPicker {...base} connection={{ status: 'rejected', networkId: null }} />);
-    await expect.element(page.getByRole('alert')).toHaveTextContent('A carteira recusou a conexão.');
+    await expect.element(page.getByRole('alert')).toMatchTextContent('A carteira recusou a conexão.');
     await expect.element(page.getByRole('button', { name: 'Conectar carteira' })).toBeVisible();
   });
 

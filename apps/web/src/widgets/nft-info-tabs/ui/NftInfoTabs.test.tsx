@@ -27,18 +27,18 @@ describe.each(['pt-BR', 'en'] as Locale[])('NftInfoTabs (%s)', (locale) => {
   it('detalhes: descricao no idioma, atributo, contrato abreviado e royalties', async () => {
     await mount();
     const panel = page.getByRole('tabpanel');
-    await expect.element(panel).toHaveTextContent(t.description);
-    await expect.element(panel).toHaveTextContent(t.attr);
-    await expect.element(panel).toHaveTextContent(t.attrValue);
-    await expect.element(panel).toHaveTextContent('0x1234…5678');
-    await expect.element(panel).toHaveTextContent(t.royalty);
-    await expect.element(panel).toHaveTextContent('ERC-721');
+    await expect.element(panel).toMatchTextContent(t.description);
+    await expect.element(panel).toMatchTextContent(t.attr);
+    await expect.element(panel).toMatchTextContent(t.attrValue);
+    await expect.element(panel).toMatchTextContent('0x1234…5678');
+    await expect.element(panel).toMatchTextContent(t.royalty);
+    await expect.element(panel).toMatchTextContent('ERC-721');
   });
 
   it('avaliacoes: mostra a quantidade de avaliacoes', async () => {
     await mount({ tab: 'reviews' });
     await expect.element(tab(t.reviews)).toHaveAttribute('aria-selected', 'true');
-    await expect.element(page.getByRole('tabpanel')).toHaveTextContent(t.reviewCount);
+    await expect.element(page.getByRole('tabpanel')).toMatchTextContent(t.reviewCount);
   });
 
   it('clicar na aba chama onTabChange', async () => {
