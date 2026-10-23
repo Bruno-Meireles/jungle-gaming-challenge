@@ -9,13 +9,29 @@ import { useWalletsQuery } from '../model/use-wallets-query';
 import { toSlots } from '../model/wallet-slots';
 import { WalletForm } from './WalletForm';
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+function Section({
+  title,
+  description,
+  action,
+  children,
+}: {
+  title: string;
+  description?: string;
+  action?: ReactNode;
+  children: ReactNode;
+}) {
   const headingId = useId();
   return (
-    <section aria-labelledby={headingId} className="flex flex-col gap-16">
-      <h2 id={headingId} className="text-body-large-17-bold text-foreground">
-        {title}
-      </h2>
+    <section aria-labelledby={headingId} className="flex flex-col gap-16 desktop:gap-24">
+      <div className="flex flex-col gap-8">
+        <div className="flex items-center justify-between gap-16">
+          <h2 id={headingId} className="text-body-large-17-bold text-foreground">
+            {title}
+          </h2>
+          {action}
+        </div>
+        {description ? <p className="text-body-14-regular-lh-15 text-text-secondary">{description}</p> : null}
+      </div>
       {children}
     </section>
   );
@@ -55,33 +71,42 @@ export function WalletsManager() {
   const renderSlot = (kind: WalletKind) => {
     const wallet = slots[kind];
     if (wallet || adding[kind]) {
-      return (
-        <WalletForm
-          key={wallet?.id ?? kind}
-          kind={kind}
-          wallet={wallet}
-          primary={slots.primary}
-          showSameAsPrimary={kind === 'secondary'}
-          autoFocusNetwork={!wallet}
-          onSaved={() => setSaved(true)}
-          onSessionExpired={onSessionExpired}
-        />
-      );
+      return {
+        action: null,
+        body: (
+          <WalletForm
+            key={wallet?.id ?? kind}
+            kind={kind}
+            wallet={wallet}
+            primary={slots.primary}
+            showSameAsPrimary={kind === 'secondary'}
+            autoFocusNetwork={!wallet}
+            onSaved={() => setSaved(true)}
+            onSessionExpired={onSessionExpired}
+          />
+        ),
+      };
     }
-    return (
-      <div className="flex flex-col items-start gap-16">
-        <p className="text-body-15-regular-lh-16 text-secondary">{t(`${kind}.empty`)}</p>
-        <Button variant="outline" onClick={() => setAdding({ ...adding, [kind]: true })}>
+    return {
+      action: (
+        <Button variant="ghost" onClick={() => setAdding({ ...adding, [kind]: true })} className="h-auto cursor-pointer">
           {t('actions.add')}
         </Button>
-      </div>
-    );
+      ),
+      body: <p className="text-body-15-regular-lh-16 text-secondary">{t(`${kind}.empty`)}</p>,
+    };
   };
+  const primary = renderSlot('primary');
+  const secondary = renderSlot('secondary');
 
   return (
     <div className="flex flex-col gap-32">
-      <Section title={t('primary.title')}>{renderSlot('primary')}</Section>
-      <Section title={t('secondary.title')}>{renderSlot('secondary')}</Section>
+      <Section title={t('primary.title')} description={t('primary.description')} action={primary.action}>
+        {primary.body}
+      </Section>
+      <Section title={t('secondary.title')} action={secondary.action}>
+        {secondary.body}
+      </Section>
       <LiveRegion>{saved ? t('messages.saved') : null}</LiveRegion>
     </div>
   );

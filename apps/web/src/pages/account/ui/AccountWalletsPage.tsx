@@ -8,7 +8,7 @@ export function AccountWalletsPage() {
   useDocumentMeta({ title: t('wallets.title'), description: t('wallets.description') });
   return (
     <section className="flex flex-col gap-24">
-      <h1 className="text-title-22-regular text-foreground">{t('wallets.heading')}</h1>
+      <h1 className="text-title-22-regular text-foreground desktop:sr-only">{t('wallets.heading')}</h1>
       <WalletsManager />
     </section>
   );
