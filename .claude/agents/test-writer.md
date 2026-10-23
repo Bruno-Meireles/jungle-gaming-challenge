@@ -1,7 +1,8 @@
 ---
 name: test-writer
 description: Fase TDD RED. Escreve um teste por vez (unitário, integração ou Playwright E2E determinístico), prova que falha pelo motivo certo e mapeia UI com Playwright CLI. Não escreve código de produção.
-model: sonnet
+model: haiku
+effort: low
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 

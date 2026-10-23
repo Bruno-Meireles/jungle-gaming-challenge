@@ -1,7 +1,8 @@
 ---
 name: architect
 description: Decide arquitetura (Clean Architecture + FSD), contratos e critérios de aceite de uma feature, e julga conformidade do diff na revisão. Somente leitura; não escreve código nem testes.
-model: opus
+model: haiku
+effort: low
 tools: Read, Grep, Glob, WebFetch
 ---
 

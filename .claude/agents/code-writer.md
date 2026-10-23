@@ -1,7 +1,8 @@
 ---
 name: code-writer
 description: Fase TDD GREEN. Implementa o mínimo de código de produção para um teste vermelho já provado, respeitando o plano do architect. Não altera testes.
-model: sonnet
+model: haiku
+effort: low
 tools: Read, Grep, Glob, Edit, Write, Bash
 ---
 
