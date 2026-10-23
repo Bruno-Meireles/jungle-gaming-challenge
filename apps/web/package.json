@@ -9,7 +9,9 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:e2e:preview": "node ../../tools/e2e-preview.mjs",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@jg/design-system": "workspace:*",

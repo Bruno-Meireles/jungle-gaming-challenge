@@ -35,7 +35,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `pnpm exec vite --host 127.0.0.1 --port ${PORT} --strictPort`,
+    // E2E_PREVIEW=1 roda a mesma suite contra o build otimizado (vite preview), como no deploy.
+    command: process.env.E2E_PREVIEW
+      ? `pnpm exec vite preview --host 127.0.0.1 --port ${PORT} --strictPort`
+      : `pnpm exec vite --host 127.0.0.1 --port ${PORT} --strictPort`,
     url: BASE_URL,
     env: { VITE_ENABLE_MOCKS: 'true' },
     reuseExistingServer: !process.env.CI,
