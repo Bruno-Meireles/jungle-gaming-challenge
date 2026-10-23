@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RouterProvider, createMemoryHistory, createRootRoute, createRoute, createRouter } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
@@ -44,9 +45,11 @@ export async function mountWithRouter(locale: Locale, ui: ReactNode, initial = '
   });
   const i18n = createI18n({ resources, locale });
   const screen = await render(
-    <I18nextProvider i18n={i18n}>
-      <RouterProvider router={router} />
-    </I18nextProvider>,
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <I18nextProvider i18n={i18n}>
+        <RouterProvider router={router} />
+      </I18nextProvider>
+    </QueryClientProvider>,
   );
   return { router, screen };
 }
