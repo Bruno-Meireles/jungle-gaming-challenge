@@ -973,5 +973,60 @@
     "node": "15:5530",
     "prop": "fill",
     "source": "docs/figma/file.json:288736"
+  },
+  "cart.item.h": {
+    "value": 70,
+    "node": "70369:244",
+    "prop": "h",
+    "source": "docs/figma/file.json:77427"
+  },
+  "cart.stepper.w": {
+    "value": 75,
+    "node": "11:2028",
+    "prop": "w",
+    "source": "docs/figma/file.json:78068"
+  },
+  "cart.stepper.h": {
+    "value": 30,
+    "node": "11:2028",
+    "prop": "h",
+    "source": "docs/figma/file.json:78068"
+  },
+  "cart.remove.w": {
+    "value": 24,
+    "node": "70402:3316",
+    "prop": "w",
+    "source": "docs/figma/file.json:79438"
+  },
+  "cart.remove.h": {
+    "value": 24,
+    "node": "70402:3316",
+    "prop": "h",
+    "source": "docs/figma/file.json:79438"
+  },
+  "cart.summary.w": {
+    "value": 332,
+    "node": "70370:239",
+    "prop": "w",
+    "source": "docs/figma/file.json:86250"
+  },
+  "cart.fees.pitch": {
+    "value": 32,
+    "node": "70370:245",
+    "ref": "70370:244",
+    "prop": "relTop",
+    "source": "docs/figma/file.json:87492"
+  },
+  "cart.promo.input.h": {
+    "value": 40,
+    "node": "70370:242",
+    "prop": "h",
+    "source": "docs/figma/file.json:86651"
+  },
+  "cart.cta.h": {
+    "value": 40,
+    "node": "70370:249",
+    "prop": "h",
+    "source": "docs/figma/file.json:88645"
   }
 }

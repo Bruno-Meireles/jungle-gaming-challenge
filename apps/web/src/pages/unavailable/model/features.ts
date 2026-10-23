@@ -4,12 +4,18 @@ export const FEATURES = [
   'auth',
   'nft-detail',
   'cart',
+  'checkout',
   'favorites',
   'journal',
   'newsletter',
   'footer',
   'social',
   'scan',
+  'activity',
+  'watchlist',
+  'offers',
+  'downloads',
+  'support',
 ] as const;
 
 export type Feature = (typeof FEATURES)[number];

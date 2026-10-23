@@ -47,3 +47,35 @@ export const highlightsDtoSchema = z.object({
 export type NftSummaryDto = z.infer<typeof nftSummaryDtoSchema>;
 export type CatalogPageDto = z.infer<typeof catalogPageDtoSchema>;
 export type HighlightsDto = z.infer<typeof highlightsDtoSchema>;
+
+const localizedTextSchema = z.object({ 'pt-BR': z.string(), en: z.string() });
+
+export const editionDtoSchema = z.object({
+  id: z.string().regex(/^[A-Za-z0-9_-]{1,64}$/),
+  kind: z.discriminatedUnion('type', [
+    z.object({ type: z.literal('limited'), size: positiveIntSchema }),
+    z.object({ type: z.literal('open') }),
+  ]),
+  priceEth: ethDecimalSchema,
+  remaining: nonNegativeIntSchema,
+  maxPerOrder: positiveIntSchema,
+});
+
+export const nftDetailDtoSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  title: z.string().min(1),
+  description: localizedTextSchema,
+  tokenId: z.string().regex(/^#\d{4,}$/),
+  rating: z.object({ average: z.number().min(0).max(5), count: nonNegativeIntSchema }),
+  gallery: z
+    .array(z.object({ src: z.string(), width: positiveIntSchema, height: positiveIntSchema }))
+    .min(1)
+    .max(4),
+  contract: z.object({ address: z.string(), standard: z.string() }),
+  royaltyPercent: z.number().min(0).max(100),
+  attributes: z.array(z.object({ name: localizedTextSchema, value: localizedTextSchema })),
+  editions: z.array(editionDtoSchema).min(1),
+  defaultEditionId: z.string(),
+  version: nonNegativeIntSchema,
+});
+export type NftDetailDto = z.infer<typeof nftDetailDtoSchema>;

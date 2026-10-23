@@ -13,7 +13,7 @@ export type ReceiptSnapshot = {
   status: 'pending' | 'confirmed' | 'refused';
   /** ISO 8601 UTC. */
   createdAt: string;
-  networkId: 'ethereum' | 'polygon';
+  networkId: 'ethereum' | 'polygon' | 'solana';
   walletAddress: string;
   transactionRef: string | null;
   items: ReceiptItem[];

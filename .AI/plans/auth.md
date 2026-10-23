@@ -32,7 +32,13 @@ Login social funcional, recuperação de senha, logout e telas de conta (F8).
 Fundo do modal = Home `inert` (alternativa descartada: background location; consequência: fundo não reflete a origem).
 
 ## Progresso
-- [ ] 1 safe-redirect
-- [ ] 2 LoginForm
-- [ ] 3 SignupForm
+- [x] 1 safe-redirect
+- [x] 2 LoginForm (UI pronta; falta ligar useLogin: aguarda features/auth/model e entities/session do Copilot)
+
+DESTRAVADO ate agora: contratos em shared/api/contracts/. PENDENTE do Copilot: auth-form-schema, auth-failure, use-login, use-register, useSession, handlers/auth.
+- [x] 3 SignupForm
 - [ ] 4 E2E auth
+
+## Destravado (vigia, 2026-10-22)
+- OK para UI: useLogin, loginFormSchema, registerFormSchema, AuthFailure, fieldErrorsFromZod (features/auth/index.ts); useSession, sessionQueryOptions (entities/session/index.ts); mocks de /api/auth/*.
+- Pendente do Copilot: export de useRegister; useLogout/logout (stub vazio); rename dos cenarios para kebab-case; remover/preencher testes vazios.

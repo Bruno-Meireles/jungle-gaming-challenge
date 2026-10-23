@@ -1,0 +1,14 @@
+export const ptBR = {
+  summary: 'Resumo do pedido',
+  tokenId: 'ID do token',
+  quantity: '(x {{quantity}})',
+  subtotal: 'Subtotal',
+  discount: 'Desconto',
+  networkFee: 'Taxa de rede',
+  total: 'Total',
+  toneInfo: 'Informação',
+  toneError: 'Erro',
+  quoteLoading: 'Carregando cotação…',
+  quoteError: 'Não foi possível carregar a cotação.',
+  recovering: 'Recuperando seu pedido. Isso pode levar alguns segundos.',
+};

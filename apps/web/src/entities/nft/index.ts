@@ -15,3 +15,5 @@ export { shortAddress } from './model/domain/short-address';
 export { editionLabel, type EditionLabel } from './model/edition-label';
 export { favoritesKeys } from './model/favorites-keys';
 export { useFavorites, useToggleFavorite } from './model/use-favorites';
+export { useNftDetail } from './model/use-nft-detail';
+export { nftKeys } from './model/nft-keys';

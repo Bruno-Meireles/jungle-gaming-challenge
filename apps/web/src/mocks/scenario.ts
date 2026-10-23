@@ -26,6 +26,9 @@ export const SCENARIO_IDS = [
   'orders-error',
   'catalog-repriced',
   'favorites-error',
+  'nft-detail-slow',
+  'nft-detail-error',
+  'wallet-rejected',
 ] as const;
 
 export type ScenarioId = (typeof SCENARIO_IDS)[number];

@@ -1,0 +1,42 @@
+export const ptBR = {
+  fields: {
+    displayName: 'Nome de exibição',
+    username: 'Nome de usuário',
+    email: 'E-mail',
+    currentPassword: 'Senha atual',
+    newPassword: 'Nova senha',
+    confirmPassword: 'Confirmar nova senha',
+  },
+  avatar: {
+    alt: 'Foto de perfil',
+    change: 'Alterar',
+    remove: 'Remover',
+  },
+  actions: {
+    save: 'Salvar',
+    retry: 'Tentar novamente',
+    showPassword: 'Mostrar senha',
+    hidePassword: 'Ocultar senha',
+  },
+  messages: {
+    saved: 'Perfil atualizado',
+    loadFailed: 'Não foi possível carregar o perfil.',
+    network: 'Não foi possível conectar. Verifique sua conexão.',
+    unexpected: 'Algo deu errado. Tente novamente mais tarde.',
+  },
+  errors: {
+    required: 'Campo obrigatório',
+    invalid_email: 'Informe um e-mail válido',
+    invalid_username: 'Use de 3 a 20 letras, números ou sublinhado',
+    too_long: 'Use no máximo 60 caracteres',
+    too_short: 'Use pelo menos 8 caracteres',
+    password_mismatch: 'As senhas não coincidem',
+    same_password: 'A nova senha deve ser diferente da atual',
+    email_taken: 'Este e-mail já está em uso',
+    username_taken: 'Este nome de usuário já está em uso',
+    wrong_current: 'Senha atual incorreta',
+    invalid: 'Valor inválido',
+    avatar_invalid_type: 'Use uma imagem PNG, JPEG ou WebP',
+    avatar_too_large: 'A imagem é grande demais',
+  },
+};

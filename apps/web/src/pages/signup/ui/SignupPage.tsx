@@ -27,7 +27,7 @@ export function SignupPage({ controller, onDismiss, redirect }: SignupPageProps)
       footer={
         <>
           <span>{t('footer')} </span>
-          <Link to="/login" search={redirect ? { redirect } : {}} className="text-text-accent">
+          <Link to="/login" search={{ redirect }} className="text-text-accent">
             {t('toggle')}
           </Link>
         </>

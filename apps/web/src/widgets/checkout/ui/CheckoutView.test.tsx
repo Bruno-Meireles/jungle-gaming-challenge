@@ -106,7 +106,7 @@ describe('CheckoutView (duble da porta)', () => {
     });
     await renderCheckoutUi(<CheckoutView controller={controller} onPlaced={() => {}} onSessionExpired={() => {}} />);
     await confirm().click();
-    await expect.element(page.getByRole('status')).toHaveTextContent(/Recuperando seu pedido/);
+    await expect.element(page.getByRole('status')).toHaveTextContent('Recuperando seu pedido');
     gate.resolve({ ok: true, orderId: 'ord-1' });
   });
 

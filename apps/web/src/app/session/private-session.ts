@@ -1,1 +1,1 @@
-export { clearPrivateData, clearPrivateSessionState } from '../../features/auth/model/logout';
+export { clearPrivateData, clearPrivateSessionState } from '../../features/auth';

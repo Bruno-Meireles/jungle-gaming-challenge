@@ -37,6 +37,6 @@ export const Increment: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole('button', { name: 'Aumentar' }));
-    await expect(canvas.getByRole('status')).toHaveTextContent('3');
+    await expect(canvas.getByRole('textbox', { name: 'Quantidade' })).toHaveValue('3');
   },
 };

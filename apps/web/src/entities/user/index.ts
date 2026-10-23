@@ -9,3 +9,4 @@ export {
   useUpdateProfile,
   useWallets,
 } from './model/use-account';
+export { connectWallet, disconnectWallet, type WalletConnection } from './api/connection-api';

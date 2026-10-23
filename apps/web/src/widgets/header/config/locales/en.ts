@@ -11,4 +11,7 @@ export const en = {
   },
   cart: 'Cart',
   login: 'Sign in',
+  account: 'Account',
+  logout: 'Sign out',
+  cartWithCount: 'Cart, {{count}} items',
 } satisfies typeof ptBR;

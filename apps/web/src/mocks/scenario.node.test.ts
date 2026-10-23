@@ -32,17 +32,37 @@ describe('readScenario', () => {
     expect(readScenario(storageWith(id))).toBe(id);
   });
 
-  it('expoe os cenarios do catalogo e os dois cenarios de auth', () => {
+  it('expoe todos os cenarios conhecidos (catalogo, auth, comercio, detalhe, carteira)', () => {
     expect([...SCENARIO_IDS].sort()).toEqual(
       [
         'auth_network_error',
         'auth_server_error',
+        'cart-availability-conflict',
+        'cart-error',
+        'cart-mutation-error',
+        'cart-price-changed',
+        'cart-seeded',
+        'cart-slow',
+        'cart-sold-out',
         'catalog-empty',
         'catalog-error',
         'catalog-flaky',
         'catalog-out-of-order',
+        'catalog-repriced',
         'catalog-slow',
+        'checkout-session-expired',
         'default',
+        'favorites-error',
+        'nft-detail-error',
+        'nft-detail-slow',
+        'order-pending',
+        'order-refused',
+        'order-timeout',
+        'orders-error',
+        'quote-changed-on-confirm',
+        'quote-error',
+        'quote-sold-out',
+        'wallet-rejected',
       ],
     );
   });

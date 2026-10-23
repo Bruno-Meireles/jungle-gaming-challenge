@@ -9,4 +9,7 @@ export const ptBR = {
   },
   cart: 'Carrinho',
   login: 'Entrar',
+  account: 'Conta',
+  logout: 'Sair',
+  cartWithCount: 'Carrinho, {{count}} itens',
 };

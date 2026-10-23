@@ -1,12 +1,13 @@
-import { Button } from '@jg/design-system';
 import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { useCatalogSearch } from '../../../entities/nft';
 import { SearchToggle } from '../../../features/catalog-search';
 import { LanguageSwitch } from '../../../features/language-switch';
-import { CartIcon, LoginIcon, PageContainer } from '../../../shared/ui';
+import { PageContainer } from '../../../shared/ui';
+import { CartLink } from './CartLink';
 import { HeaderNav } from './HeaderNav';
+import { HeaderSession } from './HeaderSession';
 
 export function Header() {
   const { t } = useTranslation(['header', 'shared']);
@@ -27,19 +28,8 @@ export function Header() {
             <div className="hidden desktop:block">
               <LanguageSwitch />
             </div>
-            <Link
-              to="/cart"
-              aria-label={t('header:cart')}
-              className="flex size-35 items-center justify-center text-foreground focus-visible:outline-2 focus-visible:outline-focus"
-            >
-              <CartIcon />
-            </Link>
-            <Button asChild className="h-35 gap-4 rounded-6 px-9 text-body-large-16-medium-lh-16">
-              <Link to="/login">
-                <LoginIcon />
-                {t('header:login')}
-              </Link>
-            </Button>
+            <CartLink />
+            <HeaderSession />
           </div>
         </div>
       </PageContainer>

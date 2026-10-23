@@ -230,6 +230,17 @@ const spec = {
   'tabbar.scan.w': ['15:5529', 'w'],
   'tabbar.scan.h': ['15:5529', 'h'],
   'tabbar.scan.fill': ['15:5530', 'fill'],
+
+  // Carrinho (desktop 11:1278)
+  'cart.item.h': ['70369:244', 'h'],
+  'cart.stepper.w': ['11:2028', 'w'],
+  'cart.stepper.h': ['11:2028', 'h'],
+  'cart.remove.w': ['70402:3316', 'w'],
+  'cart.remove.h': ['70402:3316', 'h'],
+  'cart.summary.w': ['70370:239', 'w'],
+  'cart.fees.pitch': ['70370:245', 'relTop', '70370:244'],
+  'cart.promo.input.h': ['70370:242', 'h'],
+  'cart.cta.h': ['70370:249', 'h'],
 };
 
 const out = {};

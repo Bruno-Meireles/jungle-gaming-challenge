@@ -101,7 +101,7 @@ describe.each(['pt-BR', 'en'] as const)('SignupPage (%s)', (locale) => {
 
   it('define document.title a partir do namespace pageSignup', async () => {
     await mount(locale);
-    await expect.poll(() => document.title).toBe(resources[locale].pageSignup.title);
+    await expect.poll(() => document.title).toBe(resources[locale].pageSignup?.title);
   });
 
   it('submit chama controller.submit com os valores digitados', async () => {

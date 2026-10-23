@@ -8,3 +8,6 @@ export { HomeIcon } from './icons/HomeIcon';
 export { HeartIcon } from './icons/HeartIcon';
 export { ScanIcon } from './icons/ScanIcon';
 export { UserIcon } from './icons/UserIcon';
+export { DeleteIcon } from './icons/DeleteIcon';
+export { ArrowLeftIcon } from './icons/ArrowLeftIcon';
+export { WarningIcon } from './icons/WarningIcon';

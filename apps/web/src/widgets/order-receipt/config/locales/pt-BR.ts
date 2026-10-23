@@ -1,0 +1,23 @@
+export const ptBR = {
+  transactionId: 'ID da transação',
+  date: 'Data',
+  wallet: 'Carteira',
+  editions: '{{editions}} edições',
+  networkFee: 'Taxa de rede',
+  discount: 'Desconto',
+  total: 'Total',
+  explorer: 'Ver no explorador de blocos',
+  toneInfo: 'Informação',
+  toneError: 'Erro',
+  toneSuccess: 'Sucesso',
+  status: {
+    loading: 'Carregando pedido…',
+    pending: 'Aguardando a confirmação do pagamento',
+    confirmed: 'Pagamento aprovado',
+    refused: 'Pagamento recusado',
+    not_found: 'Pedido não encontrado',
+    error: 'Não foi possível carregar o pedido',
+  },
+  retry: 'Tentar novamente',
+  backToPayment: 'Voltar ao pagamento',
+};

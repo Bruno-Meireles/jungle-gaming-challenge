@@ -1,0 +1,25 @@
+import type { ptBR } from './pt-BR';
+
+export const en = {
+  transactionId: 'Transaction ID',
+  date: 'Date',
+  wallet: 'Wallet',
+  editions: '{{editions}} editions',
+  networkFee: 'Network fee',
+  discount: 'Discount',
+  total: 'Total',
+  explorer: 'View on block explorer',
+  toneInfo: 'Information',
+  toneError: 'Error',
+  toneSuccess: 'Success',
+  status: {
+    loading: 'Loading order…',
+    pending: 'Waiting for payment confirmation',
+    confirmed: 'Payment approved',
+    refused: 'Payment refused',
+    not_found: 'Order not found',
+    error: 'Could not load the order',
+  },
+  retry: 'Try again',
+  backToPayment: 'Back to payment',
+} satisfies typeof ptBR;

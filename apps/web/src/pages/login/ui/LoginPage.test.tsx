@@ -96,7 +96,7 @@ describe.each(['pt-BR', 'en'] as const)('LoginPage (%s)', (locale) => {
 
   it('define document.title a partir do namespace pageLogin', async () => {
     await mount(locale);
-    await expect.poll(() => document.title).toBe(resources[locale].pageLogin.title);
+    await expect.poll(() => document.title).toBe(resources[locale].pageLogin?.title);
   });
 
   it('submit chama controller.submit com os valores digitados', async () => {

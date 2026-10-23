@@ -23,6 +23,8 @@ async function resolveSession(client: HttpClient, signal?: AbortSignal): Promise
 export function sessionQueryOptions(client: HttpClient = httpClient) {
   return queryOptions({
     queryKey: sessionKeys.current(),
-    queryFn: ({ signal }) => resolveSession(client, signal),
+    // Sem AbortSignal: guards (ensureQueryData) e observers (header) compartilham a mesma busca; cancelar ao desmontar
+    // o ultimo observer rejeitaria o guard com CancelledError.
+    queryFn: () => resolveSession(client),
   });
 }
