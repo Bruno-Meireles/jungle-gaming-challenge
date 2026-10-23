@@ -2,6 +2,12 @@
   "auditVersion": 1,
   "generatedAt": "2026-10-23T07:40:50.840Z",
   "status": "complete",
+  "publishedDeployment": {
+    "summaryFile": "summary-deploy.json",
+    "baseUrl": "https://jungle-gaming-challenge-lemon.vercel.app",
+    "measuredAt": "2026-10-23T14:53:33Z",
+    "performanceMedians": { "home-mobile": 53, "home-desktop": 32, "nft-detail-mobile": 66, "nft-detail-desktop": 32 }
+  },
   "configuration": {
     "buildCommand": "pnpm build",
     "mockScenario": "default (reset before each run)",

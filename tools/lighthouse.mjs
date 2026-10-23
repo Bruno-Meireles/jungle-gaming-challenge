@@ -15,7 +15,16 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const APP_ROOT = path.join(ROOT, 'apps', 'web');
 const OUTPUT_DIR = path.join(ROOT, 'docs', 'lighthouse');
 const PORT = 4173;
-const BASE_URL = `http://127.0.0.1:${PORT}`;
+const LOCAL_URL = `http://127.0.0.1:${PORT}`;
+const PUBLISHED_URL = (
+  process.env.LIGHTHOUSE_BASE_URL ??
+  process.argv.find((arg) => arg.startsWith('--base-url='))?.slice('--base-url='.length) ??
+  ''
+).replace(/\/+$/, '');
+const IS_PUBLISHED = PUBLISHED_URL !== '';
+const BASE_URL = IS_PUBLISHED ? PUBLISHED_URL : LOCAL_URL;
+const REPORT_TAG = IS_PUBLISHED ? 'deploy' : 'vercel-static';
+const SUMMARY_FILE = IS_PUBLISHED ? 'summary-deploy.json' : 'summary.json';
 const RUNS = 3;
 const STATIC_SERVER = path.join(ROOT, 'tools', 'serve-static.mjs');
 const TARGETS = {
@@ -145,7 +154,8 @@ async function writeSummary(results, environment, comparison) {
         ? 'complete'
         : 'incomplete',
     configuration: {
-      buildCommand: 'pnpm build',
+      target: IS_PUBLISHED ? 'published deployment' : 'local production build',
+      buildCommand: IS_PUBLISHED ? null : 'pnpm build',
       mockScenario: 'default (reset before each run)',
       runsPerCombination: RUNS,
       categories: TARGETS,
@@ -156,7 +166,7 @@ async function writeSummary(results, environment, comparison) {
       })),
       routes: ROUTES,
       throttlingMethod: 'simulate',
-      serverCommand: `node tools/serve-static.mjs apps/web/dist ${PORT}`,
+      serverCommand: IS_PUBLISHED ? null : `node tools/serve-static.mjs apps/web/dist ${PORT}`,
       serverUrl: BASE_URL,
       compression: 'Brotli or gzip for compressible MIME types when accepted by the client',
       cacheHeaders:
@@ -170,7 +180,7 @@ async function writeSummary(results, environment, comparison) {
     combinations: buildCombinations(results),
     results,
   };
-  await writeFile(path.join(OUTPUT_DIR, 'summary.json'), `${JSON.stringify(summary, null, 2)}\n`);
+  await writeFile(path.join(OUTPUT_DIR, SUMMARY_FILE), `${JSON.stringify(summary, null, 2)}\n`);
   return summary;
 }
 
@@ -200,7 +210,7 @@ function auditUrl(route) {
 }
 
 function reportBaseName(route, profile, run) {
-  return `${route.id}-${profile.id}-vercel-static-${run}`;
+  return `${route.id}-${profile.id}-${REPORT_TAG}-${run}`;
 }
 
 async function runAudit(route, profile, run) {
@@ -263,11 +273,13 @@ async function main() {
   const rootPackage = JSON.parse(await readFile(path.join(ROOT, 'package.json'), 'utf8'));
   const browserPath = chromium.executablePath();
   process.env.CHROME_PATH = browserPath;
-  await access(path.join(APP_ROOT, 'dist', 'index.html')).catch(() => {
-    throw new Error('Production build missing. Run `pnpm build` before `pnpm lighthouse`.');
-  });
+  if (!IS_PUBLISHED) {
+    await access(path.join(APP_ROOT, 'dist', 'index.html')).catch(() => {
+      throw new Error('Production build missing. Run `pnpm build` before `pnpm lighthouse`.');
+    });
+  }
   await mkdir(OUTPUT_DIR, { recursive: true });
-  const previousSummary = await readFile(path.join(OUTPUT_DIR, 'summary.json'), 'utf8')
+  const previousSummary = await readFile(path.join(OUTPUT_DIR, SUMMARY_FILE), 'utf8')
     .then((value) => JSON.parse(value))
     .catch((error) => {
       if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
@@ -313,22 +325,24 @@ async function main() {
   };
   await writeSummary(results, environment, comparison);
 
-  const server = spawn(
-    process.execPath,
-    [STATIC_SERVER, path.join(APP_ROOT, 'dist'), String(PORT)],
-    {
-      cwd: ROOT,
-      stdio: 'inherit',
-    },
-  );
+  const server = IS_PUBLISHED
+    ? null
+    : spawn(process.execPath, [STATIC_SERVER, path.join(APP_ROOT, 'dist'), String(PORT)], {
+        cwd: ROOT,
+        stdio: 'inherit',
+      });
   let serverError = null;
-  server.on('error', (error) => {
+  server?.on('error', (error) => {
     serverError = error;
     console.error(`Failed to start static server: ${error.message}`);
   });
 
   try {
-    await waitForServer(server, () => serverError);
+    if (server) await waitForServer(server, () => serverError);
+    else {
+      const response = await fetch(BASE_URL);
+      if (!response.ok) throw new Error(`${BASE_URL} returned HTTP ${response.status}`);
+    }
     for (const route of ROUTES) {
       for (const profile of PROFILES) {
         for (let run = 1; run <= RUNS; run += 1) {
@@ -358,7 +372,7 @@ async function main() {
       }
     }
   } finally {
-    server.kill();
+    server?.kill();
   }
 
   const summary = await writeSummary(results, environment, comparison);

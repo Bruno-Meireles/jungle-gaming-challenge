@@ -1,0 +1,1321 @@
+{
+  "auditVersion": 1,
+  "generatedAt": "2026-10-23T14:58:47.867Z",
+  "status": "complete",
+  "configuration": {
+    "target": "published deployment",
+    "buildCommand": null,
+    "mockScenario": "default (reset before each run)",
+    "runsPerCombination": 3,
+    "categories": {
+      "performance": 90,
+      "accessibility": 95,
+      "best-practices": 95,
+      "seo": 90
+    },
+    "profiles": [
+      {
+        "id": "mobile",
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "width": 390,
+          "height": 844,
+          "deviceScaleFactor": 1,
+          "mobile": true
+        }
+      },
+      {
+        "id": "desktop",
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "width": 1440,
+          "height": 900,
+          "deviceScaleFactor": 1,
+          "mobile": false
+        }
+      }
+    ],
+    "routes": [
+      {
+        "id": "home",
+        "path": "/"
+      },
+      {
+        "id": "nft-detail",
+        "path": "/nfts/emerald-ape-042"
+      }
+    ],
+    "throttlingMethod": "simulate",
+    "serverCommand": null,
+    "serverUrl": "https://jungle-gaming-challenge-lemon.vercel.app",
+    "compression": "Brotli or gzip for compressible MIME types when accepted by the client",
+    "cacheHeaders": "immutable /assets files, one-week /nfts image files, no-cache SPA documents and MSW worker",
+    "knownVercelDifference": "vercel.json currently applies the /nfts cache rule to extensionless SPA routes as well"
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "packageManager": "pnpm@12.14.0",
+    "lighthouse": "13.5.0",
+    "platform": "Windows_NT 10.0.26200",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 5700U with Radeon Graphics         ",
+    "cpuCount": 16,
+    "totalMemoryBytes": 16486035456,
+    "chromeExecutable": "C:\\Users\\opera\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe"
+  },
+  "comparison": {
+    "claudeReportedPreImageOptimization": {
+      "source": "docs/agent-communication.md, 2026-10-23 08:40",
+      "server": "vite preview",
+      "performanceMedians": [
+        {
+          "route": "home",
+          "profile": "mobile",
+          "performance": 34
+        },
+        {
+          "route": "home",
+          "profile": "desktop",
+          "performance": 28
+        },
+        {
+          "route": "nft-detail",
+          "profile": "mobile",
+          "performance": 55
+        },
+        {
+          "route": "nft-detail",
+          "profile": "desktop",
+          "performance": 32
+        }
+      ]
+    },
+    "immediatelyPreviousRun": null
+  },
+  "auditCount": 12,
+  "combinations": [
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 53,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 3759.092,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 2124.4999999999995
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.07,
+            "displayValue": "2,120 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.55,
+            "displayValue": "3.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.54,
+            "displayValue": "2.9 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.63,
+            "displayValue": "5.0 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.04,
+            "displayValue": "2,500 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.56,
+            "displayValue": "3.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.59,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.42,
+            "displayValue": "6.3 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.07,
+            "displayValue": "2,030 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.6,
+            "displayValue": "3.6 s",
+            "weight": 25
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 32,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 3938.099,
+        "cls": 0.001523419308505181,
+        "tbtMs": 2586.5
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,480 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.2,
+            "displayValue": "3.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.1,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.3,
+            "displayValue": "2.9 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0,
+            "displayValue": "3,110 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.16,
+            "displayValue": "4.0 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.1,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0,
+            "displayValue": "2,590 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "3.9 s",
+            "weight": 25
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 66,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 3966.2295,
+        "cls": 0.020721269752274788,
+        "tbtMs": 584.9999999999998
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.51,
+            "displayValue": "580 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.5,
+            "displayValue": "4.0 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.58,
+            "displayValue": "2.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.77,
+            "displayValue": "4.2 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.19,
+            "displayValue": "1,270 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.42,
+            "displayValue": "4.3 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.51,
+            "displayValue": "3.0 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.62,
+            "displayValue": "5.1 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.54,
+            "displayValue": "540 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.51,
+            "displayValue": "3.9 s",
+            "weight": 25
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 32,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 4203.7384999999995,
+        "cls": 0.04711350919086214,
+        "tbtMs": 1131.4999999999995
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.03,
+            "displayValue": "1,180 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.14,
+            "displayValue": "4.3 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.08,
+            "displayValue": "2.9 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.19,
+            "displayValue": "3.4 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.08,
+            "displayValue": "860 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.16,
+            "displayValue": "4.1 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.08,
+            "displayValue": "2.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.22,
+            "displayValue": "3.2 s",
+            "weight": 10
+          }
+        ]
+      },
+      "passed": false
+    }
+  ],
+  "results": [
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "run": 1,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 53,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3791.649,
+        "cls": 0,
+        "tbtMs": 2124.4999999999995
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.07,
+            "displayValue": "2,120 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.55,
+            "displayValue": "3.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.54,
+            "displayValue": "2.9 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.63,
+            "displayValue": "5.0 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-mobile-deploy-1.html",
+        "json": "home-mobile-deploy-1.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "run": 2,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 50,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3759.092,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 2496.5000000000005
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.04,
+            "displayValue": "2,500 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.56,
+            "displayValue": "3.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.59,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.42,
+            "displayValue": "6.3 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-mobile-deploy-2.html",
+        "json": "home-mobile-deploy-2.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "run": 3,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 55,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3610.6315,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 2031.9999999999995
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.07,
+            "displayValue": "2,030 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.6,
+            "displayValue": "3.6 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.58,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.7,
+            "displayValue": "4.6 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-mobile-deploy-3.html",
+        "json": "home-mobile-deploy-3.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "run": 1,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 34,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3745.8085,
+        "cls": 0.001523419308505181,
+        "tbtMs": 1479.5
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,480 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.2,
+            "displayValue": "3.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.1,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.3,
+            "displayValue": "2.9 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-desktop-deploy-1.html",
+        "json": "home-desktop-deploy-1.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "run": 2,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 31,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 4026.8184999999994,
+        "cls": 0.001523419308505181,
+        "tbtMs": 3109.4999999999995
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0,
+            "displayValue": "3,110 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.16,
+            "displayValue": "4.0 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.1,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-desktop-deploy-2.html",
+        "json": "home-desktop-deploy-2.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "run": 3,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 32,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3938.099,
+        "cls": 0.001523419308505181,
+        "tbtMs": 2586.5
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0,
+            "displayValue": "2,590 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "3.9 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.1,
+            "displayValue": "2.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.13,
+            "displayValue": "3.7 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-desktop-deploy-3.html",
+        "json": "home-desktop-deploy-3.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "run": 1,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 66,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3966.2295,
+        "cls": 0.02058157947934683,
+        "tbtMs": 584.9999999999998
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.51,
+            "displayValue": "580 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.5,
+            "displayValue": "4.0 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.58,
+            "displayValue": "2.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.77,
+            "displayValue": "4.2 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-mobile-deploy-1.html",
+        "json": "nft-detail-mobile-deploy-1.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "run": 2,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 53,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 4293.002,
+        "cls": 0.020721269752274788,
+        "tbtMs": 1268.0000000000005
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.19,
+            "displayValue": "1,270 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.42,
+            "displayValue": "4.3 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.51,
+            "displayValue": "3.0 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.62,
+            "displayValue": "5.1 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-mobile-deploy-2.html",
+        "json": "nft-detail-mobile-deploy-2.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "run": 3,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 67,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 3949.176,
+        "cls": 0.020721269752274788,
+        "tbtMs": 539.4999999999998
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.54,
+            "displayValue": "540 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.51,
+            "displayValue": "3.9 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.58,
+            "displayValue": "2.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.69,
+            "displayValue": "4.7 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-mobile-deploy-3.html",
+        "json": "nft-detail-mobile-deploy-3.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "run": 1,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 32,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 4255.432,
+        "cls": 0.04711350919086214,
+        "tbtMs": 1182.5
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.03,
+            "displayValue": "1,180 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.14,
+            "displayValue": "4.3 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.08,
+            "displayValue": "2.9 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.19,
+            "displayValue": "3.4 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-desktop-deploy-1.html",
+        "json": "nft-detail-desktop-deploy-1.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "run": 2,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 34,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 4059.1955,
+        "cls": 0.04711350919086214,
+        "tbtMs": 862.5
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.08,
+            "displayValue": "860 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.16,
+            "displayValue": "4.1 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.08,
+            "displayValue": "2.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.22,
+            "displayValue": "3.2 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-desktop-deploy-2.html",
+        "json": "nft-detail-desktop-deploy-2.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "run": 3,
+      "url": "https://jungle-gaming-challenge-lemon.vercel.app/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 32,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 4203.7384999999995,
+        "cls": 0.04711350919086214,
+        "tbtMs": 1131.4999999999995
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.03,
+            "displayValue": "1,130 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.15,
+            "displayValue": "4.2 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.09,
+            "displayValue": "2.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.18,
+            "displayValue": "3.4 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-desktop-deploy-3.html",
+        "json": "nft-detail-desktop-deploy-3.json"
+      }
+    }
+  ]
+}
