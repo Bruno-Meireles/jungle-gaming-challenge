@@ -14,6 +14,10 @@ export type NftInfoTabsProps = {
 };
 
 const TABS: readonly InfoTab[] = ['details', 'reviews'];
+const TERM = 'mt-12 text-foreground first:mt-0';
+const LIST = 'desktop:gap-32 desktop:border-b desktop:border-primary/30';
+const TRIGGER =
+  'desktop:h-28 desktop:text-body-large-17-regular-lh-16 desktop:data-[state=active]:text-body-large-17-bold desktop:after:top-27 desktop:after:h-3';
 
 function isInfoTab(value: string): value is InfoTab {
   return TABS.some((tab) => tab === value);
@@ -22,11 +26,17 @@ function isInfoTab(value: string): value is InfoTab {
 function DetailsPanel({ nft }: { nft: NftDetail }) {
   const { t } = useTranslation('nftInfoTabs');
   const locale = useLocale();
+  const paragraphs = pickLocalized(nft.description, locale).split(/\n{2,}/);
   return (
-    <div className="flex flex-col gap-16">
-      <p className="text-body-14-regular-lh-24 text-foreground">{pickLocalized(nft.description, locale)}</p>
+    <div className="flex flex-col gap-12 text-body-14-regular-lh-24 text-text-secondary">
+      <div className="flex flex-col gap-24">
+        {paragraphs.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
+        <p>{t('ownership')}</p>
+      </div>
       {nft.attributes.length > 0 ? (
-        <section aria-label={t('attributes')}>
+        <section aria-label={t('attributes')} className="desktop:hidden">
           <ul className="flex flex-wrap gap-8">
             {nft.attributes.map((attribute) => (
               <li key={attribute.name.en} className="rounded-8 border border-secondary px-12 py-8 text-body-14-regular-lh-16">
@@ -37,13 +47,13 @@ function DetailsPanel({ nft }: { nft: NftDetail }) {
           </ul>
         </section>
       ) : null}
-      <dl className="grid grid-cols-[auto_1fr] gap-x-16 gap-y-8 text-body-14-regular-lh-16">
-        <dt className="text-text-secondary">{t('contract')}</dt>
-        <dd className="text-foreground">{shortAddress(nft.contract.address)}</dd>
-        <dt className="text-text-secondary">{t('standard')}</dt>
-        <dd className="text-foreground">{nft.contract.standard}</dd>
-        <dt className="text-text-secondary">{t('royalties')}</dt>
-        <dd className="text-foreground">{nft.royaltyPercent}%</dd>
+      <dl>
+        <dt className={TERM}>{t('network')}</dt>
+        <dd>{t('networkText')}</dd>
+        <dt className={TERM}>{t('contract')}</dt>
+        <dd>{t('contractText', { address: shortAddress(nft.contract.address), standard: nft.contract.standard })}</dd>
+        <dt className={TERM}>{t('royalties')}</dt>
+        <dd>{t('royaltiesText', { percent: nft.royaltyPercent })}</dd>
       </dl>
     </div>
   );
@@ -75,14 +85,14 @@ export function NftInfoTabs({ nft, tab, onTabChange }: NftInfoTabsProps) {
   };
   return (
     <Tabs value={tab} onValueChange={handleValueChange}>
-      <TabsList aria-label={t('tabsLabel')}>
+      <TabsList aria-label={t('tabsLabel')} className={LIST}>
         {TABS.map((id) => (
-          <TabsTrigger key={id} value={id}>
-            {t(id)}
+          <TabsTrigger key={id} value={id} className={TRIGGER}>
+            {t(id, { count: nft.rating.count })}
           </TabsTrigger>
         ))}
       </TabsList>
-      <TabsContent value="details" className="pt-16">
+      <TabsContent value="details" className="pt-16 desktop:pt-12">
         <DetailsPanel nft={nft} />
       </TabsContent>
       <TabsContent value="reviews" className="pt-16">
