@@ -1,9 +1,12 @@
 import { defineConfig, devices } from '@playwright/test';
 
-const BASE_URL = 'http://127.0.0.1:5173';
+// PORT e PW_OUTPUT permitem rodar várias cópias (worktrees) em paralelo sem colisão.
+const PORT = Number(process.env.PORT ?? 5173);
+const BASE_URL = `http://127.0.0.1:${PORT}`;
 
 export default defineConfig({
   testDir: './e2e',
+  outputDir: process.env.PW_OUTPUT ?? 'test-results',
   forbidOnly: true,
   reporter: [['html', { open: 'never' }], ['list']],
   use: {
@@ -30,7 +33,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: 'pnpm exec vite --host 127.0.0.1 --port 5173 --strictPort',
+    command: `pnpm exec vite --host 127.0.0.1 --port ${PORT} --strictPort`,
     url: BASE_URL,
     env: { VITE_ENABLE_MOCKS: 'true' },
     reuseExistingServer: !process.env.CI,
