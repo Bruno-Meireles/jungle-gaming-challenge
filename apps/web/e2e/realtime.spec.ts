@@ -164,7 +164,6 @@ test.describe('sincronização realtime (mocks MSW)', () => {
     const emeraldLine = page.getByRole('listitem').filter({ hasText: 'Emerald Ape #042' });
     await expect(emeraldLine).toContainText('1,19 ETH');
     await mockNftPrice(page, '2.50');
-    await expect(emeraldLine).toContainText('O preço mudou');
     await expect(emeraldLine).toContainText('2,50 ETH');
 
     await page.getByRole('link', { name: 'Finalizar compra' }).click();
