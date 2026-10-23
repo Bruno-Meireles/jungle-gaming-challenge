@@ -10,7 +10,7 @@ import { NFT_FIXTURES } from './nfts';
 
 /*
  * Contrato sob teste: `NFT_FIXTURES: readonly NftSummaryDto[]` exportado de ./nfts.
- * Imagens: `image.src === '/nfts/<id>.webp'`, arquivo em apps/web/public/nfts/<id>.webp.
+ * Imagens: `image.src === '/nfts/<id>-480.webp'` (variante gerada por tools/resize-nft-images.mjs; o original <id>.webp segue em public/ e o detalhe usa <id>-960.webp).
  */
 
 const PUBLIC_DIR = resolve(import.meta.dirname, '../../../public');
@@ -73,10 +73,10 @@ describe('NFT_FIXTURES', () => {
     if (price !== undefined) expect(item?.priceEth).toBe(price);
   });
 
-  it('cada imagem aponta para /nfts/<slug>.webp e o arquivo existe em public/', () => {
+  it('cada imagem aponta para /nfts/<slug>-480.webp e as variantes 480/960 existem em public/', () => {
     for (const item of NFT_FIXTURES) {
-      expect(item.image.src).toBe(`/nfts/${item.id}.webp`);
-      expect(existsSync(resolve(PUBLIC_DIR, `nfts/${item.id}.webp`)), item.image.src).toBe(true);
+      expect(item.image.src).toBe(`/nfts/${item.id}-480.webp`);
+      for (const size of [480, 960]) expect(existsSync(resolve(PUBLIC_DIR, `nfts/${item.id}-${size}.webp`)), item.image.src).toBe(true);
     }
   });
 });

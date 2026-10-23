@@ -6,15 +6,15 @@ type Promo = { key: 'genesis' | 'curated'; image: string; tab: 'new' | 'trending
 
 // Imagens do mock (desvio: o Figma so tem 4 image fills; ver ADR-22).
 const PROMOS: Promo[] = [
-  { key: 'genesis', image: '/nfts/neon-vessel-552.webp', tab: 'new', imageSide: 'left' },
-  { key: 'curated', image: '/nfts/emerald-ape-042.webp', tab: 'trending', imageSide: 'left' },
+  { key: 'genesis', image: '/nfts/neon-vessel-552-480.webp', tab: 'new', imageSide: 'left' },
+  { key: 'curated', image: '/nfts/emerald-ape-042-480.webp', tab: 'trending', imageSide: 'left' },
 ];
 
 function PromoCard({ promo }: { promo: Promo }) {
   const { t } = useTranslation('promoBanners');
   return (
     <article className="relative flex min-h-250 overflow-hidden rounded-8 bg-surface-card">
-      <img src={promo.image} alt="" width={292} height={250} className="hidden h-250 w-292 shrink-0 object-cover tablet:block" />
+      <img src={promo.image} alt="" width={292} height={250} loading="lazy" className="hidden h-250 w-292 shrink-0 object-cover tablet:block" />
       <div className="flex flex-1 flex-col items-start justify-between gap-16 p-24 tablet:items-end tablet:text-right">
         <div className="flex flex-col gap-12">
           <h3 className="text-body-large-18-bold-lh-24 text-foreground">{t(`${promo.key}.title`)}</h3>

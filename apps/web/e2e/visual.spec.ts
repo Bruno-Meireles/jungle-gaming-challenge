@@ -9,6 +9,8 @@ import { addFirstEditionToCart, loginToHome } from './support/session';
 async function settle(page: Page) {
   await page.evaluate(async () => {
     await document.fonts.ready;
+    // Imagens lazy fora da dobra nunca disparam load: force o carregamento antes da captura de pagina inteira.
+    for (const image of document.images) image.loading = 'eager';
     await Promise.all(
       [...document.images].filter((image) => !image.complete).map((image) => new Promise((resolve) => {
         image.addEventListener('load', resolve, { once: true });

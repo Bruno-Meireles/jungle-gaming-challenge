@@ -27,6 +27,8 @@ export function FeaturedNft() {
             width={nft.image.width}
             height={nft.image.height}
             alt={t('nft:image.alt', { title: nft.title })}
+            loading="lazy"
+            decoding="async"
             className="h-368 w-310 rounded-22 object-cover"
           />
         </Link>

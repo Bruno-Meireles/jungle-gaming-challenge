@@ -20,6 +20,7 @@ export function NftGallery({ title, images }: NftGalleryProps) {
         width={main.width}
         height={main.height}
         alt={t('nft:image.alt', { title })}
+        fetchPriority="high"
         className="aspect-square h-auto w-full rounded-22 object-cover"
       />
       {images.length > 1 ? (
@@ -33,7 +34,7 @@ export function NftGallery({ title, images }: NftGalleryProps) {
                 onClick={() => setCurrent(index)}
                 className="block cursor-pointer rounded-8 border-2 border-transparent p-0 aria-pressed:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
               >
-                <img src={image.src} alt="" width={image.width} height={image.height} className="size-72 rounded-6 object-cover" />
+                <img src={image.src} alt="" width={image.width} height={image.height} loading="lazy" className="size-72 rounded-6 object-cover" />
               </button>
             </li>
           ))}

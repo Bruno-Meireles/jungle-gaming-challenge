@@ -66,7 +66,7 @@ const ROWS: readonly Row[] = [
 
 const NEWEST_LISTED_AT = Date.parse('2026-10-01T12:00:00.000Z');
 const SIX_HOURS_MS = 6 * 60 * 60 * 1000;
-const IMAGE_SIZE = 1254;
+const IMAGE_SIZE = 480; // variantes geradas por tools/resize-nft-images.mjs
 
 export const NFT_FIXTURES: readonly NftSummaryDto[] = ROWS.map(
   ([id, title, priceEth, collectionId, networkId, rare], index) => ({
@@ -75,7 +75,7 @@ export const NFT_FIXTURES: readonly NftSummaryDto[] = ROWS.map(
     collectionId,
     networkId,
     priceEth,
-    image: { src: `/nfts/${id}.webp`, width: IMAGE_SIZE, height: IMAGE_SIZE },
+    image: { src: `/nfts/${id}-480.webp`, width: IMAGE_SIZE, height: IMAGE_SIZE },
     rarity: rare ? 'rare' : 'common',
     listedAt: new Date(NEWEST_LISTED_AT - index * SIX_HOURS_MS).toISOString(),
     popularity: (index * 37 + 11) % 100,

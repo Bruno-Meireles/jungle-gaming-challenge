@@ -27,6 +27,8 @@ export function Hero({ exploreTargetId }: { exploreTargetId: string }) {
           width={active.image.width}
           height={active.image.height}
           alt={t('nft:image.alt', { title: active.title })}
+          fetchPriority="high"
+          decoding="async"
           className="size-138 shrink-0 rounded-16 object-cover tablet:size-300 tablet:rounded-24 desktop:size-450"
         />
       ) : (

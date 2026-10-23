@@ -41,6 +41,8 @@ export function NftCard({ title, priceLabel, image, badge, action, link }: NftCa
         <img
           src={image.src}
           alt={image.alt}
+          loading="lazy"
+          decoding="async"
           className="block size-full object-cover tablet:size-250 tablet:rounded-15"
         />
         {badge ? <div className="absolute top-16 left-0 flex">{badge}</div> : null}
