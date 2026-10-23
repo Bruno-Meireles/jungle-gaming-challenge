@@ -89,6 +89,14 @@ Com `pnpm dev` ativo e mocks habilitados, abra `http://localhost:5173/?mockReset
 | `order-timeout`                   | Após login, checkout; confirme a compra                          | Falha de rede após criação é recuperada com a mesma chave de idempotência, sem pedido duplicado.          |
 | `orders-error`                    | Após login, abra `/orders/ord-ana-0001`                          | A consulta do pedido falha com indisponibilidade; não exibe sucesso fictício.                             |
 
+## Idioma
+
+O app suporta pt-BR e inglês. **Não há seletor visual de idioma** (ele não existe no Figma): a troca é feita apenas pela URL.
+
+- Forçar o idioma em qualquer rota: `/?lang=pt-BR`, `/?lang=en`, `/nfts/emerald-ape-042?lang=en`, `/cart?lang=pt-BR`. Valores inválidos são ignorados.
+- Prioridade: `?lang=` válido, preferência salva (`localStorage jg:locale`), idioma do navegador e, por último, pt-BR.
+- Um `?lang=` válido também grava a preferência salva e atualiza `<html lang>`; assim o idioma permanece ao navegar e ao recarregar a página sem o parâmetro. Para voltar ao idioma do navegador, limpe `jg:locale` do armazenamento local.
+
 ## Estrutura
 
 `apps/web/src`: `app` (providers, router, bootstrap) › `pages` › `widgets` › `features` › `entities` › `shared`; imports apenas para baixo e sempre pelo `index.ts` do slice (lint). `mocks/` é a única camada com respostas fictícias. Decisões e desvios do Figma: `ARCHITECTURE.md`. Padrões: `.AI/standards/`.

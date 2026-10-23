@@ -15,7 +15,17 @@ function matchLanguage(language: string): Locale | null {
   return null;
 }
 
-export function resolveLocale({ saved, languages }: { saved: string | null; languages: readonly string[] }): Locale {
+/** Prioridade: idioma valido na URL, preferencia salva, idioma do navegador e, por ultimo, pt-BR. */
+export function resolveLocale({
+  url = null,
+  saved,
+  languages,
+}: {
+  url?: string | null;
+  saved: string | null;
+  languages: readonly string[];
+}): Locale {
+  if (isLocale(url)) return url;
   if (isLocale(saved)) return saved;
   for (const language of languages) {
     const match = matchLanguage(language);
