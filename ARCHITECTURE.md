@@ -69,3 +69,86 @@ Registro de decisões duradouras e desvios (formato: contexto, decisão, alterna
 **ADR-16 (adendo, item 22 da Home): bootstrap dos mocks.** `msw 2.15.0` já instalado; `public/mockServiceWorker.js` gerado por `msw init` (sem `--save`). `app/bootstrap/enable-mocks.ts` importa `mocks/browser` dinamicamente só com `VITE_ENABLE_MOCKS=true` (`.env.production` versionado com `true`, exceção no `.gitignore`). A UI não espera o worker: as buscas do TanStack Query ficam pausadas via `onlineManager` até ele iniciar. Sem dependência nova.
 
 **ADR-16 (adendo, item 38 da Home): `@axe-core/playwright` 4.14.0 em `apps/web` (devDependency, versão fixa).** Verificação automática de acessibilidade nos E2E da Home (`e2e/home-axe.spec.ts`). Usa o `axe-core` 4.14.0 já fixado no design system (peer `playwright-core >= 1.0.0`, compatível com `@playwright/test` 1.64.1). Pré-autorizada pelo `CLAUDE.md` (necessária ao enunciado §8).
+
+## Contratos de negócio e integração do app
+
+Esta seção registra os contratos implementados em `apps/web/src/shared/api/contracts`, consumidos por entidades e simulados em `apps/web/src/mocks`. O cliente Axios usa `baseURL: '/api'`, valida respostas com Zod e envia o token da sessão autenticada como Bearer. Os handlers MSW são a única fonte de respostas simuladas; componentes e hooks não fabricam respostas de API.
+
+### REST
+
+| Área | Endpoint | Contrato e observações |
+| --- | --- | --- |
+| Sessão | `POST /api/auth/login`, `POST /api/auth/register` | Login recebe `email` e `password`; cadastro recebe `displayName`, `username`, `email` e `password`. Retornam `{ token, expiresAt, user }`, com `expiresAt` em epoch milliseconds; cadastro responde `201`. |
+| Sessão | `GET /api/auth/session`, `POST /api/auth/logout` | Sessão anônima responde `200 { user: null }`; token inválido ou expirado responde `401 session_invalid`. Logout responde `204`. |
+| Perfil e carteiras | `GET/PUT /api/account/profile`, `PUT /api/account/password`, `GET/PUT /api/account/wallets` | Perfil e lista de carteiras são por usuário autenticado. Atualização de senha responde `204`; carteiras são salvas por tipo (`primary` ou `secondary`) e rede. |
+| Conexão de carteira | `POST/DELETE /api/wallet/connect` | `POST` recebe `walletId` e responde `{ connectionId, provider }`; recusa simulada responde `403 forbidden`; `DELETE` desconecta e responde `204`. Conexão é distinta do cadastro de carteiras. |
+| Catálogo | `GET /api/nfts`, `GET /api/nfts/:nftId`, `GET /api/highlights` | A listagem aceita `search`, `view`, `sort`, `collections`, `networks`, `minPriceEth`, `maxPriceEth`, `page` e `pageSize` (9 por padrão). Detalhes expõem edições e disponibilidade; conteúdo editorial localizado é selecionado no cliente. |
+| Favoritos | `GET /api/favorites`, `PUT/DELETE /api/favorites/:nftId` | Recurso privado; a resposta contém `nftIds` e `version`. A alteração otimista da UI reverte em falha. |
+| Carrinho | `GET /api/cart`, `POST /api/cart/items`, `PATCH/DELETE /api/cart/items/:lineId` | Carrinho de visitante ou autenticado. A linha é identificada por `(nftId, editionId)` e tem `lineId` estável; mutações retornam o carrinho atualizado. Disponibilidade insuficiente responde `409 availability_conflict`. |
+| Cupom e cotação | `PUT/DELETE /api/cart/coupon`, `GET /api/cart/quote?networkId=...` | Cupom inválido/expirado responde `422 coupon_invalid`/`coupon_expired`. A cotação autoritativa contém `quoteHash`, `cartVersion`, valores, estado de disponibilidade e `canCheckout`; taxas variam pela rede. |
+| Pedidos | `POST /api/orders`, `GET /api/orders`, `GET /api/orders/:orderId` | Criar pedido exige `Idempotency-Key`, cotação revalidada, rede, carteira, dados do comprador e linhas. Primeira criação responde `201`; replay idempotente responde `200`. A lista responde `{ orders }`; detalhe não encontrado ou pertencente a outro usuário não é exposto. |
+
+O DTO do carrinho contém `lines`, `couponCode`, `itemCount` e `version`; cada linha inclui NFT/edição, quantidade, preço unitário e `maxQuantity`. A cotação retorna `quoteHash`, `cartVersion`, `networkId`, linhas com `status`/`available`, `subtotalEth`, `discountEth`, `networkFeeEth`, `totalEth`, cupom, `canCheckout` e `expiresAt`. O pedido congela esses valores e suas linhas no snapshot.
+
+Erros de validação usam `400 validation_failed`; credenciais inválidas e sessão inválida usam `401`; conflitos de conta usam `409 account_conflict` com campos; cotação/preço alterado, disponibilidade e idempotência usam `409 quote_changed`, `409 availability_conflict` e `409 idempotency_conflict`; cupom inválido/expirado usa `422`; indisponibilidade do serviço é `503 service_unavailable`. Falhas de transporte são tratadas pelo cliente como erros de rede, não como resposta de sucesso.
+
+Valores monetários em ETH trafegam como strings decimais e permanecem strings/valores exatos no domínio; não se usa `Number` ou `parseFloat` para calcular ETH. Quantidades, versões e percentuais são inteiros. O recibo usa o snapshot imutável gravado no pedido, incluindo preços e totais, referência de transação e URL de exploração simuladas.
+
+### Sessão e persistência
+
+- O token do cliente fica em `localStorage['jg.session.token']`; `GET /api/auth/session` recupera a sessão após refresh. O registro mock contém usuário, salt e hash de senha, nunca a senha em claro.
+- O identificador de carrinho visitante persiste em `localStorage['jg.guest.cart-id']` e é enviado como `X-Guest-Cart-Id`, inclusive durante login/cadastro. O handler autentica a sessão e mescla o carrinho visitante ao do usuário: soma quantidades respeitando a disponibilidade, preserva o cupom do usuário, remove o carrinho visitante e pode repetir a operação sem duplicar o merge.
+- O estado mock de identidade/sessões/carteiras usa `jg:mocks:state`; comércio (carrinhos, favoritos, mercado, pedidos, versões e contadores de cenários) usa `jg:mocks:commerce`. Ambos persistem em `localStorage`; sem storage, o estado de comércio recorre a memória.
+- Chaves React Query são organizadas pelas fábricas de sessão, carrinho, NFT/favoritos, pedidos e usuário. A chave do carrinho é `['cart']` e não inclui viewer; o isolamento entre visitantes/usuários é garantido limpando essa raiz no logout/troca de usuário e invalidando-a após login/cadastro. As raízes privadas removidas no logout/troca de usuário são `cartKeys.all`, `orderKeys.all`, `favoritesKeys.all` e `userKeys.all`.
+- Logout tenta invalidar a sessão no servidor, mas limpa o estado local mesmo se a requisição falhar: executa `registerPrivateTeardown` pendentes, cancela/remove queries privadas, remove `jg.idempotency.*` de `sessionStorage`, apaga o token e define a sessão como anônima. Depois invalida o carrinho para carregar o viewer atual.
+- Chaves de criação de pedido são derivadas do fingerprint do conteúdo e salvas em `sessionStorage` sob `jg.idempotency.*`; tentativas simultâneas com o mesmo conteúdo compartilham a chamada e retries de rede reutilizam a mesma chave. No servidor, a repetição da chave com o mesmo conteúdo devolve o mesmo pedido; a mesma chave com conteúdo diferente responde `idempotency_conflict`. O pedido aceita estados `pending`, `confirmed` e `refused`; após confirmação, somente as quantidades compradas saem do carrinho.
+
+### Eventos Socket.IO e reconciliação REST
+
+O cliente conecta a `wss://realtime.jungle.test`, no path Socket.IO `/socket.io/`, e identifica a sessão pelo evento `session.identify` com o token. Todos os eventos carregam `eventId`, `version` monotônica por recurso, `occurredAt` e `resource`. O cliente valida o envelope, ignora IDs já vistos e versões antigas/iguais para o recurso e registra o disconnect como teardown privado.
+
+| Evento | Dados | Efeito no cliente |
+| --- | --- | --- |
+| `nft.updated` | `resource: { type: 'nft', id }`; `priceEth` da edição padrão e `editions[]` com `id`, `priceEth` e `remaining`. | Atualiza caches existentes de catálogo, destaques, detalhe e linhas do carrinho; invalida a cotação para recalcular disponibilidade e totais pela API. |
+| `order.updated` | `resource: { type: 'order', id }`, `userId` e `data: { status, transactionRef }`. | Só é aplicado se pertencer ao usuário identificado; ignora pedido terminal ou versão antiga e invalida a consulta do pedido. |
+
+O estado REST permanece a fonte autoritativa. Após reconexão, as consultas de NFTs, carrinho e pedidos são invalidadas para reconciliar eventos perdidos. Pedido pendente também tem polling de um segundo como fallback do `order.updated`; o polling termina em estado terminal. O handler MSW emite os mesmos envelopes e restringe eventos de pedido ao usuário identificado.
+
+### Mock e inicialização
+
+MSW 2.15.0 é ativado por `VITE_ENABLE_MOCKS=true` e importado dinamicamente pelo bootstrap; `onlineManager` pausa as consultas enquanto o worker inicia para impedir chamadas antes dos handlers. O mock de realtime usa `@mswjs/socket.io-binding` 0.2.0 e o cliente real `socket.io-client` 4.8.4. Em produção de demonstração, `.env.production` mantém os mocks ativados conforme o enunciado.
+
+### Transporte Socket.IO nos mocks e limitações
+
+O handler de realtime registra `ws.link('wss://realtime.jungle.test')` no MSW e adapta cada conexão com `toSocketIo` de `@mswjs/socket.io-binding`. O client real `socket.io-client` é carregado por import dinâmico em `useRealtimeSync` apenas depois do bootstrap aguardar `worker.start`; conecta com `transports: ['websocket']`, sem fallback de polling HTTP. O binding termina a negociação Socket.IO no WebSocket simulado: o path de transporte `/socket.io/` não é uma rota HTTP/servidor separada do mock. O handler envia ping Engine.IO a cada 20 segundos por `connection.client.send('2')` para manter a conexão mock.
+
+Este transporte simula eventos no worker da página atual: não há servidor remoto Socket.IO, conexão entre navegadores/dispositivos, nem simulação de polling HTTP. Eventos de comércio são disparados pelo estado/controles MSW; a REST permanece necessária para carregar dados e reconciliar alterações.
+
+### Política de cache, retries e sincronização
+
+- `createQueryClient` configura `staleTime` padrão de 30 segundos; o retry padrão permite uma repetição apenas para erros marcados como transitórios, após 300 ms. Falhas de validação e demais erros não transitórios não são repetidos.
+- Catálogo e cotação do carrinho usam `keepPreviousData` enquanto carregam os novos parâmetros. A cotação continua sendo obtida/revalidada na API; a revalidação pré-compra usa `staleTime: 0`.
+- As consultas que aceitam cancelamento propagam o `AbortSignal` do TanStack Query até Axios. A consulta de sessão deliberadamente não consome esse signal: guards `ensureQueryData` e observers compartilham a mesma busca e o cancelamento quando o último observer desmonta rejeitaria o guard com `CancelledError`.
+- Pedido não terminal é consultado novamente a cada segundo como fallback de `order.updated`; consultas de detalhe param quando o pedido chega a `confirmed` ou `refused`.
+- Mutations de adicionar/remover/atualizar item e aplicar/remover cupom atualizam a query com a resposta REST e invalidam a raiz do carrinho para reconciliação. Alterar quantidade e remover linha são otimistas; em erro, restauram o snapshot anterior. Favoritos também são otimizados, revertidos em erro e invalidados ao terminar.
+- Eventos realtime atualizam caches existentes apenas para o recurso afetado e invalidam cotações/pedidos conforme o contrato acima. Reconexão invalida consultas de catálogo, carrinho e pedidos; REST decide os valores finais.
+
+### Home: banners, Diário da Cunhagem e Footer
+
+`widgets/promo-banners` usa imagens locais do catálogo de mocks em lugar de image fills específicos do Figma; o botão “Explorar” leva para `/?tab=new` ou `/?tab=trending`. `widgets/journal` (“Diário da Cunhagem”) usa conteúdo editorial fixo da demonstração e imagens do catálogo mock; links de leitura levam a `/unavailable?feature=journal`. A newsletter em `widgets/footer` valida o endereço e informa que o cadastro não está disponível, sem simular sucesso. Links de suporte, redes sociais e outros recursos fora do escopo navegam para `/unavailable?feature=...`, conforme a funcionalidade indicada.
+
+### Controles de mock por URL
+
+Com MSW ativo, `app/bootstrap/mock-controls.ts` interpreta `?mockReset=1&mockScenario=<id>` antes de iniciar o worker. `mockReset=1` limpa o estado persistido e restaura os seeds; um identificador válido em `mockScenario` seleciona o cenário (incluindo `default`), e ambos os parâmetros são removidos da barra de endereço após a aplicação. Sem reset nem cenário, o estado persistido não é modificado.
+
+### Deploy
+
+O deploy Vercel está configurado em `vercel.json`: instala com `pnpm install --frozen-lockfile`, builda `@jg/web` pelo Turbo, publica `apps/web/dist` e reescreve rotas SPA para `/index.html`. `apps/web/.env.production` define `VITE_ENABLE_MOCKS=true`, portanto os mocks MSW são incluídos/ativados no build público de demonstração.
+
+### Decisões e desvios de UX registrados em relação ao Figma
+
+- Cadastro envia `displayName` igual ao `username`, embora o formulário apresente username; o modal desktop mantém a Home inerte ao fundo, enquanto mobile usa página.
+- No detalhe de NFT não existe ação de compartilhar; favoritar exige sessão e não é aplicado automaticamente após o login.
+- No carrinho, remover linha é uma ação explícita em cada linha também no mobile; header e BottomNav permanecem globais, o `h1` desktop fica oculto, o badge soma quantidades e relacionados aparecem apenas a partir de 768 px, sem pontos de status. A linha de desconto permanece visível mesmo zerada (`(-) 0,00 ETH`), com formatação decimal do locale.
+- No checkout/recibo, o recibo é modal sobre a Home em desktop e página em mobile; a data usa `Intl`, o botão de fechar é acessível e a linha de desconto só aparece quando não é zero.
+- Na conta, há um único botão Salvar, o avatar é enviado como data URL e a navegação mobile é horizontal. Campos do Figma sem contrato de API (por exemplo, nome ENS e apelido da carteira) foram omitidos.
