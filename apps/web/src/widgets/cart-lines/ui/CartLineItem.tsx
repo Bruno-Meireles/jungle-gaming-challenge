@@ -43,7 +43,7 @@ export function CartLineItem({ line, pending = false, onQuantityChange, onRemove
           <img src={line.image.src} alt={line.image.alt} width={96} height={96} className="size-100 rounded-14 object-cover tablet:size-96 tablet:rounded-8" />
         </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-4 py-12 tablet:p-0">
-          <Link to="/nfts/$nftId" params={{ nftId }} className="text-body-15-bold-lh-16 text-foreground focus-visible:outline-2 focus-visible:outline-focus">
+          <Link to="/nfts/$nftId" params={{ nftId }} className="text-body-15-bold-lh-16 text-foreground tablet:text-body-large-16-bold-lh-16 focus-visible:outline-2 focus-visible:outline-focus">
             {line.title}
           </Link>
           <p className="text-body-14-regular-lh-16 text-secondary">
