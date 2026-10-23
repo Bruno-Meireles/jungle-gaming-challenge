@@ -45,6 +45,30 @@ async function catalog(query = '') {
   return catalogPageDtoSchema.parse(await response.json());
 }
 
+describe('GET /api/nfts/:id (conteudo de demonstracao do Figma)', () => {
+  const detail = async (id: string) => nftDetailDtoSchema.parse(await (await fetch(`${base}/nfts/${id}`)).json());
+
+  it('emerald-ape-042 traz nota 4.8 (19), descricao editorial e atributos Oculos/Esmeralda/Raro', async () => {
+    const emerald = await detail('emerald-ape-042');
+
+    expect(emerald.rating).toEqual({ average: 4.8, count: 19 });
+    expect(emerald.description['pt-BR']).toBe(
+      'Um colecionável digital 1/50 finalizado à mão da coleção Kurio Editions, verificado na Ethereum.',
+    );
+    expect(emerald.description.en).toMatch(/Kurio Editions/);
+    expect(emerald.attributes.map((a) => a.value['pt-BR'])).toEqual(['Óculos', 'Esmeralda', 'Raro']);
+    expect(emerald.attributes.map((a) => a.value.en)).toEqual(['Glasses', 'Emerald', 'Rare']);
+    expect(emerald.attributes.every((a) => a.name['pt-BR'] !== '' && a.name.en !== '')).toBe(true);
+  });
+
+  it('os demais NFTs seguem com conteudo gerado (colecao, rede, raridade)', async () => {
+    const other = await detail('violet-nomad-314');
+
+    expect(other.attributes.map((a) => a.name.en)).toEqual(['Collection', 'Network', 'Rarity']);
+    expect(other.rating).not.toEqual({ average: 4.8, count: 19 });
+  });
+});
+
 describe('GET /api/nfts (catalogo)', () => {
   it('pagina de 9 em 9 sem repetir itens entre paginas e com contagens coerentes', async () => {
     const first = await catalog();
