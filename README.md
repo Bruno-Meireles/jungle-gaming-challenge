@@ -50,8 +50,42 @@ Cenários: `default`, `catalog-empty`, `catalog-error`, `catalog-flaky`, `catalo
 | E2E (Playwright) | `pnpm --filter @jg/web test:e2e` |
 | Um E2E | `pnpm --filter @jg/web exec playwright test e2e/purchase-flow.spec.ts -g "compra completa"` |
 | Regressão visual do DS | `pnpm test:visual` |
-| Lighthouse (3 medições, mediana) | ver `ARCHITECTURE.md` / `tools/` (pendente se ausente) |
+| Lighthouse (12 auditorias; 3 medições por rota/perfil, mediana) | `pnpm lighthouse` (relatórios em `docs/lighthouse/`; código diferente de zero enquanto alguma meta não for atingida) |
 | Tudo | `pnpm verify` |
+
+### Reproduzir cenários de falha
+
+Com `pnpm dev` ativo e mocks habilitados, abra `http://localhost:5173/?mockReset=1&mockScenario=<id>` para iniciar do seed conhecido com o cenário desejado. Em seguida, navegue para a tela indicada. Para cenários privados, autentique-se com Ana (`ana@example.test` / `JungleDemo-Ana-2026!`) antes de abrir a rota. Resultados esperados:
+
+| Cenário                           | Tela/ação                                                        | Resultado esperado                                                                                        |
+| --------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `catalog-empty`                   | Home (`/`)                                                       | Estado vazio, sem cards; “Limpar filtros” restaura a listagem.                                            |
+| `catalog-error`                   | Home (`/`)                                                       | Alerta de falha e “Tentar novamente”; a falha persiste.                                                   |
+| `catalog-flaky`                   | Home (`/`)                                                       | Falha inicial; “Tentar novamente” carrega os NFTs.                                                        |
+| `catalog-slow`                    | Home (`/`)                                                       | Skeleton durante a espera e cards após a resposta.                                                        |
+| `catalog-out-of-order`            | Home (`/`); alterne “Em alta” e “Novos lançamentos”              | A resposta lenta anterior não substitui os resultados nem a aba mais recente.                             |
+| `auth_network_error`              | Login (`/login`)                                                 | Erro de conexão recuperável; não autentica.                                                               |
+| `auth_server_error`               | Login (`/login`)                                                 | Erro de indisponibilidade do servidor; não autentica.                                                     |
+| Credenciais inválidas             | Login (`/login`); use e-mail da Ana com senha incorreta          | Mensagem de credenciais inválidas e sessão permanece anônima.                                             |
+| Conflito de cadastro              | Cadastro (`/signup`); use `ana@example.test`                     | E-mail já utilizado é associado ao campo; a conta não é criada.                                           |
+| `nft-detail-slow`                 | Detalhe (`/nfts/emerald-ape-042`)                                | Região ocupada/skeleton até os dados do NFT carregarem.                                                   |
+| `nft-detail-error`                | Detalhe (`/nfts/emerald-ape-042`)                                | Erro com “Tentar novamente”; após voltar ao cenário `default`, a tentativa carrega o NFT.                 |
+| `favorites-error`                 | Após login, detalhe de um NFT; acione Favoritar                  | A falha da mutation reverte o estado otimista do favorito.                                                |
+| `cart-slow`                       | Após login, carrinho (`/cart`)                                   | Skeleton do carrinho enquanto a resposta está lenta; itens aparecem depois.                               |
+| `cart-error`                      | Após login, carrinho (`/cart`)                                   | Erro de carregamento e opção de tentar novamente; `default` recupera os itens.                            |
+| `cart-mutation-error`             | Após login, carrinho (`/cart`); altere quantidade ou remova item | A mutation falha e o carrinho mantém o estado confirmado anterior.                                        |
+| `cart-availability-conflict`      | Detalhe de NFT; tente adicioná-lo ao carrinho                    | API responde conflito de disponibilidade (409); item não é adicionado.                                    |
+| Cupom inválido/expirado           | Após login, carrinho (`/cart`); aplique `NOPE` ou `EXPIRED2025`  | Erro de validação informa que o cupom é inválido ou expirado; não é aplicado.                             |
+| `quote-error`                     | Após login, carrinho ou checkout                                 | Cotação indisponível; compra não deve ser confirmada com cotação ausente.                                 |
+| `cart-price-changed`              | Após login, carrinho/checkout; atualize a cotação                | Preço do item muda para `1.29 ETH` e a cotação é sincronizada antes da compra.                            |
+| `cart-sold-out`, `quote-sold-out` | Após login, carrinho/checkout; atualize a cotação                | Edição fica indisponível; API informa conflito e checkout não deve concluir a compra.                     |
+| `quote-changed-on-confirm`        | Após login, checkout; clique “Confirmar compra”                  | Aviso “A cotação mudou. Revise os valores e confirme novamente.”; só a segunda confirmação cria o pedido. |
+| `checkout-session-expired`        | Após login, checkout; confirme a compra                          | Sessão expira e redireciona ao login preservando o destino `/checkout`.                                   |
+| `wallet-rejected`                 | Após login, checkout; tente conectar uma carteira                | Conexão recusada; compra não avança como se a carteira estivesse conectada.                               |
+| `order-refused`                   | Após login, checkout; conclua a compra                           | Recibo mostra “Pagamento recusado”, sem estado de pagamento aprovado.                                     |
+| `order-pending`                   | Após login, conclua a compra e abra o recibo                     | Recibo apresenta estado pendente e pode ser atualizado via Socket.IO/recuperado por REST.                 |
+| `order-timeout`                   | Após login, checkout; confirme a compra                          | Falha de rede após criação é recuperada com a mesma chave de idempotência, sem pedido duplicado.          |
+| `orders-error`                    | Após login, abra `/orders/ord-ana-0001`                          | A consulta do pedido falha com indisponibilidade; não exibe sucesso fictício.                             |
 
 ## Estrutura
 
