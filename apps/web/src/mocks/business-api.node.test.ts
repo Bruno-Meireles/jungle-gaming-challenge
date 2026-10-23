@@ -8,7 +8,8 @@ import {
   saveWallet,
   updateProfile,
 } from '../entities/user/api/account-api';
-import { fetchSession, login, logout, register } from '../entities/user/api/auth-api';
+import { fetchSession } from '../entities/session';
+import { login, logout, register } from '../entities/user/api/auth-api';
 import { createHttpClient } from '../shared/api/http-client';
 import { createHandlers } from './handlers';
 import { resetMockState } from './reset';
