@@ -80,7 +80,7 @@ export function WalletNetworkPicker(props: WalletNetworkPickerProps) {
       {visible.length === 0 ? (
         <div className="flex flex-col gap-8">
           <p>{t('empty')}</p>
-          <Link to="/account/wallets" className="text-text-accent">
+          <Link to="/account/wallets" className="text-text-accent underline">
             {t('register')}
           </Link>
         </div>

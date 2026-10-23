@@ -7,7 +7,7 @@ function Row({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex justify-between gap-16 text-body-14-regular-lh-16">
       <span>{label}</span>
-      <span>{value}</span>
+      <span className="min-w-0 break-all text-right">{value}</span>
     </div>
   );
 }
@@ -36,7 +36,7 @@ export function OrderReceipt({ view }: { view: ReceiptView }) {
       {view.discount ? <Row label={t('discount')} value={view.discount} /> : null}
       <Row label={t('total')} value={view.total} />
       {view.explorerUrl ? (
-        <a href={view.explorerUrl} target="_blank" rel="noopener noreferrer" className="text-text-accent">
+        <a href={view.explorerUrl} target="_blank" rel="noopener noreferrer" className="text-text-accent underline">
           {t('explorer')}
         </a>
       ) : null}

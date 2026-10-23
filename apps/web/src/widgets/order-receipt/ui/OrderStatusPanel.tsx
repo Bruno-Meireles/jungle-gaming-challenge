@@ -7,10 +7,6 @@ import type { ReceiptState } from '../model/ports';
 
 export type OrderStatusPanelProps = { state: { kind: ReceiptState['kind'] }; onRetry: () => void };
 
-// Rota ainda nao registrada em router.tsx (fora do escopo): cast ate o registro; remover depois.
-// eslint-disable-next-line no-restricted-syntax
-const CHECKOUT_ROUTE = '/checkout' as '/';
-
 const TONES = {
   loading: 'info',
   pending: 'info',
@@ -34,7 +30,7 @@ export function OrderStatusPanel({ state, onRetry }: OrderStatusPanelProps) {
     );
   } else if (state.kind === 'refused') {
     action = (
-      <Link to={CHECKOUT_ROUTE} className="text-text-accent">
+      <Link to="/checkout" className="text-text-accent underline">
         {t('backToPayment')}
       </Link>
     );

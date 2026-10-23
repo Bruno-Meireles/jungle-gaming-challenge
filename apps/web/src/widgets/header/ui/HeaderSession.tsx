@@ -18,9 +18,9 @@ export function HeaderSession() {
     return (
       <>
         <Button asChild variant="outline" className={BUTTON}>
-          <Link to="/account/profile" aria-label={t('account')}>
+          <Link to="/account/profile">
             <UserIcon />
-            <span className="hidden desktop:inline">{session.data.user.displayName}</span>
+            <span className="sr-only desktop:not-sr-only">{session.data.user.displayName}</span>
           </Link>
         </Button>
         <Button

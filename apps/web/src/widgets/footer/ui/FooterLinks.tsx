@@ -16,10 +16,10 @@ const SOCIAL = ['instagram', 'x', 'discord', 'youtube'] as const;
 
 function Column({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <nav aria-label={title} className="flex flex-col gap-12">
+    <section aria-label={title} className="flex flex-col gap-12">
       <h2 className={TITLE}>{title}</h2>
       <ul className="m-0 flex list-none flex-col gap-8 p-0">{children}</ul>
-    </nav>
+    </section>
   );
 }
 
