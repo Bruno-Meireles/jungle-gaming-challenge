@@ -10,7 +10,10 @@ export function RealtimeSessionBridge() {
   const queryClient = useQueryClient();
   const subscribe = useCallback(
     (onStoreChange: () => void) =>
-      queryClient.getQueryCache().subscribe(() => onStoreChange()),
+      queryClient.getQueryCache().subscribe((event) => {
+        // observerAdded/Removed disparam durante a renderizacao de outros componentes; so mudancas de dado importam.
+        if (event.type === 'updated' || event.type === 'removed' || event.type === 'added') onStoreChange();
+      }),
     [queryClient],
   );
   const getSession = useCallback(

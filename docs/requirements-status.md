@@ -1,6 +1,6 @@
 # Status dos requisitos do prompt.md (seção `challenge`)
 
-Legenda: **A** atendido (verificado por execução), **P** parcial, **X** pendente. Evidência = comando/arquivo executado nesta sessão. Atualizado em 2026-10-23. Itens de backend/tempo real/Lighthouse do Copilot estão em `docs/requirements-backend-status.md` (quando existir) e são consolidados no HANDOFF.md.
+Legenda: **A** atendido (verificado por execução), **P** parcial, **X** pendente. Evidência = comando/arquivo executado nesta sessão. Atualizado em 2026-10-23 (verificacao final sobre 901880d + fix do RealtimeSessionBridge). Seletor de idioma removido do header a pedido do usuario (idioma por jg:locale/navigator.languages). Itens de backend/tempo real/Lighthouse do Copilot estão em `docs/requirements-backend-status.md` (quando existir) e são consolidados no HANDOFF.md.
 
 Comandos de verificação usados: `pnpm lint` (turbo, 2 pacotes), `cd apps/web && npx tsc --noEmit`, `npx vitest run` (node + Chromium), `PW_OUTPUT=... PORT=5180 npx playwright test --project=desktop-1440 --project=mobile-390`, `node ../../tools/e2e-preview.mjs` (E2E contra `vite preview` do build).
 
@@ -57,7 +57,13 @@ Ver `docs/requirements-backend-status.md` (Copilot) e ARCHITECTURE.md. Itens ver
 | Regressão visual (início, detalhe, carrinho, pagamento) com baselines | A | `visual.spec.ts` (+ snapshots win32, estáveis em 2 execuções); baselines só valem na plataforma que as gerou |
 | Relatório HTML e traces | A | `playwright.config.ts` (reporter html, trace retain-on-failure) |
 
-## §10 Lighthouse — ver HANDOFF.md / docs/lighthouse (Copilot, fila item 2): **X até medir**.
+## §10 Lighthouse
+| Combinacao (12 auditorias, mediana de 3) | Performance | A11y | BP | SEO | Status |
+|---|---|---|---|---|---|
+| Home mobile / desktop | 49 / 30 | 100 | 100 | 100 | Perf **X** (meta 90); demais A |
+| Detalhe mobile / desktop | 58 / 32 | 100 | 100 | 100 | Perf **X** (meta 90); demais A |
+
+Evidencia: `docs/lighthouse/summary.json` e relatorios HTML/JSON, `pnpm lighthouse`. Baseline anterior 34/28/55/32. Performance NAO atingida. O boot de JavaScript (bundle principal 509 kB e chunk MSW 468 kB, obrigatorio no build publico) e compativel com o TBT alto, mas os relatorios nao provam que o MSW sozinho seja a causa.
 
 ## §12 Entrega
 | Requisito | Status | Evidência |
@@ -65,5 +71,12 @@ Ver `docs/requirements-backend-status.md` (Copilot) e ARCHITECTURE.md. Itens ver
 | README (setup, env, credenciais, cenários/reset, comandos) | A | `README.md` (revisão dos comandos: fila do Copilot item 7) |
 | ARCHITECTURE.md (contratos, sessão, carrinho, cache, reconciliação, desvios) | P | seção do Copilot publicada; correções e seções finais na fila item 1 |
 | Scripts: dev com mocks, build, preview, typecheck, lint, Playwright, Lighthouse | P | todos existem exceto Lighthouse (fila item 2) |
-| Deploy público (Vercel) | X | `vercel.json` pronto; CLI sem login nesta máquina (ver HANDOFF.md) |
+| Deploy público (Vercel) | X | `vercel.json` pronto; CLI logada; deploy sera feito apos o merge na main e a validacao manual do usuario |
 | Checkout limpo | P | fila do Copilot item 6 |
+
+## Verificacao final (2026-10-23)
+- `tsc --noEmit` e `pnpm lint`: ok.
+- Vitest do app (serial): 1138 passaram, 3 falharam na 1a execucao (timeouts sob carga: lint-i18n, FilterPanel medida e outro); FilterPanel e lint-i18n passam isolados (34/34). Terceiro nao identificado: **nao confirmado**.
+- Playwright desktop+mobile, 2 workers: 295 passaram, 5 falharam (timeouts de 30s em carrinho/pagamento/realtime/visual); os 5 passam isolados. Causa provavel: carga/cold start; nao comprovado.
+- Corrigido aviso do React (setState durante render no RealtimeSessionBridge); realtime+compra 12/12.
+- Nao verificado: baselines visuais so em win32; zoom 200%; reconexao automatica do mesmo socket sem reload (P).
