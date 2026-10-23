@@ -92,3 +92,7 @@ Com `pnpm dev` ativo e mocks habilitados, abra `http://localhost:5173/?mockReset
 ## Estrutura
 
 `apps/web/src`: `app` (providers, router, bootstrap) › `pages` › `widgets` › `features` › `entities` › `shared`; imports apenas para baixo e sempre pelo `index.ts` do slice (lint). `mocks/` é a única camada com respostas fictícias. Decisões e desvios do Figma: `ARCHITECTURE.md`. Padrões: `.AI/standards/`.
+
+## Deploy público
+
+https://jungle-gaming-challenge-lemon.vercel.app (Vercel, mocks MSW ativos). Publicado via `vercel deploy --prod --archive=tgz`; `.vercelignore` mantém o upload enxuto.
