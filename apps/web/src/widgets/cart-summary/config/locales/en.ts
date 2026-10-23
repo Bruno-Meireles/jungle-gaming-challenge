@@ -7,6 +7,7 @@ export const en = {
   discount: 'Discount',
   discountValue: '(-) {{amount}} ETH',
   networkFee: 'Network fee',
+  estimatedFee: 'Estimated fee',
   total: 'Total',
   couponApplied: 'Coupon {{code}} applied',
   error: 'Could not calculate the summary. Try again.',

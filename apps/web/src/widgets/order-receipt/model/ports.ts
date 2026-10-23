@@ -6,6 +6,7 @@ export type ReceiptItem = {
   quantity: number;
   unitPriceEth: string;
   lineTotalEth: string;
+  imageSrc?: string;
 };
 
 export type ReceiptSnapshot = {
@@ -27,9 +28,12 @@ export type ReceiptView = {
   id: string;
   transactionRef: string | null;
   date: string;
+  /** Somente a data (sem hora), para o resumo do modal. */
+  dateShort: string;
+  networkId: ReceiptSnapshot['networkId'];
   wallet: string;
   explorerUrl: string | null;
-  items: { key: string; title: string; editions: number; totalLabel: string }[];
+  items: { key: string; title: string; tokenId: string; imageSrc?: string; editions: number; totalLabel: string }[];
   networkFee: string;
   /** null quando o desconto e zero. */
   discount: string | null;

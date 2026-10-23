@@ -10,11 +10,13 @@ const view: ReceiptView = {
   id: 'ord-ana-0001',
   transactionRef: '0xdeadbeef',
   date: '5 de mar. de 2026, 23:30',
+  dateShort: '5 de mar. de 2026',
+  networkId: 'ethereum',
   wallet: '0xA91F…E82C',
   explorerUrl: 'https://etherscan.io/tx/0xdeadbeef',
   items: [
-    { key: '042', title: 'Emerald Ape', editions: 2, totalLabel: '20 ETH' },
-    { key: '314', title: 'Violet Nomad', editions: 6, totalLabel: '6,6 ETH' },
+    { key: '042', tokenId: '0042', title: 'Emerald Ape', editions: 2, totalLabel: '20 ETH' },
+    { key: '314', tokenId: '0314', title: 'Violet Nomad', editions: 6, totalLabel: '6,6 ETH' },
   ],
   networkFee: '0,246 ETH',
   discount: null,
@@ -26,14 +28,16 @@ describe('OrderReceipt (pt-BR)', () => {
     await renderCheckoutUi(<OrderReceipt view={view} />);
     await expect.element(page.getByText('ID da transação')).toBeVisible();
     await expect.element(page.getByText('0xdeadbeef')).toBeVisible();
-    await expect.element(page.getByText('5 de mar. de 2026, 23:30')).toBeVisible();
+    await expect.element(page.getByText('5 de mar. de 2026')).toBeVisible();
     await expect.element(page.getByText('0xA91F…E82C')).toBeVisible();
     await expect.element(page.getByText('Emerald Ape')).toBeVisible();
     await expect.element(page.getByText(/2 edições/)).toBeVisible();
     await expect.element(page.getByText(/6 edições/)).toBeVisible();
     await expect.element(page.getByText('6,6 ETH', { exact: true })).toBeVisible();
     await expect.element(page.getByText('0,246 ETH', { exact: true })).toBeVisible();
-    await expect.element(page.getByText('26,846 ETH', { exact: true })).toBeVisible();
+    // Total aparece no resumo do topo e na linha final.
+    await expect.element(page.getByText('26,846 ETH', { exact: true }).first()).toBeVisible();
+    expect(page.getByText('26,846 ETH', { exact: true }).elements()).toHaveLength(2);
   });
 
   it('sem desconto nao mostra a linha de desconto', async () => {

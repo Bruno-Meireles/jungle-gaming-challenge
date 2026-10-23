@@ -16,8 +16,8 @@ const TEXT = {
     inc: 'Aumentar quantidade',
     max: 'Máximo de 3 por pedido',
     description: 'Um macaco esmeralda raro.',
-    reviews: 'Avaliações',
-    details: 'Detalhes',
+    reviews: 'Avaliações de colecionadores (124)',
+    details: 'Detalhes do NFT',
     price: { def: '1,19 ETH', small: '1,69 ETH' },
   },
   en: {
@@ -31,8 +31,8 @@ const TEXT = {
     inc: 'Increase quantity',
     max: 'Maximum 3 per order',
     description: 'A rare emerald ape.',
-    reviews: 'Reviews',
-    details: 'Details',
+    reviews: 'Collector reviews (124)',
+    details: 'NFT details',
     price: { def: '1.19 ETH', small: '1.69 ETH' },
   },
 } as const;

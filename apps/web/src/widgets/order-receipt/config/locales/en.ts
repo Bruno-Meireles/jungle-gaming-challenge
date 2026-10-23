@@ -1,6 +1,13 @@
 import type { ptBR } from './pt-BR';
 
 export const en = {
+  itemsHeading: 'Transaction details',
+  columnNfts: 'NFTs',
+  columnEditions: 'Editions',
+  columnSubtotal: 'Subtotal',
+  tokenId: 'Token ID: {{tokenId}}',
+  confirmedMessage: 'Your NFTs are now in your wallet',
+  confirmedNote: 'Transaction confirmed on {{network}}. Ownership was transferred to your connected wallet and recorded on the network.',
   transactionId: 'Transaction ID',
   date: 'Date',
   wallet: 'Wallet',

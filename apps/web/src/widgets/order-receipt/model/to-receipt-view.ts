@@ -17,17 +17,25 @@ function formatDate(iso: string, locale: Locale): string {
   return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' }).format(new Date(iso));
 }
 
+function formatDay(iso: string, locale: Locale): string {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeZone: 'UTC' }).format(new Date(iso));
+}
+
 export function toReceiptView(order: ReceiptSnapshot, locale: Locale): ReceiptView {
   const ref = order.transactionRef;
   return {
     id: order.id,
     transactionRef: ref,
     date: formatDate(order.createdAt, locale),
+    dateShort: formatDay(order.createdAt, locale),
+    networkId: order.networkId,
     wallet: shortenAddress(order.walletAddress),
     explorerUrl: ref === null ? null : `${EXPLORERS[order.networkId]}${encodeURIComponent(ref)}`,
     items: order.items.map((item) => ({
       key: item.tokenId,
       title: item.title,
+      tokenId: item.tokenId,
+      ...(item.imageSrc ? { imageSrc: item.imageSrc } : {}),
       editions: item.quantity,
       totalLabel: eth(item.lineTotalEth, locale),
     })),

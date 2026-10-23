@@ -5,8 +5,8 @@ import { mountWithRouter, nft, type Locale } from '../../../test-support/nft-det
 import { NftInfoTabs } from '..';
 
 const TEXT = {
-  'pt-BR': { details: 'Detalhes', reviews: 'Avaliações', description: 'Um macaco esmeralda raro.', attr: 'Fundo', attrValue: 'Verde', royalty: 'Royalties', reviewCount: '124 avaliações' },
-  en: { details: 'Details', reviews: 'Reviews', description: 'A rare emerald ape.', attr: 'Background', attrValue: 'Green', royalty: 'Royalties', reviewCount: '124 reviews' },
+  'pt-BR': { details: 'Detalhes do NFT', reviews: 'Avaliações de colecionadores (124)', description: 'Um macaco esmeralda raro.', attr: 'Fundo', attrValue: 'Verde', royalty: 'Direitos autorais do criador: 5% nas vendas secundárias', reviewCount: '124 avaliações' },
+  en: { details: 'NFT details', reviews: 'Collector reviews (124)', description: 'A rare emerald ape.', attr: 'Background', attrValue: 'Green', royalty: 'Creator royalty: 5% on secondary sales', reviewCount: '124 reviews' },
 } as const;
 
 type Props = Parameters<typeof NftInfoTabs>[0];

@@ -41,37 +41,39 @@ function PurchaseSection({
         {t('shared:eth.amount', { amount: formatEthAmount(price, locale) })}
       </p>
       <EditionPicker editions={editions} selectedId={edition.id} onSelect={onSelectEdition} />
-      <div className="flex flex-col gap-8">
-        <QuantityControl
-          value={quantity}
-          min={1}
-          max={max}
-          onValueChange={setRequested}
-          label={t('quantity')}
-          decrementLabel={t('decrease')}
-          incrementLabel={t('increase')}
-        />
-        {max > 0 && quantity >= max ? (
-          <p role="status" className="text-body-14-regular-lh-16 text-text-secondary">
-            {t('maxReached', { max })}
-          </p>
-        ) : null}
-      </div>
       <p className="flex items-baseline gap-8 text-body-14-regular-lh-16 text-foreground">
         <span>{t('total')}</span>
         <span className="text-title-20-regular-lh-10">
           {t('shared:eth.amount', { amount: formatEthFixed(total, locale, 2) })}
         </span>
       </p>
-      <div className="flex items-start gap-12 tablet:flex-col tablet:items-stretch tablet:gap-24">
-        <AddToCartButton
-          nftId={nftId}
-          editionId={edition.id}
-          quantity={quantity}
-          controller={addToCart}
-          disabled={max === 0}
-        />
-        <FavoriteButton {...favorite} />
+      <div className="flex flex-col gap-24 desktop:flex-row desktop:items-center desktop:justify-between">
+        <div className="flex flex-col gap-8">
+          <QuantityControl
+            value={quantity}
+            min={1}
+            max={max}
+            onValueChange={setRequested}
+            label={t('quantity')}
+            decrementLabel={t('decrease')}
+            incrementLabel={t('increase')}
+          />
+          {max > 0 && quantity >= max ? (
+            <p role="status" className="text-body-14-regular-lh-16 text-text-secondary">
+              {t('maxReached', { max })}
+            </p>
+          ) : null}
+        </div>
+        <div className="flex items-start gap-12 tablet:items-stretch tablet:gap-12">
+          <AddToCartButton
+            nftId={nftId}
+            editionId={edition.id}
+            quantity={quantity}
+            controller={addToCart}
+            disabled={max === 0}
+          />
+          <FavoriteButton {...favorite} />
+        </div>
       </div>
     </section>
   );

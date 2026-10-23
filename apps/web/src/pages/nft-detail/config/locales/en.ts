@@ -12,4 +12,5 @@ export const en = {
   back: 'Back',
   breadcrumb: 'Breadcrumb',
   crumbHome: 'Home',
+  reviewsLabel: '{{count}} collector reviews',
 } satisfies typeof ptBR;
