@@ -49,7 +49,7 @@
     "serverUrl": "http://127.0.0.1:4173",
     "compression": "Brotli or gzip for compressible MIME types when accepted by the client",
     "cacheHeaders": "immutable /assets files, one-week /nfts image files, no-cache SPA documents and MSW worker",
-    "knownVercelDifference": "vercel.json currently applies the /nfts cache rule to extensionless SPA routes as well"
+    "knownVercelDifference": "At audit time the broad /nfts/(.*) Vercel rule could cache extensionless SPA routes. This was corrected afterward in commit 36c2c0f to /nfts/:file.webp; the local server already used no-cache for SPA documents."
   },
   "environment": {
     "node": "v24.19.0",
