@@ -53,14 +53,16 @@ Legenda: **Tem** = contrato e mock já trazem o dado; **Parcial** = existe, mas 
 | E-mail, senha, "Esqueceu a senha?", "Entrar", "Ou continue com", Google/Facebook, "Novo na Kurio? Crie uma conta" | Tem / fora de escopo | Login/cadastro existem (`auth.ts`); "Esqueceu a senha?" e os logins sociais não têm endpoint e levam a `/unavailable?feature=…` (decisão já registrada). |
 | Cadastro: "Nome de usuário", e-mail, "Senha", "Confirmar senha", "Criar perfil", "Já tem uma conta? Entre" | Tem | `usernameSchema`, `emailSchema`, `passwordSchema` no contrato; "Confirmar senha" é validação do cliente. |
 
-## Resumo do que falta no contrato/mocks
+## Resumo e decisões (Claude, 2026-10-23)
 
-1. **Nome da coleção** ("Kurio Apes", "Kurio Editions"): novo campo localizável (ex.: `collectionName`) em `NftDetailDto`; hoje só há o enum de categoria.
-2. **Atributos/traços por NFT** (Óculos, Esmeralda, Raro): mock hoje devolve metadados de catálogo, não traços.
-3. **Dados exatos do Emerald Ape**: rating 4.8/19 e descrição editorial (pt-BR/en) em vez de valores gerados.
-4. **Edições do Figma**: decidir 1/10 + 1/50 + aberta (e 1/1 para Violet Nomad no carrinho) vs. o conjunto atual do mock.
-5. **Carteira com ENS e a "reserva" Polygon** no seed da Ana, e endereço `0xA91F…E82C`.
-6. **Provedores de carteira** (WalletConnect, MetaMask, Coinbase Wallet) no mock de conexão.
-7. **Rótulos de resumo** ("Desconto do lançamento", "Taxa estimada"): decisão de texto/i18n; contrato já tem `discountEth` e `networkFeeEth`.
+Princípio: só fidelidade visual e conteúdo de demonstração; sem mudar contratos nem regras de negócio.
 
-Nada disso foi alterado no código; ajustes de mocks/contratos dependem da decisão do Claude sobre os itens 1, 2, 4 e 7.
+| # | Lacuna | Decisão | Estado |
+| --- | --- | --- | --- |
+| 1 | Nome da coleção ("Kurio Apes", "Kurio Editions") | Contrato inalterado | **Limitação aceita:** o contrato só tem a categoria (`collectionId`); a UI não mostra "Kurio Apes". |
+| 2 | Atributos "Óculos, Esmeralda, Raro" | Só no mock de detalhe de `emerald-ape-042`, mantendo `{name,value}` | **Feito:** Acessório: Óculos, Cor: Esmeralda, Raridade: Raro (pt-BR e en). Demais NFTs inalterados. |
+| 3 | Nota 4.8 (19) e descrição editorial | Só `emerald-ape-042` | **Feito** (pt-BR e en); demais seguem gerados. |
+| 4 | Edições (1/10 duplicado, 1/1 e 1/10 no carrinho, Golden Beat) e valores do carrinho (linhas somam 8.14 ou 10.12; Figma diz 8.92) | Não alterar (regra de preço/estoque é de negócio) | **Divergência registrada:** o app mantém as edições e o seed do mock; o carrinho mobile não reproduz os números do Figma. |
+| 5 | ENS `nova.kurio.eth`, reserva Polygon, `0xA91F…E82C` | Não alterar | **Limitação aceita** (seed da Ana tem só a principal Ethereum). |
+| 6 | Provedores WalletConnect/MetaMask/Coinbase | Não alterar | **Limitação aceita** (mock devolve `MockWallet`). |
+| 7 | Rótulos "Desconto do lançamento" e "Taxa estimada" | Decisão de texto na UI (Claude, i18n) | Fora do escopo de negócio; contrato já tem `discountEth` e `networkFeeEth`. |
