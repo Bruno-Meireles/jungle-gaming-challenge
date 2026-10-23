@@ -1,6 +1,7 @@
 import { Alert, Button } from '@jg/design-system';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_PILL_CTA } from '../../../shared/ui';
 import type { AddToCartController } from '../model/add-to-cart-controller';
 
 export type AddToCartButtonProps = {
@@ -16,9 +17,10 @@ export function AddToCartButton({ nftId, editionId, quantity, controller, disabl
   const { t } = useTranslation('addToCart');
   const { failure } = controller;
   return (
-    <div className="flex flex-col gap-12">
+    <div className="flex min-w-0 flex-1 flex-col gap-12 tablet:flex-none">
       <Button
         size="block"
+        className={MOBILE_PILL_CTA + ' text-body-large-16-bold-lh-20 tablet:text-body-15-bold-lh-16'}
         disabled={disabled}
         loading={controller.pending}
         onClick={() => controller.submit({ nftId, editionId, quantity })}

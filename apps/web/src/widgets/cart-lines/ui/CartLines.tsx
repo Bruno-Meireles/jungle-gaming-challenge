@@ -13,7 +13,7 @@ export type CartLinesProps = {
 export function CartLines({ lines, pendingLineIds, onQuantityChange, onRemove }: CartLinesProps) {
   const { t } = useTranslation('cartLines');
   return (
-    <ul aria-label={t('label')} className="m-0 flex list-none flex-col p-0">
+    <ul aria-label={t('label')} className="m-0 flex list-none flex-col gap-20 p-0 tablet:gap-0">
       {lines.map((line) => (
         <CartLineItem
           key={line.lineId}

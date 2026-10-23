@@ -2,6 +2,8 @@ import { FormField, Input, Textarea } from '@jg/design-system';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_FIELD } from '../../../shared/ui';
+
 import type { CollectorErrors, CollectorField, CollectorValues } from '../model/collector-schema';
 
 export type CollectorFormProps = {
@@ -40,6 +42,7 @@ export function CollectorForm({ values, errors, focusField, onChange }: Collecto
       {TEXT_FIELDS.map(({ field, required, type, autoComplete }) => (
         <FormField key={field} label={t(`fields.${field}`)} error={errorOf(field)}>
           <Input
+            className={MOBILE_FIELD}
             name={field}
             type={type ?? 'text'}
             autoComplete={autoComplete}

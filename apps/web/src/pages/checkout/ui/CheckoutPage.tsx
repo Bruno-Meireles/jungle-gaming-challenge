@@ -16,7 +16,7 @@ export function CheckoutPage({ form, wallet, ...view }: CheckoutPageProps) {
   useDocumentMeta({ title: t('title'), description: t('description') });
   return (
     <PageContainer className="py-24 tablet:py-32">
-      <h1 className="mb-24 text-heading-28-bold text-foreground">{t('heading')}</h1>
+      <h1 className="mb-24 text-title-20-bold-lh-16 text-foreground tablet:text-heading-28-bold">{t('heading')}</h1>
       <div className="flex flex-col gap-32 desktop:grid desktop:grid-cols-[1fr_405px] desktop:gap-48">
         <div className="flex flex-col gap-32">
           <section aria-label={t('collector')}>

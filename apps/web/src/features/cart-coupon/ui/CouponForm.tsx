@@ -45,9 +45,23 @@ export function CouponForm({ appliedCode, pending, failure, onApply, onRemove }:
   return (
     <form noValidate onSubmit={submit} className="flex flex-col gap-12">
       <FormField label={t('label')} error={fieldError}>
-        <Input value={value} onChange={(event) => setValue(event.target.value)} autoComplete="off" />
+        <Input
+          className="h-50 rounded-40 bg-surface-card pr-0 tablet:h-40 tablet:rounded-5 tablet:bg-transparent tablet:pr-16"
+          endSlot={
+            <button
+              type="submit"
+              disabled={pending}
+              className="-my-12 h-50 w-97 cursor-pointer rounded-40 border-0 bg-linear-to-br from-primary/54 to-primary text-body-15-bold-lh-16 text-foreground disabled:cursor-not-allowed disabled:opacity-60 tablet:hidden"
+            >
+              {t('apply')}
+            </button>
+          }
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          autoComplete="off"
+        />
       </FormField>
-      <Button type="submit" variant="outline" loading={pending} className="self-start">
+      <Button type="submit" variant="outline" loading={pending} className="hidden self-start tablet:inline-flex">
         {t('apply')}
       </Button>
       {failure === 'network' || failure === 'unexpected' ? (

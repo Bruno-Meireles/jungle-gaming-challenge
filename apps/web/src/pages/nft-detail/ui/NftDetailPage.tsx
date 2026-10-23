@@ -84,7 +84,7 @@ function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps 
       <NftGallery title={nft.title} images={nft.gallery} />
       <div className="flex flex-col gap-24">
         <header className="flex flex-col gap-8">
-          <h1 className="text-heading-24-bold text-foreground">{nft.title}</h1>
+          <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-heading-24-bold">{nft.title}</h1>
           <p className="text-body-14-regular-lh-16 text-text-secondary">{nft.tokenId}</p>
           <Rating value={nft.rating.average} max={5} label={t('ratingLabel', { average })} />
         </header>

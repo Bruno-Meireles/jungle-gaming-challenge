@@ -11,7 +11,7 @@ export function CartPageView({ heading, main, aside, footer }: { heading: string
     <PageContainer className="py-24 tablet:py-32">
       <BackButton label={t('back')} />
       <PageBreadcrumb label={t('breadcrumb')} items={[{ label: t('crumbHome'), to: '/' }, { label: heading }]} />
-      <h1 className="mb-24 text-heading-28-bold text-foreground">{heading}</h1>
+      <h1 className="mb-24 text-title-20-bold-lh-16 text-foreground tablet:text-heading-28-bold">{heading}</h1>
       <div className="flex flex-col gap-32 desktop:grid desktop:grid-cols-[1fr_405px] desktop:gap-48">
         <div>{main}</div>
         {aside ? <aside className="flex flex-col gap-24">{aside}</aside> : null}

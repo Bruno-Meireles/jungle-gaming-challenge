@@ -3,7 +3,10 @@ import { Link } from '@tanstack/react-router';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_PILL_CTA } from '../../../shared/ui';
 import { resolveCheckoutTarget } from '../model/resolve-checkout-target';
+
+const CTA = MOBILE_PILL_CTA + ' text-body-large-16-bold-lh-20 tablet:text-body-15-bold-lh-16';
 
 export type CheckoutDisabledReason = 'quote_pending' | 'quote_error' | 'line_blocking';
 
@@ -20,7 +23,7 @@ export function CheckoutCta({
   if (disabledReason) {
     return (
       <div className="flex flex-col gap-8">
-        <Button size="block" disabled aria-describedby={hintId}>
+        <Button size="block" disabled aria-describedby={hintId} className={CTA}>
           {label}
         </Button>
         <p id={hintId} className="text-body-14-regular-lh-16 text-secondary">
@@ -31,7 +34,7 @@ export function CheckoutCta({
   }
   const target = resolveCheckoutTarget(isAuthenticated);
   return (
-    <Button size="block" asChild>
+    <Button size="block" asChild className={CTA}>
       {target.to === '/checkout' ? (
         <Link to="/checkout">{label}</Link>
       ) : (
