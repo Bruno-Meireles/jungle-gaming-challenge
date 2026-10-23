@@ -26,7 +26,8 @@ Comandos de verificação usados: `pnpm lint` (turbo, 2 pacotes), `cd apps/web &
 | Login / Cadastro | A | `auth-account.spec.ts` |
 | Perfil / Carteiras | A | `auth-account.spec.ts` |
 | Mobile 390, tablet 768, desktop 1440 sem overflow e sem violações axe | A | `screens-a11y.spec.ts` (pt-BR e en, 11 telas) |
-| Fidelidade visual ao Figma | P | medidas dos componentes do DS e blocos principais por testes `*.measure.test.tsx`; telas montadas por composição sem comparação pixel a pixel (PNG do Figma não foi aberto por regra do usuário); desvios em ARCHITECTURE.md |
+| Fidelidade visual ao Figma | P | medidas dos componentes do DS e blocos principais por testes `*.measure.test.tsx`; telas montadas por composição sem comparação pixel a pixel (PNG do Figma não foi aberto por regra do usuário); desvios em ARCHITECTURE.md. Revisão visual mobile/desktop (frames Mobile Login, Cadastro, Carrinho, Pagamento, Detalhe, banner do Hero, carrossel) feita na `feat/visual-review` com baselines regeneradas (`18ade65`); **ainda não integrada na `main`**. Lacunas de conteúdo/negócio dos frames mobile e decisões: `docs/figma-mobile-gaps.md` (limitações aceitas e divergências registradas) |
+| Abas da Home ("Todos os NFTs", "Novos lançamentos", "Em alta") | A | Critério (`docs/discovery.md`/`routes.md`): as abas só ordenam, não filtram (Todos/Novos = `recent`, Em alta = `popular`; sort explícito vence). Commit `406c4ad`; testes unitários + `e2e/home-sort-tabs.spec.ts` (45 NFTs em todas as abas; 1º card de Em alta = Mint Cipher #308), validado em `18ade65` |
 
 ## §4–7 Integração, contratos, mocks, tempo real
 Ver `docs/requirements-backend-status.md` (Copilot) e ARCHITECTURE.md. Itens verificados por mim na UI: otimismo com rollback (favoritos: `commerce-flows` "falha da mutation reverte"), recuperação sem duplicar (clique repetido = 1 POST; timeout = mesma Idempotency-Key), isolamento por usuário (`auth-account` troca de usuário), checkout com cotação alterada (`quote-changed-on-confirm`), expiração durante o checkout.
@@ -98,3 +99,22 @@ No deploy (CDN, Brotli, HTTP/2) a Performance ficou muito acima da medicao local
 - Playwright desktop+mobile, 2 workers: 295 passaram, 5 falharam (timeouts de 30s em carrinho/pagamento/realtime/visual); os 5 passam isolados. Causa provavel: carga/cold start; nao comprovado.
 - Corrigido aviso do React (setState durante render no RealtimeSessionBridge); realtime+compra 12/12.
 - Nao verificado: baselines visuais so em win32; zoom 200%; reconexao automatica do mesmo socket sem reload (P).
+
+## Revalidacao em `feat/visual-review` (2026-10-23, HEAD `18ade65`, worktree limpa, DS buildado)
+- Design system (vitest serial): 75 arquivos / 1007 testes passaram.
+- App (vitest serial): 112/114 arquivos (1247 testes na rodada anterior em `e48b52e`); 2 falhas so na rodada completa, ambas passam isoladas: `app/design-system.smoke.test.tsx:17` (cor do Button lida no meio da transicao sob carga) e `app/router/auth-routes-external.test.tsx` (`ApiError: invalid_response`). Causa provavel: carga/estado entre testes; **nao comprovada**.
+- Playwright completo, incluindo `visual.spec`, desktop-1440 + mobile-390 + tablet-768, 2 workers: 326 passaram, 6 falharam por timeout de ~30 s enquanto o vitest rodava em paralelo (`commerce-flows.spec.ts:32` favoritos, `screens-a11y.spec.ts:41` carrinho/pagamento/recibo pt-BR e carteiras tablet, `realtime.spec.ts:278`); reexecutadas isoladas: 16/16 ok. Nenhuma falha visual.
+- Rodada anterior (`e48b52e`, sem visual): 319/324; as falhas fixas eram specs de abas desatualizados, corrigidos depois (`a809051`).
+- Aviso React do `RealtimeSessionBridge` corrigido na `feat/visual-review` (bridge reage so a `updated`/`removed` da query da sessao); **nao** reconfirmado por nova execucao do Playwright apos a correcao.
+- Cobertura de testes de negocio: `c261adb` (77 arquivos / 855 testes) + `406c4ad` e `3df973e` (867 testes na suite node).
+- Flaky conhecidos: `auth-routes-external`, smoke do Button sob carga, favoritos (30 s) sob carga.
+
+## Lighthouse na URL publicada: situacao
+- Local contra a URL publicada (medianas de 3): Perf 53/32/66/32 (Home mobile/desktop, detalhe mobile/desktop); PageSpeed do usuario (1 execucao): 98 desktop / 86 mobile. Perf **P**, nao A.
+- SEO 92 vinha do `robots.txt` invalido; `apps/web/public/robots.txt` estatico existe (`c5de75a`), mas **nao foi publicado nem re-medido**.
+
+## Pendencias reais
+1. Deploy do `robots.txt` (e re-medicao do SEO): aguarda o OK do usuario.
+2. Integracao da `feat/visual-review` na `main`: aguarda o OK do usuario; nada foi mesclado.
+3. Medianas de 3 execucoes no deploy para Home e detalhe: nao feitas.
+4. Ainda por rodar: `pnpm lint`, `pnpm typecheck` e `vitest --project node` no HEAD final ("VISUAL FINAL").

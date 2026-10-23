@@ -25,5 +25,13 @@ Branch `feat/design-system`. Idioma de trabalho: português. Leia nesta ordem: e
 6. `prompt.md` está com diff de formatação (bullets) não feito por Claude; revisar antes de commitar.
 7. Rodar a suíte completa de novo (vitest + Playwright desktop/mobile/tablet) no estado final e atualizar `docs/requirements-status.md`.
 
+## Atualizacao (2026-10-23, tarde)
+- **Revisao visual mobile/desktop** (Login, Cadastro, Carrinho, Pagamento, Detalhe, banner do Hero, carrossel) na branch `feat/visual-review`, HEAD `18ade65` (baselines win32 regeneradas, estaveis). **Ainda NAO integrada na `main`**: aguarda o OK do usuario.
+- **Abas da Home** so ordenam (Em alta = popularidade; Todos/Novos = recentes), commit `406c4ad`; specs ajustados (`a809051`).
+- **Lacunas de conteudo dos frames mobile:** `docs/figma-mobile-gaps.md` (limitacoes aceitas e divergencias; Emerald Ape com rating/atributos no mock).
+- **Testes:** cobertura de negocio `c261adb` + novos; revalidacao em `18ade65`: DS 1007 ok; app 112/114 arquivos (2 flaky isolados passam); Playwright 326 ok + 6 timeouts sob carga que passam isolados (16/16). Flaky conhecidos: `auth-routes-external`, smoke do Button sob carga, favoritos 30 s. Detalhes em `docs/requirements-status.md`.
+- **Lighthouse na URL publicada:** local 53/32/66/32 (medianas de 3); PageSpeed do usuario 98 desktop / 86 mobile (1 execucao). Perf continua parcial.
+- **Pendencias reais:** deploy do `robots.txt` (SEO 92 -> re-medir) e integracao da `feat/visual-review` na `main`, ambos aguardando o OK do usuario; lint/typecheck/vitest node no HEAD final ("VISUAL FINAL"). Nada foi mesclado nem publicado.
+
 ## Comandos
 Ver `README.md` (dev, build, preview, typecheck, lint, vitest, Playwright, `node ../../tools/e2e-preview.mjs`, `?mockReset=1&mockScenario=<id>`).
