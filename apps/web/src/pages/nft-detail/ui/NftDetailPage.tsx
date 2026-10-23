@@ -110,9 +110,12 @@ function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps 
           addToCart={props.addToCart}
           favorite={props.favorite}
         />
-        <NftInfoTabs nft={nft} tab={props.search.tab} onTabChange={props.onTabChange} />
       </div>
     </div>
+      {/* Figma 10:244: abas em secao de largura total abaixo do topo (galeria + painel). */}
+      <div className="mt-32 desktop:mt-70">
+        <NftInfoTabs nft={nft} tab={props.search.tab} onTabChange={props.onTabChange} />
+      </div>
       <div className="mt-48">
         <RelatedNfts variant="collection" excludeNftIds={[nft.id]} collectionId={collectionId} />
       </div>
