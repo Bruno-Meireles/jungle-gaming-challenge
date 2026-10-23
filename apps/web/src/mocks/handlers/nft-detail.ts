@@ -51,7 +51,7 @@ function toDetail(id: string): NftDetailDto | null {
     },
     tokenId: tokenId(nft.title, nft.id),
     rating: { average: 3.5 + (hash(nft.id) % 15) / 10, count: 20 + (hash(nft.id) % 400) },
-    gallery: [nft.image],
+    gallery: [nft.image, ...NFT_FIXTURES.filter((n) => n.id !== nft.id && n.collectionId === nft.collectionId).slice(0, 3).map((n) => n.image)],
     contract: { address: address(nft.id), standard: nft.networkId === 'solana' ? 'Metaplex' : 'ERC-721' },
     royaltyPercent: 5,
     attributes: [
@@ -70,6 +70,7 @@ function toDetail(id: string): NftDetailDto | null {
       maxPerOrder: e.maxPerOrder,
     })),
     defaultEditionId: editions.some((e) => e.id === DEFAULT_EDITION_ID) ? DEFAULT_EDITION_ID : (editions[0]?.id ?? 'open'),
+    collectionId: nft.collectionId,
     version: nftVersion(id),
   };
 }

@@ -9,4 +9,7 @@ export const en = {
   retry: 'Try again',
   notFound: 'NFT not found',
   home: 'Back to home',
+  back: 'Back',
+  breadcrumb: 'Breadcrumb',
+  crumbHome: 'Home',
 } satisfies typeof ptBR;

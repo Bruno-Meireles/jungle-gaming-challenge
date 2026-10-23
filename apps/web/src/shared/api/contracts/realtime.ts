@@ -11,6 +11,8 @@ export const REALTIME_URL = 'wss://realtime.jungle.test';
 export const REALTIME_EVENT_NAMES = ['nft.updated', 'order.updated'] as const;
 /** Evento do cliente: identifica o usuario da conexao (token de sessao) para filtrar eventos privados. */
 export const REALTIME_IDENTIFY_EVENT = 'session.identify';
+export const realtimeIdentifyPayloadSchema = z.object({ token: z.string().min(1) });
+export type RealtimeIdentifyPayload = z.infer<typeof realtimeIdentifyPayloadSchema>;
 
 const envelope = {
   eventId: z.string().min(1),

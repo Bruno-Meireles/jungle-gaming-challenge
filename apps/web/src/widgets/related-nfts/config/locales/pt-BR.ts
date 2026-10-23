@@ -1,1 +1,5 @@
-export const ptBR = { title: 'Você também pode gostar' };
+export const ptBR = {
+  popular: 'Você também pode gostar',
+  collection: 'Mais desta coleção',
+  viewed: 'Colecionadores também viram',
+};

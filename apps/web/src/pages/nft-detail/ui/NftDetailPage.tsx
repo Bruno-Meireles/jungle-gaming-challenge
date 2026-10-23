@@ -6,7 +6,9 @@ import { resolveEdition, type NftDetail } from '../../../entities/nft';
 import type { AddToCartController } from '../../../features/add-to-cart';
 import type { FavoriteButtonProps } from '../../../features/toggle-favorite';
 import { useDocumentMeta, useLocale } from '../../../shared/hooks';
-import { PageContainer } from '../../../shared/ui';
+import { COLLECTION_IDS } from '../../../shared/api/contracts/ids';
+import { BackButton, PageBreadcrumb, PageContainer } from '../../../shared/ui';
+import { RelatedNfts } from '../../../widgets/related-nfts';
 import { NftGallery } from '../../../widgets/nft-gallery';
 import { NftInfoTabs } from '../../../widgets/nft-info-tabs';
 import { NftPurchasePanel } from '../../../widgets/nft-purchase-panel';
@@ -69,11 +71,15 @@ function NotFoundView() {
 }
 
 function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps }) {
-  const { t } = useTranslation('nftInfoTabs');
+  const { t } = useTranslation(['nftInfoTabs', 'pageNftDetail']);
   const locale = useLocale();
   const { edition } = resolveEdition(nft.editions, nft.defaultEditionId, props.search.edition);
   const average = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 }).format(nft.rating.average);
+  const collectionId = COLLECTION_IDS.find((id) => id === nft.collectionId);
   return (
+    <>
+      <BackButton label={t('pageNftDetail:back')} />
+      <PageBreadcrumb label={t('pageNftDetail:breadcrumb')} items={[{ label: t('pageNftDetail:crumbHome'), to: '/' }, { label: nft.title }]} />
     <div className="grid gap-24 desktop:grid-cols-2 desktop:gap-48">
       <NftGallery title={nft.title} images={nft.gallery} />
       <div className="flex flex-col gap-24">
@@ -93,6 +99,10 @@ function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps 
         <NftInfoTabs nft={nft} tab={props.search.tab} onTabChange={props.onTabChange} />
       </div>
     </div>
+      <div className="mt-48">
+        <RelatedNfts variant="collection" excludeNftIds={[nft.id]} collectionId={collectionId} />
+      </div>
+    </>
   );
 }
 

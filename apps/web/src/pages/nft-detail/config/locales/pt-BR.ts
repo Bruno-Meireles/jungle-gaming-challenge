@@ -7,4 +7,7 @@ export const ptBR = {
   retry: 'Tentar novamente',
   notFound: 'NFT não encontrado',
   home: 'Voltar ao início',
+  back: 'Voltar',
+  breadcrumb: 'Trilha de navegação',
+  crumbHome: 'Início',
 };

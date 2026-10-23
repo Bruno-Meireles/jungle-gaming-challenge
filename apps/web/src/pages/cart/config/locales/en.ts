@@ -3,6 +3,10 @@ import type { ptBR } from './pt-BR';
 export const en = {
   title: 'Cart — Kurio',
   description: 'Review your items, apply a coupon and check out.',
+  back: 'Back',
+  breadcrumb: 'Breadcrumb',
+  crumbHome: 'Home',
+  continueExploring: 'Keep exploring',
   heading: 'Cart',
   empty: { body: 'Your cart is empty.', cta: 'Keep exploring' },
   error: { body: 'Could not load the cart.', retry: 'Try again' },

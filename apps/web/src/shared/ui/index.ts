@@ -11,3 +11,5 @@ export { UserIcon } from './icons/UserIcon';
 export { DeleteIcon } from './icons/DeleteIcon';
 export { ArrowLeftIcon } from './icons/ArrowLeftIcon';
 export { WarningIcon } from './icons/WarningIcon';
+export { PageBreadcrumb, type PageBreadcrumbItem } from './PageBreadcrumb';
+export { BackButton } from './BackButton';

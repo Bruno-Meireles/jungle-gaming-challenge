@@ -76,6 +76,7 @@ export const nftDetailDtoSchema = z.object({
   attributes: z.array(z.object({ name: localizedTextSchema, value: localizedTextSchema })),
   editions: z.array(editionDtoSchema).min(1),
   defaultEditionId: z.string(),
+  collectionId: collectionIdSchema,
   version: nonNegativeIntSchema,
 });
 export type NftDetailDto = z.infer<typeof nftDetailDtoSchema>;

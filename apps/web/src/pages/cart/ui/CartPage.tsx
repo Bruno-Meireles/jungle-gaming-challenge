@@ -1,4 +1,5 @@
-import { Alert } from '@jg/design-system';
+import { Alert, Button } from '@jg/design-system';
+import { Link } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { useCart, useCartQuote, type Cart } from '../../../entities/cart';
@@ -8,6 +9,7 @@ import { CheckoutCta } from '../../../features/checkout-cta';
 import { useDocumentMeta, useLocale, useLooseTranslate } from '../../../shared/hooks';
 import { CartLines, CartLinesSkeleton } from '../../../widgets/cart-lines';
 import { CartSummary } from '../../../widgets/cart-summary';
+import { RelatedNfts } from '../../../widgets/related-nfts';
 import { toCartPageState } from '../model/cart-page-state';
 import { useCartActions } from '../model/use-cart-actions';
 import { toCartViews } from '../model/to-cart-views';
@@ -51,6 +53,7 @@ function CartContent({ cart }: { cart: Cart }) {
           />
         </div>
       }
+      footer={<RelatedNfts variant="viewed" excludeNftIds={cart.lines.map((line) => line.nftId)} />}
       aside={
         <>
           <CartSummary summary={views.summary} onRetry={() => void quote.refetch()} />
@@ -62,6 +65,9 @@ function CartContent({ cart }: { cart: Cart }) {
             onRemove={actions.removeCoupon}
           />
           <CheckoutCta isAuthenticated={session.data?.status === 'authenticated'} disabledReason={views.disabledReason} />
+          <Button asChild variant="outline">
+            <Link to="/">{t('continueExploring')}</Link>
+          </Button>
         </>
       }
     />

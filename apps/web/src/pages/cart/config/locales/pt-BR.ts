@@ -1,6 +1,10 @@
 export const ptBR = {
   title: 'Carrinho — Kurio',
   description: 'Revise os itens, aplique um cupom e finalize a compra.',
+  back: 'Voltar',
+  breadcrumb: 'Trilha de navegação',
+  crumbHome: 'Início',
+  continueExploring: 'Continuar explorando',
   heading: 'Carrinho',
   empty: { body: 'Seu carrinho está vazio.', cta: 'Continuar explorando' },
   error: { body: 'Não foi possível carregar o carrinho.', retry: 'Tentar novamente' },

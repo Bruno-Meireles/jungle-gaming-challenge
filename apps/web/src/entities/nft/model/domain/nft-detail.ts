@@ -23,4 +23,5 @@ export type NftDetail = {
   attributes: { name: LocalizedText; value: LocalizedText }[];
   editions: Edition[];
   defaultEditionId: string;
+  collectionId?: string;
 };

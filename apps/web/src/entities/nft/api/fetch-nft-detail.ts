@@ -20,5 +20,6 @@ export async function fetchNftDetail(nftId: string, signal?: AbortSignal): Promi
     attributes: dto.attributes,
     editions: dto.editions,
     defaultEditionId: dto.defaultEditionId,
+    collectionId: dto.collectionId,
   };
 }

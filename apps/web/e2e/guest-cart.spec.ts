@@ -26,4 +26,25 @@ test.describe('visitante: detalhe do NFT e carrinho', () => {
     await page.getByRole('button', { name: /^Remover .* do carrinho$/ }).click();
     await expect(page.getByText('Seu carrinho está vazio.')).toBeVisible();
   });
+
+  test('detalhe tem galeria com 4 miniaturas, trilha e Mais desta colecao (desktop)', async ({ page }) => {
+    await page.goto('/nfts/emerald-ape-042');
+    await expect(page.getByRole('button', { name: /^Ver imagem [1-4] de 4$/ })).toHaveCount(4);
+    const wide = (page.viewportSize()?.width ?? 0) >= 768;
+    if (wide) {
+      await expect(page.getByRole('navigation', { name: 'Trilha de navegação' })).toContainText('Emerald Ape #042');
+      await expect(page.getByRole('region', { name: 'Mais desta coleção' })).toBeVisible();
+    } else {
+      await expect(page.getByRole('button', { name: 'Voltar' })).toBeVisible();
+    }
+  });
+
+  test('carrinho tem Colecionadores tambem viram e Continuar explorando', async ({ page }) => {
+    await page.goto('/nfts/emerald-ape-042');
+    await page.getByRole('button', { name: 'Comprar', exact: true }).click();
+    await expect(page.getByRole('link', { name: 'Continuar explorando' })).toBeVisible();
+    if ((page.viewportSize()?.width ?? 0) >= 768) {
+      await expect(page.getByRole('region', { name: 'Colecionadores também viram' })).toBeVisible();
+    }
+  });
 });
