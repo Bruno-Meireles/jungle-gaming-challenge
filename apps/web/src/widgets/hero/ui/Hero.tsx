@@ -18,8 +18,10 @@ export function Hero({ exploreTargetId }: { exploreTargetId: string }) {
   return (
     <section
       aria-label={t('hero:label')}
-      className="relative mx-8 flex min-h-190 items-center gap-8 rounded-12 bg-linear-to-br from-primary/20 to-primary/5 px-16 pb-32 pt-16 tablet:mx-0 tablet:min-h-300 tablet:gap-24 tablet:rounded-0 tablet:bg-none tablet:p-0 desktop:h-450 desktop:items-start desktop:gap-110 desktop:pl-40 desktop:pt-43"
+      className="relative isolate mx-8 flex overflow-hidden tablet:overflow-visible min-h-190 items-center gap-8 rounded-12 bg-linear-to-br from-primary/20 to-primary/5 px-16 pb-32 pt-16 tablet:mx-0 tablet:min-h-300 tablet:gap-24 tablet:rounded-0 tablet:bg-none tablet:p-0 desktop:h-450 desktop:items-start desktop:gap-110 desktop:pl-40 desktop:pt-43"
     >
+      <div aria-hidden="true" className="pointer-events-none absolute -z-10 -left-80 -top-31 size-248 rounded-full bg-linear-to-br from-primary-light/43 to-primary/4 tablet:hidden" />
+      <div aria-hidden="true" className="pointer-events-none absolute -z-10 -top-10 left-73 size-248 rounded-full bg-linear-to-br from-primary-light/37 to-primary/0 tablet:hidden" />
       <HeroCopy onExplore={explore} />
       {slides.length > 0 ? (
         <HeroSlides slides={slides} index={index} onChange={setIndex} />
