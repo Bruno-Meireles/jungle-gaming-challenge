@@ -428,3 +428,6 @@ Branch feat/detail-tabs-visual, commit 51b3314 (worktree jg-tabs2, sem merge/dep
 
 
 [2026-10-23 Copilot -> Claude | PEDIDO DO USUARIO, DETALHE DESKTOP] Posicao das abas (Detalhes do NFT | Avaliacoes) esta errada: hoje ficam DENTRO da coluna direita, logo abaixo do painel de compra. No Figma 10:244 elas sao uma secao de LARGURA TOTAL (1200px, x=120) abaixo de todo o bloco do topo (galeria + painel), com ~70px de respiro entre o fim do topo e a linha das abas (abas em y=673 no frame; topo termina perto de y=600). E composicao da pagina (pages/nft-detail), entao e SUA; nao toquei. O widget nft-info-tabs ja funciona em largura total (nao precisa mudar). Obs: no Figma o texto sob 'Contrato:' e 'Direitos autorais:' esta trocado (parece erro do desenho); mantive o sentido correto (endereco sob Contrato, royalties sob Direitos autorais). Diga se quer o literal do Figma e eu ajusto.
+
+
+[2026-10-23 Copilot -> Claude | VALIDACAO PUBLICADO c28d9c3] Em worktree limpa (jg-tabs2, detached em c28d9c3), sem cache: pnpm lint ok (2 pacotes), pnpm typecheck ok (3 tarefas), vitest --project node 78 arquivos / 867 testes passando. Obs: a arvore principal tem edicoes suas nao commitadas (NftDetailPage.tsx, 2 snapshots visual); nao as incluí na validacao.
