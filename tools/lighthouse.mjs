@@ -17,6 +17,7 @@ const OUTPUT_DIR = path.join(ROOT, 'docs', 'lighthouse');
 const PORT = 4173;
 const BASE_URL = `http://127.0.0.1:${PORT}`;
 const RUNS = 3;
+const STATIC_SERVER = path.join(ROOT, 'tools', 'serve-static.mjs');
 const TARGETS = {
   performance: 90,
   accessibility: 95,
@@ -42,9 +43,12 @@ const PROFILES = [
 const CATEGORIES = Object.keys(TARGETS);
 const requireFromApp = createRequire(path.join(APP_ROOT, 'package.json'));
 const chromium = requireFromApp('playwright').chromium;
-const viteEntry = requireFromApp.resolve('vite');
-const vitePackageRoot = path.resolve(path.dirname(viteEntry), '..', '..');
-const viteCli = path.join(vitePackageRoot, 'bin', 'vite.js');
+const REPORTED_BASELINE = [
+  { route: 'home', profile: 'mobile', performance: 34 },
+  { route: 'home', profile: 'desktop', performance: 28 },
+  { route: 'nft-detail', profile: 'mobile', performance: 55 },
+  { route: 'nft-detail', profile: 'desktop', performance: 32 },
+];
 
 function median(values) {
   const sorted = values.filter(Number.isFinite).sort((left, right) => left - right);
@@ -131,7 +135,7 @@ function buildCombinations(results) {
   );
 }
 
-async function writeSummary(results, environment) {
+async function writeSummary(results, environment, comparison) {
   const summary = {
     auditVersion: 1,
     generatedAt: new Date().toISOString(),
@@ -142,8 +146,6 @@ async function writeSummary(results, environment) {
         : 'incomplete',
     configuration: {
       buildCommand: 'pnpm build',
-      previewCommand: `vite preview --host 127.0.0.1 --port ${PORT} --strictPort`,
-      previewUrl: BASE_URL,
       mockScenario: 'default (reset before each run)',
       runsPerCombination: RUNS,
       categories: TARGETS,
@@ -154,8 +156,16 @@ async function writeSummary(results, environment) {
       })),
       routes: ROUTES,
       throttlingMethod: 'simulate',
+      serverCommand: `node tools/serve-static.mjs apps/web/dist ${PORT}`,
+      serverUrl: BASE_URL,
+      compression: 'Brotli or gzip for compressible MIME types when accepted by the client',
+      cacheHeaders:
+        'immutable /assets files, one-week /nfts image files, no-cache SPA documents and MSW worker',
+      knownVercelDifference:
+        'vercel.json currently applies the /nfts cache rule to extensionless SPA routes as well',
     },
     environment,
+    comparison,
     auditCount: results.length,
     combinations: buildCombinations(results),
     results,
@@ -164,24 +174,24 @@ async function writeSummary(results, environment) {
   return summary;
 }
 
-async function waitForPreview(server, getServerError) {
+async function waitForServer(server, getServerError) {
   const deadline = Date.now() + 60_000;
   let lastError;
   while (Date.now() < deadline) {
     if (getServerError()) throw getServerError();
     if (server.exitCode !== null) {
-      throw new Error(`vite preview exited before readiness (code ${server.exitCode})`);
+      throw new Error(`static server exited before readiness (code ${server.exitCode})`);
     }
     try {
       const response = await fetch(BASE_URL);
       if (response.ok) return;
-      lastError = new Error(`vite preview returned HTTP ${response.status}`);
+      lastError = new Error(`static server returned HTTP ${response.status}`);
     } catch (error) {
       lastError = error;
     }
     await delay(300);
   }
-  throw new Error(`Timed out waiting for vite preview: ${lastError?.message ?? 'unknown error'}`);
+  throw new Error(`Timed out waiting for static server: ${lastError?.message ?? 'unknown error'}`);
 }
 
 function auditUrl(route) {
@@ -190,7 +200,7 @@ function auditUrl(route) {
 }
 
 function reportBaseName(route, profile, run) {
-  return `${route.id}-${profile.id}-${run}`;
+  return `${route.id}-${profile.id}-vercel-static-${run}`;
 }
 
 async function runAudit(route, profile, run) {
@@ -217,7 +227,7 @@ async function runAudit(route, profile, run) {
   if (!result)
     throw new Error(`Lighthouse returned no result for ${route.id}/${profile.id}/${run}`);
 
-  const html = generateReport(result.lhr, 'html');
+  const html = generateReport(result.lhr, 'html').replace(/^[ \t]+$/gm, '');
   const json = generateReport(result.lhr, 'json');
   const basename = reportBaseName(route, profile, run);
   await Promise.all([
@@ -257,6 +267,37 @@ async function main() {
     throw new Error('Production build missing. Run `pnpm build` before `pnpm lighthouse`.');
   });
   await mkdir(OUTPUT_DIR, { recursive: true });
+  const previousSummary = await readFile(path.join(OUTPUT_DIR, 'summary.json'), 'utf8')
+    .then((value) => JSON.parse(value))
+    .catch((error) => {
+      if (error && typeof error === 'object' && 'code' in error && error.code === 'ENOENT') {
+        return null;
+      }
+      throw error;
+    });
+  const comparison = {
+    claudeReportedPreImageOptimization: {
+      source: 'docs/agent-communication.md, 2026-10-23 08:40',
+      server: 'vite preview',
+      performanceMedians: REPORTED_BASELINE,
+    },
+    immediatelyPreviousRun: previousSummary
+      ? {
+          generatedAt: previousSummary.generatedAt,
+          serverCommand: previousSummary.configuration?.previewCommand ?? null,
+          performanceMedians: previousSummary.combinations.map(({ route, profile, medians }) => ({
+            route,
+            profile,
+            performance: medians.performance,
+          })),
+          vitals: previousSummary.combinations.map(({ route, profile, vitals }) => ({
+            route,
+            profile,
+            ...vitals,
+          })),
+        }
+      : null,
+  };
 
   const results = [];
   const environment = {
@@ -270,25 +311,24 @@ async function main() {
     totalMemoryBytes: os.totalmem(),
     chromeExecutable: browserPath,
   };
-  await writeSummary(results, environment);
+  await writeSummary(results, environment, comparison);
 
   const server = spawn(
     process.execPath,
-    [viteCli, 'preview', '--host', '127.0.0.1', '--port', String(PORT), '--strictPort'],
+    [STATIC_SERVER, path.join(APP_ROOT, 'dist'), String(PORT)],
     {
-      cwd: APP_ROOT,
+      cwd: ROOT,
       stdio: 'inherit',
-      env: { ...process.env, VITE_ENABLE_MOCKS: 'true' },
     },
   );
   let serverError = null;
   server.on('error', (error) => {
     serverError = error;
-    console.error(`Failed to start vite preview: ${error.message}`);
+    console.error(`Failed to start static server: ${error.message}`);
   });
 
   try {
-    await waitForPreview(server, () => serverError);
+    await waitForServer(server, () => serverError);
     for (const route of ROUTES) {
       for (const profile of PROFILES) {
         for (let run = 1; run <= RUNS; run += 1) {
@@ -297,7 +337,7 @@ async function main() {
           try {
             const result = await runAudit(route, profile, run);
             results.push(result);
-            await writeSummary(results, environment);
+            await writeSummary(results, environment, comparison);
             console.log(
               `  Performance ${result.categories.performance}, Accessibility ${result.categories.accessibility}, ` +
                 `Best Practices ${result.categories['best-practices']}, SEO ${result.categories.seo}`,
@@ -312,7 +352,7 @@ async function main() {
               run,
               failure: message,
             });
-            await writeSummary(results, environment);
+            await writeSummary(results, environment, comparison);
           }
         }
       }
@@ -321,7 +361,7 @@ async function main() {
     server.kill();
   }
 
-  const summary = await writeSummary(results, environment);
+  const summary = await writeSummary(results, environment, comparison);
   for (const combination of summary.combinations) {
     console.log(
       `${combination.route}/${combination.profile}: median ` +

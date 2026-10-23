@@ -50,8 +50,10 @@ Cenários: `default`, `catalog-empty`, `catalog-error`, `catalog-flaky`, `catalo
 | E2E (Playwright) | `pnpm --filter @jg/web test:e2e` |
 | Um E2E | `pnpm --filter @jg/web exec playwright test e2e/purchase-flow.spec.ts -g "compra completa"` |
 | Regressão visual do DS | `pnpm test:visual` |
-| Lighthouse (12 auditorias; 3 medições por rota/perfil, mediana) | `pnpm lighthouse` (relatórios em `docs/lighthouse/`; código diferente de zero enquanto alguma meta não for atingida) |
+| Lighthouse (12 auditorias; 3 medições por rota/perfil, mediana) | `pnpm lighthouse` (servidor estático comprimido em `tools/serve-static.mjs`; relatórios em `docs/lighthouse/`; código diferente de zero enquanto alguma meta não for atingida) |
 | Tudo | `pnpm verify` |
+
+O Lighthouse mede o build de produção com o servidor estático local, que habilita Brotli/gzip, fallback SPA, cache imutável de `/assets` e cache de sete dias para imagens NFT estáticas. Os relatórios novos usam o sufixo `vercel-static` para preservar as medições anteriores feitas com `vite preview`. A regra atual de `/nfts/(.*)` no `vercel.json` também cobre rotas HTML sem extensão; a medição local deixa esses documentos `no-cache`, e essa diferença está registrada no resumo enquanto aguarda alinhamento da regra de deploy.
 
 ### Reproduzir cenários de falha
 
