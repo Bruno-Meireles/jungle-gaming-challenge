@@ -23,6 +23,10 @@ export type WalletFormProps = {
 
 type Banner = 'network' | 'unexpected' | null;
 
+/** O asterisco dos obrigatorios e CSS (::after com texto alternativo vazio): nao entra no nome acessivel. */
+const FIELDS =
+  "flex max-w-417 flex-col gap-24 desktop:grid desktop:max-w-none desktop:grid-cols-2 desktop:gap-x-28 [&_label]:after:ml-4 [&_label]:after:text-title-22-regular [&_label]:after:text-text-coral [&_label]:after:content-['*'/'']";
+
 function bannerOf(failure: FormFailure): Banner {
   if (failure.kind === 'network') return 'network';
   return failure.kind === 'unexpected' ? 'unexpected' : null;
@@ -100,7 +104,7 @@ export function WalletForm({
 
   return (
     <form onSubmit={(e) => void handleSubmit(e)} noValidate className="flex flex-col gap-24">
-      <div className="flex max-w-417 flex-col gap-24">
+      <div className={FIELDS}>
         <NetworkSelect
           value={values.network}
           disabled={same}
@@ -117,8 +121,8 @@ export function WalletForm({
             onChange={(e) => setValues({ ...values, address: e.target.value })}
           />
         </FormField>
-        {showSameAsPrimary ? <SameAsPrimary checked={same} disabled={primary === null} onChange={toggleSame} /> : null}
       </div>
+      {showSameAsPrimary ? <SameAsPrimary checked={same} disabled={primary === null} onChange={toggleSame} /> : null}
       {banner ? (
         <Alert tone="error" toneLabel="">
           {t(`messages.${banner}`)}

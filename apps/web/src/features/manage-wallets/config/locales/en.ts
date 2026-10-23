@@ -1,7 +1,11 @@
 import type { ptBR } from './pt-BR';
 
 export const en = {
-  primary: { title: 'Primary wallet', empty: "You haven't added a primary wallet yet." },
+  primary: {
+    title: 'Primary wallet',
+    description: 'These wallets are available at checkout and to receive purchased NFTs.',
+    empty: "You haven't added a primary wallet yet.",
+  },
   secondary: { title: 'Secondary wallet', empty: "You haven't added a secondary wallet yet." },
   fields: { network: 'Network', address: 'Wallet address', same: 'Same as primary wallet' },
   networks: { ethereum: 'Ethereum', polygon: 'Polygon', solana: 'Solana' },

@@ -1,5 +1,9 @@
 export const ptBR = {
-  primary: { title: 'Carteira principal', empty: 'Você ainda não adicionou uma carteira principal.' },
+  primary: {
+    title: 'Carteira principal',
+    description: 'Estas carteiras ficam disponíveis no pagamento e para receber NFTs comprados.',
+    empty: 'Você ainda não adicionou uma carteira principal.',
+  },
   secondary: { title: 'Carteira secundária', empty: 'Você ainda não adicionou uma carteira secundária.' },
   fields: { network: 'Rede', address: 'Endereço da carteira', same: 'Igual à carteira principal' },
   networks: { ethereum: 'Ethereum', polygon: 'Polygon', solana: 'Solana' },
