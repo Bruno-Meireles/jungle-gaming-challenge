@@ -39,12 +39,15 @@ export function AuthSurface({ title, subtitle, onDismiss, footer, children }: Au
 
   return (
     <section className="flex flex-col gap-24 p-16">
-      <div className="flex flex-col gap-8">
-        <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-title-20-medium">{title}</h1>
-        <p className="text-caption-13-regular-lh-16 text-foreground">{subtitle}</p>
+      <p aria-hidden="true" className="mt-32 text-center text-display-32-bold text-foreground">
+        {t('brand')}
+      </p>
+      <div className="mt-24 flex flex-col gap-8 text-center">
+        <h1 className="text-title-20-bold-lh-16 text-foreground">{title}</h1>
+        <p className="sr-only">{subtitle}</p>
       </div>
       {children}
-      <div className="text-body-14-regular-lh-16">{footer}</div>
+      <div className="text-center text-body-15-regular-lh-16 text-text-secondary">{footer}</div>
     </section>
   );
 }

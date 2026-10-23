@@ -45,16 +45,19 @@ export function SignupForm({ onSubmit, pending, failure, fieldErrors = {}, onRet
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-16">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-16 [&_label]:sr-only tablet:[&_label]:not-sr-only">
       <FormField label={t('fields.username')} error={usernameError}>
-        <Input className="h-50 rounded-10 tablet:h-40 tablet:rounded-5" autoComplete="username" value={values.username} onChange={set('username')} />
+        <Input
+          placeholder={t('fields.username')} className="h-50 rounded-10 tablet:h-40 tablet:rounded-5 tablet:[&_input::placeholder]:text-transparent" autoComplete="username" value={values.username} onChange={set('username')} />
       </FormField>
       <FormField label={t('fields.email')} error={emailError}>
-        <Input className="h-50 rounded-10 tablet:h-40 tablet:rounded-5" type="email" autoComplete="email" value={values.email} onChange={set('email')} />
+        <Input
+          placeholder={t('fields.email')} className="h-50 rounded-10 tablet:h-40 tablet:rounded-5 tablet:[&_input::placeholder]:text-transparent" type="email" autoComplete="email" value={values.email} onChange={set('email')} />
       </FormField>
       <FormField label={t('fields.password')} error={error(fieldErrors.password)}>
         <PasswordInput
-          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5"
+          placeholder={t('fields.password')}
+          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5 tablet:[&_input::placeholder]:text-transparent"
           autoComplete="new-password"
           showLabel={t('actions.showPassword')}
           hideLabel={t('actions.hidePassword')}
@@ -64,7 +67,8 @@ export function SignupForm({ onSubmit, pending, failure, fieldErrors = {}, onRet
       </FormField>
       <FormField label={t('fields.confirmPassword')} error={error(fieldErrors.confirmPassword)}>
         <PasswordInput
-          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5"
+          placeholder={t('fields.confirmPassword')}
+          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5 tablet:[&_input::placeholder]:text-transparent"
           autoComplete="new-password"
           showLabel={t('actions.showPassword')}
           hideLabel={t('actions.hidePassword')}

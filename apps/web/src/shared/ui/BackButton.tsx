@@ -3,14 +3,14 @@ import { useRouter } from '@tanstack/react-router';
 import { ArrowLeftIcon } from './icons/ArrowLeftIcon';
 
 /* Voltar do mobile (Figma "Back" 35x35: circulo #2F1D15 com borda #3F2319): historico anterior ou, sem historico interno, a Home. */
-export function BackButton({ label }: { label: string }) {
+export function BackButton({ label, className = 'mb-16' }: { label: string; className?: string }) {
   const router = useRouter();
   const back = () => {
     if (router.history.canGoBack()) router.history.back();
     else void router.navigate({ to: '/' });
   };
   return (
-    <div className="mb-16 tablet:hidden">
+    <div className={className + ' tablet:hidden'}>
       <button
         type="button"
         onClick={back}

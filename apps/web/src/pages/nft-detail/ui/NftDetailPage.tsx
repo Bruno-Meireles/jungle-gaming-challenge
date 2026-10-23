@@ -84,9 +84,20 @@ function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps 
       <NftGallery title={nft.title} images={nft.gallery} />
       <div className="flex flex-col gap-24">
         <header className="flex flex-col gap-8">
-          <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-heading-24-bold">{nft.title}</h1>
+          <div className="flex items-center justify-between gap-12">
+            <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-heading-24-bold">{nft.title}</h1>
+            <span
+              role="img"
+              aria-label={t('ratingLabel', { average })}
+              className="inline-flex h-27 shrink-0 items-center gap-6 rounded-32 border border-solid border-primary px-8 tablet:hidden"
+            >
+              <span aria-hidden="true" className="text-body-14-regular-lh-16 text-primary">★</span>
+              <span aria-hidden="true" className="text-body-14-medium-lh-16 text-foreground">{average}</span>
+              <span aria-hidden="true" className="text-body-14-regular-lh-16 text-text-secondary">({nft.rating.count})</span>
+            </span>
+          </div>
           <p className="text-body-14-regular-lh-16 text-text-secondary">{nft.tokenId}</p>
-          <Rating value={nft.rating.average} max={5} label={t('ratingLabel', { average })} />
+          <Rating className="hidden tablet:inline-flex" value={nft.rating.average} max={5} label={t('ratingLabel', { average })} />
         </header>
         <NftPurchasePanel
           nftId={nft.id}
