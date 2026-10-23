@@ -11,3 +11,5 @@ export {
   type RegisterFormSchemaValues,
 } from './model/auth-form-schema';
 export { useLogin } from './model/use-login';
+export { useRegister } from './model/use-register';
+export { logout, useLogout, clearPrivateData, clearPrivateSessionState } from './model/logout';

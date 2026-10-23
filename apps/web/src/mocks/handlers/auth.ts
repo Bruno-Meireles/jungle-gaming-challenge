@@ -10,6 +10,8 @@ import {
   simulateLatency,
   toSessionUser,
 } from '../auth/guard';
+import { GUEST_CART_HEADER } from '../../shared/api/contracts/commerce';
+import { mergeGuestCart } from '../commerce/cart-store';
 import { readScenario } from '../scenario';
 import { updateState, readState } from '../state';
 import type { UserRecord } from '../state/state-schema';
@@ -28,7 +30,9 @@ function authScenarioFailure(): Response | null {
   return null;
 }
 
-function issueSession(userId: string) {
+function issueSession(userId: string, request: Request) {
+  const guestId = request.headers.get(GUEST_CART_HEADER);
+  if (guestId) mergeGuestCart(guestId, userId);
   const token = crypto.randomUUID();
   const expiresAt = Date.now() + SESSION_TTL_MS;
   updateState((s) => {
@@ -62,7 +66,7 @@ export const authHandlers = [
     const user = readState().users.find((u) => u.email.toLowerCase() === email);
     const matches = user ? await verifyPassword(user.salt, user.passwordHash, body.data.password) : false;
     if (!user || !matches) return invalidCredentials();
-    return HttpResponse.json({ ...issueSession(user.id), user: toSessionUser(user) });
+    return HttpResponse.json({ ...issueSession(user.id, request), user: toSessionUser(user) });
   }),
 
   http.post('*/api/auth/register', async ({ request }) => {
@@ -89,7 +93,7 @@ export const authHandlers = [
       passwordHash: await hashPassword(salt, password),
     };
     updateState((s) => void s.users.push(record));
-    return HttpResponse.json({ ...issueSession(record.id), user: toSessionUser(record) }, { status: 201 });
+    return HttpResponse.json({ ...issueSession(record.id, request), user: toSessionUser(record) }, { status: 201 });
   }),
 
   http.get('*/api/auth/session', async ({ request }) => {
