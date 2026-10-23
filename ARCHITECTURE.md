@@ -145,10 +145,14 @@ Com MSW ativo, `app/bootstrap/mock-controls.ts` interpreta `?mockReset=1&mockSce
 
 O deploy Vercel está configurado em `vercel.json`: instala com `pnpm install --frozen-lockfile`, builda `@jg/web` pelo Turbo, publica `apps/web/dist` e reescreve rotas SPA para `/index.html`. `apps/web/.env.production` define `VITE_ENABLE_MOCKS=true`, portanto os mocks MSW são incluídos/ativados no build público de demonstração.
 
-### Decisões e desvios de UX registrados em relação ao Figma
+### Desvio visual consciente em relação ao Figma
 
-- Cadastro envia `displayName` igual ao `username`, embora o formulário apresente username; o modal desktop mantém a Home inerte ao fundo, enquanto mobile usa página.
-- No detalhe de NFT não existe ação de compartilhar; favoritar exige sessão e não é aplicado automaticamente após o login.
-- No carrinho, remover linha é uma ação explícita em cada linha também no mobile; header e BottomNav permanecem globais, o `h1` desktop fica oculto, o badge soma quantidades e relacionados aparecem apenas a partir de 768 px, sem pontos de status. A linha de desconto permanece visível mesmo zerada (`(-) 0,00 ETH`), com formatação decimal do locale.
+- O seletor de idioma pt-BR/en no header não aparece no Figma; foi acrescentado para cumprir o requisito de i18n do app. Fica visível a partir de 1440 px, inclusive ao lado/sobre o modal desktop de login. Abaixo desse breakpoint, o idioma continua respeitando a preferência `jg:locale` e `navigator.languages`.
+
+### Decisões de fluxo e contrato
+
+- Cadastro envia `displayName` igual ao `username`, embora o formulário peça username. Login/cadastro são modal sobre a Home inerte em desktop e página em mobile.
+- Detalhe não possui ação de compartilhar; favoritar exige sessão e não é aplicado automaticamente após o login.
+- Carrinho permite remover cada linha, mantém Header/BottomNav globais, apresenta desconto mesmo zerado (`(-) 0,00 ETH`) e formata valores conforme o locale; relacionados aparecem a partir de 768 px.
 - No checkout/recibo, o recibo é modal sobre a Home em desktop e página em mobile; a data usa `Intl`, o botão de fechar é acessível e a linha de desconto só aparece quando não é zero.
 - Na conta, há um único botão Salvar, o avatar é enviado como data URL e a navegação mobile é horizontal. Campos do Figma sem contrato de API (por exemplo, nome ENS e apelido da carteira) foram omitidos.
