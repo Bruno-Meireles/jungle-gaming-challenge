@@ -91,11 +91,11 @@ Com `pnpm dev` ativo e mocks habilitados, abra `http://localhost:5173/?mockReset
 
 ## Idioma
 
-O app suporta pt-BR e inglês. Prioridade: idioma válido na URL (`?lang=`), preferência salva (`localStorage jg:locale`), idioma do navegador e, por último, pt-BR.
+O app suporta pt-BR e inglês. **Não há seletor visual de idioma** (ele não existe no Figma): a troca é feita apenas pela URL.
 
-- Forçar pela URL, em qualquer rota: `/?lang=en`, `/nfts/emerald-ape-042?lang=pt-BR`, `/cart?lang=en`. Valores inválidos são ignorados.
-- Seletor discreto no rodapé: ao trocar, a URL recebe `?lang=` (mantendo a rota e os demais parâmetros), a preferência é salva e `<html lang>` é atualizado.
-- O seletor não existe no Figma: é uma adaptação registrada em `ARCHITECTURE.md` (Desvios visuais conscientes).
+- Forçar o idioma em qualquer rota: `/?lang=pt-BR`, `/?lang=en`, `/nfts/emerald-ape-042?lang=en`, `/cart?lang=pt-BR`. Valores inválidos são ignorados.
+- Prioridade: `?lang=` válido, preferência salva (`localStorage jg:locale`), idioma do navegador e, por último, pt-BR.
+- Um `?lang=` válido também grava a preferência salva e atualiza `<html lang>`; assim o idioma permanece ao navegar e ao recarregar a página sem o parâmetro. Para voltar ao idioma do navegador, limpe `jg:locale` do armazenamento local.
 
 ## Estrutura
 

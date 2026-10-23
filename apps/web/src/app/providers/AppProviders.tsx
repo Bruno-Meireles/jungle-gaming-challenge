@@ -34,9 +34,12 @@ export function AppProviders({
   resources?: Resources;
 }) {
   const [queryClient] = useState(createQueryClient);
-  const [i18n] = useState(() =>
-    createI18n({ resources, locale: resolveLocale({ url: readLangParam(location.search), saved: readSavedLocale(), languages: navigator.languages }) }),
-  );
+  const [i18n] = useState(() => {
+    const url = readLangParam(location.search);
+    // `?lang=` valido tambem vira a preferencia salva: o idioma sobrevive a navegacao e ao refresh sem o parametro.
+    if (url) saveLocale(url);
+    return createI18n({ resources, locale: resolveLocale({ url, saved: readSavedLocale(), languages: navigator.languages }) });
+  });
 
   useEffect(() => {
     const syncLang = (language: string) => {

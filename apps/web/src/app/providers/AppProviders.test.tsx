@@ -109,6 +109,7 @@ describe('AppProviders', () => {
     );
     await expect.element(page.getByTestId('greeting')).toHaveTextContent(text);
     expect(document.documentElement.lang).toBe(lang);
+    expect(localStorage.getItem('jg:locale')).toBe(lang);
   });
 
   it('?lang= invalido e ignorado e cai na preferencia salva', async () => {

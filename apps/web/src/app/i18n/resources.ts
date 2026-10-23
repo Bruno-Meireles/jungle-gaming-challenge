@@ -15,7 +15,6 @@ import { searchLocales } from '../../features/catalog-search';
 import { sortLocales } from '../../features/catalog-sort';
 import { viewTabsLocales } from '../../features/catalog-view-tabs';
 import { filtersLocales } from '../../features/catalog-filters';
-import { languageLocales } from '../../features/language-switch';
 import { authLocales } from '../../features/auth';
 import { catalogLocales } from '../../widgets/catalog';
 import { featuredLocales } from '../../widgets/featured-nft';
@@ -56,7 +55,6 @@ export const ptBRResources = {
   nft: nftLocales['pt-BR'],
   catalog: catalogLocales['pt-BR'],
   footer: footerLocales['pt-BR'],
-  language: languageLocales['pt-BR'],
   hero: heroLocales['pt-BR'],
   featured: featuredLocales['pt-BR'],
   auth: authLocales['pt-BR'],
@@ -106,7 +104,6 @@ const enResources = {
   nft: nftLocales.en,
   catalog: catalogLocales.en,
   footer: footerLocales.en,
-  language: languageLocales.en,
   hero: heroLocales.en,
   featured: featuredLocales.en,
   auth: authLocales.en,
