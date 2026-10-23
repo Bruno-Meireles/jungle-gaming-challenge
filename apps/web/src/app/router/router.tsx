@@ -8,11 +8,17 @@ import { UnavailablePage, unavailableSearchSchema } from '../../pages/unavailabl
 import { RootLayout } from '../layouts/RootLayout';
 import { safeRedirect } from '../../shared/lib/navigation/safe-redirect';
 import { AuthBackdrop } from './AuthBackdrop';
-import { CheckoutRoute, NftDetailRoute, OrderRoute } from './private-routes';
-import { AccountLayout, AccountProfilePage, AccountWalletsPage } from '../../pages/account';
-import { CartPage } from '../../pages/cart';
+import { Navigate, lazyRouteComponent } from '@tanstack/react-router';
 import { nftDetailSearchSchema } from '../../pages/nft-detail';
-import { Navigate } from '@tanstack/react-router';
+
+// Rotas fora da Home sao carregadas sob demanda para manter o bundle inicial pequeno (Lighthouse/LCP).
+const CartPage = lazyRouteComponent(() => import('../../pages/cart'), 'CartPage');
+const AccountLayout = lazyRouteComponent(() => import('../../pages/account'), 'AccountLayout');
+const AccountProfilePage = lazyRouteComponent(() => import('../../pages/account'), 'AccountProfilePage');
+const AccountWalletsPage = lazyRouteComponent(() => import('../../pages/account'), 'AccountWalletsPage');
+const CheckoutRoute = lazyRouteComponent(() => import('./private-routes'), 'CheckoutRoute');
+const NftDetailRouteComponent = lazyRouteComponent(() => import('./private-routes'), 'NftDetailRouteComponent');
+const OrderRouteComponent = lazyRouteComponent(() => import('./private-routes'), 'OrderRouteComponent');
 import { redirectIfAuthenticated, requireAuth, type RouterContext } from './guards';
 import { parseSearch, stringifySearch } from './search-serialization';
 
@@ -86,19 +92,14 @@ const nftRoute = createRoute({
     const { tab, edition } = nftDetailSearchSchema(raw);
     return { ...(tab === 'details' ? {} : { tab }), ...(edition === undefined ? {} : { edition }) };
   },
-  component: function NftRoute() {
-    const search = nftRoute.useSearch();
-    return <NftDetailRoute nftId={nftRoute.useParams().nftId} search={nftDetailSearchSchema(search)} />;
-  },
+  component: NftDetailRouteComponent,
 });
 const checkoutRoute = createRoute({ getParentRoute: () => rootRoute, path: '/checkout', beforeLoad: requireAuth, component: CheckoutRoute });
 const orderRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/orders/$orderId',
   beforeLoad: requireAuth,
-  component: function OrderPageRoute() {
-    return <OrderRoute rawOrderId={orderRoute.useParams().orderId} />;
-  },
+  component: OrderRouteComponent,
 });
 const accountRoute = createRoute({ getParentRoute: () => rootRoute, path: '/account', beforeLoad: requireAuth, component: AccountLayout });
 const accountIndexRoute = createRoute({ getParentRoute: () => accountRoute, path: '/', component: () => <Navigate to="/account/profile" replace /> });

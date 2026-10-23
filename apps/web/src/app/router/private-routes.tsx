@@ -1,8 +1,8 @@
-import { Navigate, useRouter } from '@tanstack/react-router';
+import { Navigate, getRouteApi, useRouter } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 
 import { CheckoutPage, useCheckoutController } from '../../pages/checkout';
-import { NftDetailPage, useNftDetailController, type NftDetailSearch } from '../../pages/nft-detail';
+import { NftDetailPage, useNftDetailController, nftDetailSearchSchema, type NftDetailSearch } from '../../pages/nft-detail';
 import { OrderReceiptPage, parseOrderId, useOrderReceipt } from '../../pages/order-receipt';
 import { NotFoundPage } from '../../pages/not-found';
 
@@ -47,4 +47,16 @@ export function OrderRoute({ rawOrderId }: { rawOrderId: string }) {
   const orderId = parseOrderId(rawOrderId);
   if (orderId === null) return <NotFoundPage />;
   return <OrderReceiptRoute orderId={orderId} onClose={() => void router.navigate({ to: '/' })} />;
+}
+
+const nftApi = getRouteApi('/nfts/$nftId');
+const orderApi = getRouteApi('/orders/$orderId');
+
+/** Componentes de rota carregados sob demanda (code splitting): leem params/search pela API da rota. */
+export function NftDetailRouteComponent() {
+  return <NftDetailRoute nftId={nftApi.useParams().nftId} search={nftDetailSearchSchema(nftApi.useSearch())} />;
+}
+
+export function OrderRouteComponent() {
+  return <OrderRoute rawOrderId={orderApi.useParams().orderId} />;
 }
