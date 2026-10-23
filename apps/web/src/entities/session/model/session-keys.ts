@@ -1,4 +1,6 @@
+import { SESSION_QUERY_ROOT } from '../../../shared/api/query-roots';
+
 export const sessionKeys = {
-  all: ['session'] as const,
-  current: () => ['session', 'current'] as const,
+  all: [SESSION_QUERY_ROOT] as const,
+  current: () => [SESSION_QUERY_ROOT, 'current'] as const,
 };
