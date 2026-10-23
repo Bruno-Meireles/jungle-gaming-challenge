@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { useHighlightsQuery } from '../../../entities/nft';
 import { HeroCopy } from './HeroCopy';
 import { HeroDots } from './HeroDots';
+import { HeroSlides } from './HeroSlides';
 
-// Carrossel manual: sem autoplay e sem transicao animada (movimento reduzido satisfeito por construcao).
+// Carrossel manual (sem autoplay): bolinhas, deslizar/arrastar e transicao deslizante (desligada com movimento reduzido).
 export function Hero({ exploreTargetId }: { exploreTargetId: string }) {
   const { t } = useTranslation(['hero', 'nft']);
   const { data } = useHighlightsQuery();
   const [index, setIndex] = useState(0);
   const slides = data?.hero ?? [];
-  const active = slides[index];
 
   const explore = () => document.getElementById(exploreTargetId)?.focus();
 
@@ -21,16 +21,8 @@ export function Hero({ exploreTargetId }: { exploreTargetId: string }) {
       className="relative mx-8 flex min-h-190 items-center gap-8 rounded-12 bg-linear-to-br from-primary/20 to-primary/5 px-16 pb-32 pt-16 tablet:mx-0 tablet:min-h-300 tablet:gap-24 tablet:rounded-0 tablet:bg-none tablet:p-0 desktop:h-450 desktop:items-start desktop:gap-110 desktop:pl-40 desktop:pt-43"
     >
       <HeroCopy onExplore={explore} />
-      {active ? (
-        <img
-          src={active.image.src}
-          width={active.image.width}
-          height={active.image.height}
-          alt={t('nft:image.alt', { title: active.title })}
-          fetchPriority="high"
-          decoding="async"
-          className="size-138 shrink-0 rounded-16 object-cover tablet:size-300 tablet:rounded-24 desktop:size-450"
-        />
+      {slides.length > 0 ? (
+        <HeroSlides slides={slides} index={index} onChange={setIndex} />
       ) : (
         <div aria-hidden="true" className="size-138 shrink-0 tablet:size-300 desktop:size-450" />
       )}
