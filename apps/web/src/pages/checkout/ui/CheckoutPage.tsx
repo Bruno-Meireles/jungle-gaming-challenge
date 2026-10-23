@@ -31,15 +31,17 @@ export function CheckoutPage({ form, wallet, ...view }: CheckoutPageProps) {
     <PageContainer className="py-24 tablet:py-32">
       <h1 className="mb-24 text-title-20-bold-lh-16 text-foreground tablet:text-heading-28-bold">{t('heading')}</h1>
       <div className="flex flex-col gap-32 desktop:grid desktop:grid-cols-[1fr_405px] desktop:gap-48">
-        <div className="flex flex-col gap-32">
-          <Section title={t('collector')}>
-            <CollectorForm {...form} />
-          </Section>
-          <Section title={t('wallet')}>
-            <WalletNetworkPicker {...wallet} />
-          </Section>
-        </div>
-        <CheckoutView {...view} />
+        <Section title={t('collector')}>
+          <CollectorForm {...form} />
+        </Section>
+        <CheckoutView
+          {...view}
+          beforeConfirm={
+            <Section title={t('wallet')}>
+              <WalletNetworkPicker {...wallet} />
+            </Section>
+          }
+        />
       </div>
     </PageContainer>
   );

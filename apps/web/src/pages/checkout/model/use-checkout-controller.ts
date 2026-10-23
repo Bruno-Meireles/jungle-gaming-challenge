@@ -12,7 +12,7 @@ import type { CheckoutController, PlaceOrderResult, QuoteState } from '../../../
 import { useCollectorState } from './collector-state';
 import { useWalletConnection } from './wallet-connection';
 
-type LineRef = { lineId: string; tokenId: string; title: string };
+type LineRef = { lineId: string; tokenId: string; title: string; image?: { src: string } };
 type Collector = ReturnType<typeof useCollectorState>;
 type Connection = ReturnType<typeof useWalletConnection>;
 
@@ -26,6 +26,7 @@ function toQuoteState(quote: CartQuote | undefined, status: 'pending' | 'error' 
       lines: quote.lines.map((l) => ({
         tokenId: byId.get(l.lineId)?.tokenId ?? l.lineId,
         title: byId.get(l.lineId)?.title ?? '',
+        imageSrc: byId.get(l.lineId)?.image?.src,
         quantity: l.quantity,
         unitPriceEth: l.unitPrice,
         lineTotalEth: l.lineTotal,
