@@ -9,6 +9,7 @@ import { sortLocales } from '../../features/catalog-sort';
 import { viewTabsLocales } from '../../features/catalog-view-tabs';
 import { filtersLocales } from '../../features/catalog-filters';
 import { languageLocales } from '../../features/language-switch';
+import { authLocales } from '../../features/auth';
 import { catalogLocales } from '../../widgets/catalog';
 import { featuredLocales } from '../../widgets/featured-nft';
 import { heroLocales } from '../../widgets/hero';
@@ -28,6 +29,7 @@ export const ptBRResources = {
   hero: heroLocales['pt-BR'],
   featured: featuredLocales['pt-BR'],
   language: languageLocales['pt-BR'],
+  auth: authLocales['pt-BR'],
   filters: filtersLocales['pt-BR'],
   sort: sortLocales['pt-BR'],
   search: searchLocales['pt-BR'],
@@ -47,6 +49,7 @@ const enResources = {
   hero: heroLocales.en,
   featured: featuredLocales.en,
   language: languageLocales.en,
+  auth: authLocales.en,
   filters: filtersLocales.en,
   sort: sortLocales.en,
   search: searchLocales.en,

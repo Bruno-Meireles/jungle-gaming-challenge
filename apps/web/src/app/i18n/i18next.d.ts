@@ -12,6 +12,7 @@ declare module 'i18next' {
       'hero',
       'featured',
       'language',
+      'auth',
       'filters',
       'sort',
       'search',
