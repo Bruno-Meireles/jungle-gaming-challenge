@@ -5,6 +5,7 @@ import { createI18n } from '../i18n/init';
 import { resources as defaultResources, type Resources } from '../i18n/resources';
 import { resolveLocale } from '../../shared/lib/i18n/resolve-locale';
 import { createQueryClient } from './query-client';
+import { RealtimeSessionBridge } from '../realtime/RealtimeSessionBridge';
 
 const LOCALE_STORAGE_KEY = 'jg:locale';
 
@@ -51,7 +52,10 @@ export function AppProviders({
 
   return (
     <QueryClientProvider client={queryClient}>
-      <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
+      <I18nextProvider i18n={i18n}>
+        <RealtimeSessionBridge />
+        {children}
+      </I18nextProvider>
     </QueryClientProvider>
   );
 }

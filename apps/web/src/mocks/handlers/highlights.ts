@@ -1,6 +1,7 @@
 import { delay, http, HttpResponse } from 'msw';
 
 import type { NftSummaryDto } from '../../shared/api/contracts/nfts';
+import { livePrice } from '../commerce/market';
 import { NFT_FIXTURES } from '../fixtures/nfts';
 import { readScenario } from '../scenario';
 
@@ -12,7 +13,9 @@ const SLOW_LATENCY_MS = 1500;
 function byId(id: string): NftSummaryDto {
   const item = NFT_FIXTURES.find((candidate) => candidate.id === id);
   if (item === undefined) throw new Error(`fixture ausente: ${id}`);
-  return item;
+  const priceEth = livePrice(id);
+  if (priceEth === undefined) throw new Error(`mercado ausente para NFT ${id}`);
+  return { ...item, priceEth };
 }
 
 export const highlightsHandler = http.get('/api/highlights', async () => {

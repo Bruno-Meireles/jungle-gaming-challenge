@@ -10,6 +10,7 @@ import { isEthDecimal } from '../../shared/lib/eth/eth';
 import { queryCatalog, type CatalogQuery } from '../catalog/query-catalog';
 import { MOCK_NOW } from '../clock';
 import { NFT_FIXTURES } from '../fixtures/nfts';
+import { livePrice } from '../commerce/market';
 import { readScenario } from '../scenario';
 
 const DEFAULT_LATENCY_MS = 120;
@@ -68,7 +69,13 @@ export function createCatalogHandler() {
       await delay(requests === 2 ? OUT_OF_ORDER_FIRST_MS : OUT_OF_ORDER_NEXT_MS);
     } else await delay(DEFAULT_LATENCY_MS);
 
-    const source = scenario === 'catalog-empty' ? [] : NFT_FIXTURES;
+    const source = scenario === 'catalog-empty'
+      ? []
+      : NFT_FIXTURES.map((nft) => {
+          const priceEth = livePrice(nft.id);
+          if (priceEth === undefined) throw new Error(`mercado ausente para NFT ${nft.id}`);
+          return { ...nft, priceEth };
+        });
     const body = queryCatalog(source, parseQuery(new URL(request.url).searchParams), MOCK_NOW);
     return HttpResponse.json(body);
   });
