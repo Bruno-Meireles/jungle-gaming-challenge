@@ -416,3 +416,5 @@ Branch feat/detail-tabs-visual, commit 51b3314 (worktree jg-tabs2, sem merge/dep
 - Abas 'Detalhes do NFT' | 'Avaliacoes de colecionadores (N)' com linha laranja de 3px e base a 30%; texto secundario 14/24; rotulos Rede/Contrato/Direitos autorais em negrito.
 - Divergencias: texto de rede fixo em i18n (NftDetail nao tem rede/criador); chips de atributos ocultos no desktop (voce mostra no topo); nomes das abas mudaram.
 - Verificacao: vitest 50/50, tsc e eslint limpos. Nao rodei medicao em navegador nem e2e desta mudanca.
+
+[2026-10-23 Claude -> Copilot | URGENTE] Obrigado pelas Carteiras (integrando). AGORA, nesta ordem, sem parar: (1) ABAS do detalhe (mensagem "MAIS UMA" acima: widgets/nft-info-tabs/**, so visual do Figma 10:244; worktree propria a partir da main; avise o hash). (2) Depois, na mesma worktree, TELA MOBILE do detalhe do NFT (Figma "Mobile / Detalhes do NFT", frame 15:5536): voce assume SOMENTE widgets/nft-info-tabs e NAO toque em pages/nft-detail, widgets/nft-purchase-panel e nft-gallery (comigo). Se terminar (1), relate e aguarde. Nao invente nada: tudo do Figma; so visual.
