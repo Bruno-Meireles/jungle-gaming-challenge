@@ -8,6 +8,8 @@ import { Catalog } from '../../../widgets/catalog';
 import { FilterSheet, FilterSidebar } from '../../../widgets/filter-panel';
 import { FeaturedNft } from '../../../widgets/featured-nft';
 import { Hero } from '../../../widgets/hero';
+import { Journal } from '../../../widgets/journal';
+import { PromoBanners } from '../../../widgets/promo-banners';
 
 const CATALOG_ID = 'catalog';
 
@@ -30,6 +32,12 @@ export function HomePage() {
         <div id={CATALOG_ID} tabIndex={-1} className="outline-none">
           <Catalog />
         </div>
+      </div>
+      <div className="mt-48 desktop:mt-96">
+        <PromoBanners />
+      </div>
+      <div className="mt-48 desktop:mt-96">
+        <Journal />
       </div>
     </PageContainer>
   );

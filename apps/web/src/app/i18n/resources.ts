@@ -44,6 +44,8 @@ import { cartCouponLocales } from '../../features/cart-coupon';
 import { checkoutCtaLocales } from '../../features/checkout-cta';
 import { pageCartLocales } from '../../pages/cart';
 import { relatedNftsLocales } from '../../widgets/related-nfts';
+import { promoBannersLocales } from '../../widgets/promo-banners';
+import { journalLocales } from '../../widgets/journal';
 
 export type Resources = { 'pt-BR': Record<string, Messages>; en: Record<string, Messages> };
 
@@ -86,6 +88,8 @@ export const ptBRResources = {
   nftInfoTabs: nftInfoTabsLocales['pt-BR'],
   purchasePanel: purchasePanelLocales['pt-BR'],
   pageNftDetail: pageNftDetailLocales['pt-BR'],
+  promoBanners: promoBannersLocales['pt-BR'],
+  journal: journalLocales['pt-BR'],
   cartLines: cartLinesLocales['pt-BR'],
   cartSummary: cartSummaryLocales['pt-BR'],
   cartLineControls: cartLineControlsLocales['pt-BR'],
@@ -134,6 +138,8 @@ const enResources = {
   nftInfoTabs: nftInfoTabsLocales.en,
   purchasePanel: purchasePanelLocales.en,
   pageNftDetail: pageNftDetailLocales.en,
+  promoBanners: promoBannersLocales.en,
+  journal: journalLocales.en,
   cartLines: cartLinesLocales.en,
   cartSummary: cartSummaryLocales.en,
   cartLineControls: cartLineControlsLocales.en,

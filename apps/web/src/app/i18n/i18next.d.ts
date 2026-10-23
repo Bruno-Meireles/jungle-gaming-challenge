@@ -41,6 +41,8 @@ declare module 'i18next' {
       'nftInfoTabs',
       'purchasePanel',
       'pageNftDetail',
+      'promoBanners',
+      'journal',
       'cartLines',
       'cartSummary',
       'cartLineControls',

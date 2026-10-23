@@ -12,10 +12,13 @@ export function useCanonicalSearchUrl(): void {
   const router = useRouter();
   const navigate = useNavigate();
   const current = useLocation({ select: (location) => location.searchStr });
+  const pathname = useLocation({ select: (location) => location.pathname });
 
   useEffect(() => {
+    // Na troca de rota a Home ainda esta montada por um instante: nao reescreva a URL de outra rota.
+    if (pathname !== '/') return;
     const search = normalizeCatalogSearch(router.options.parseSearch(current));
     const canonical = router.buildLocation({ to: '/', search }).searchStr;
     if (current !== canonical) void navigate({ to: '/', search, replace: true });
-  }, [current, router, navigate]);
+  }, [current, pathname, router, navigate]);
 }
