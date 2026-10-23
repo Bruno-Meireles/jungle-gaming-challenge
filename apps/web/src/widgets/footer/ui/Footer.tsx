@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { LanguageSwitch } from '../../../features/language-switch';
 import { PageContainer } from '../../../shared/ui';
 import { FooterBar } from './FooterBar';
 import { FooterLinks } from './FooterLinks';
@@ -18,7 +19,10 @@ export function Footer() {
           </div>
           <FooterBar />
           <FooterLinks />
-          <p className="bg-surface-card px-24 py-16 text-center text-body-14-regular-lh-16 text-text-secondary">{t('copyright')}</p>
+          <div className="flex flex-col items-center gap-12 bg-surface-card px-24 py-16 tablet:flex-row tablet:justify-between">
+            <p className="text-body-14-regular-lh-16 text-text-secondary">{t('copyright')}</p>
+            <LanguageSwitch />
+          </div>
         </div>
       </PageContainer>
     </footer>

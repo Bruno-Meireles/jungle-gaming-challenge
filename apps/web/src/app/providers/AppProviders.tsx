@@ -3,6 +3,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { createI18n } from '../i18n/init';
 import { resources as defaultResources, type Resources } from '../i18n/resources';
+import { readLangParam } from '../../shared/lib/i18n/lang-param';
 import { resolveLocale } from '../../shared/lib/i18n/resolve-locale';
 import { createQueryClient } from './query-client';
 import { RealtimeSessionBridge } from '../realtime/RealtimeSessionBridge';
@@ -34,7 +35,7 @@ export function AppProviders({
 }) {
   const [queryClient] = useState(createQueryClient);
   const [i18n] = useState(() =>
-    createI18n({ resources, locale: resolveLocale({ saved: readSavedLocale(), languages: navigator.languages }) }),
+    createI18n({ resources, locale: resolveLocale({ url: readLangParam(location.search), saved: readSavedLocale(), languages: navigator.languages }) }),
   );
 
   useEffect(() => {

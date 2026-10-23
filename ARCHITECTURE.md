@@ -147,7 +147,7 @@ O deploy Vercel está configurado em `vercel.json`: instala com `pnpm install --
 
 ### Desvios visuais conscientes em relação ao Figma
 
-- O seletor de idioma pt-BR/en que havia sido acrescentado ao header foi removido em 2026-10-23 a pedido do usuário, pois não aparece no Figma. O app continua resolvendo o idioma pela preferência `jg:locale` já persistida, depois por `navigator.languages` e, por fim, pt-BR.
+- **Seletor de idioma no rodapé (adaptação ao Figma).** O Figma não define seletor de idioma; ele foi adicionado de forma discreta na faixa final do rodapé (componente `Select` do design system, textos por props via i18n) para atender ao requisito de i18n pt-BR/en. Ao trocar, grava `?lang=` na URL atual preservando rota, demais parâmetros e hash, salva `jg:locale` e atualiza `<html lang>`. Prioridade de resolução (`shared/lib/i18n/resolve-locale.ts`): `?lang=` válido, preferência salva, `navigator.languages` e, por último, pt-BR. O `?lang=` vale em qualquer rota e não altera a preferência salva até o usuário trocar pelo seletor.
 
 ### Decisões de fluxo e contrato
 

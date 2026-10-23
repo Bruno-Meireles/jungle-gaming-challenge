@@ -9,6 +9,7 @@ declare module 'i18next' {
       'nft',
       'catalog',
       'footer',
+      'language',
       'hero',
       'featured',
       'auth',
