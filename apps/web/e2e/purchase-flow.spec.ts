@@ -4,7 +4,7 @@ const ANA = { email: 'ana@example.test', password: 'JungleDemo-Ana-2026!' };
 
 async function login(page: Page, credentials = ANA) {
   await page.goto('/login');
-  await page.getByLabel('E-mail').fill(credentials.email);
+  await page.getByLabel('E-mail', { exact: true }).fill(credentials.email);
   await page.getByLabel('Senha', { exact: true }).fill(credentials.password);
   await page.getByRole('button', { name: 'Entrar', exact: true }).last().click();
   await expect(page).toHaveURL(/\/$/);
@@ -14,7 +14,7 @@ test.describe('fluxo de compra (mocks MSW)', () => {
   test('checkout exige login e volta ao destino depois de entrar', async ({ page }) => {
     await page.goto('/checkout');
     await expect(page).toHaveURL(/\/login\?redirect=%2Fcheckout/);
-    await page.getByLabel('E-mail').fill(ANA.email);
+    await page.getByLabel('E-mail', { exact: true }).fill(ANA.email);
     await page.getByLabel('Senha', { exact: true }).fill(ANA.password);
     await page.getByRole('button', { name: 'Entrar', exact: true }).last().click();
     await expect(page).toHaveURL(/\/checkout$/);
