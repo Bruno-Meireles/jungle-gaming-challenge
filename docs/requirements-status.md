@@ -74,6 +74,14 @@ Evidencia: `docs/lighthouse/summary.json` e relatorios HTML/JSON, `pnpm lighthou
 | Deploy público (Vercel) | X | `vercel.json` pronto; CLI logada; deploy sera feito apos o merge na main e a validacao manual do usuario |
 | Checkout limpo | P | fila do Copilot item 6 |
 
+### PageSpeed Insights na URL publicada (informado pelo usuario, 1 execucao, pagina inicial; nao e a mediana de 3 do enunciado)
+| Perfil | Performance | A11y | BP | SEO |
+|---|---|---|---|---|
+| Desktop | 98 | 100 | 100 | 92 |
+| Mobile | 86 | 100 | 100 | 92 |
+
+No deploy (CDN, Brotli, HTTP/2) a Performance ficou muito acima da medicao local (49/30). Mobile 86 ainda abaixo da meta 90; medianas de 3 execucoes nas duas rotas (Home e detalhe) no deploy **nao foram feitas**: Performance segue **P**, nao A.
+
 ## Verificacao final (2026-10-23)
 - `tsc --noEmit` e `pnpm lint`: ok.
 - Vitest do app (serial): 1138 passaram, 3 falharam na 1a execucao (timeouts sob carga: lint-i18n, FilterPanel medida e outro); FilterPanel e lint-i18n passam isolados (34/34). Terceiro nao identificado: **nao confirmado**.
