@@ -118,7 +118,14 @@ export function updateItem(owner: Owner, lineId: string, quantity: number): Cart
   if (!line) return { ok: false, error: 'not_found' };
   const max = maxQuantityOf(line);
   if (quantity > max) return { ok: false, error: 'availability_conflict', available: max };
-  return { ok: true, cart: save(owner, () => void (line.quantity = quantity)) };
+  // A mutacao precisa atingir a linha do estado salvo, nao a copia lida acima.
+  return {
+    ok: true,
+    cart: save(owner, (c) => {
+      const stored = c.lines.find((l) => l.lineId === lineId);
+      if (stored) stored.quantity = quantity;
+    }),
+  };
 }
 
 export function removeItem(owner: Owner, lineId: string): CartMutation {
