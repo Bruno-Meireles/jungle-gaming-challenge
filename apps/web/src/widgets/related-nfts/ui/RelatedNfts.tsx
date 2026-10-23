@@ -13,7 +13,11 @@ export type RelatedNftsProps = {
 export function RelatedNfts({ variant = 'popular', excludeNftIds = [], collectionId }: RelatedNftsProps) {
   const { t } = useTranslation('relatedNfts');
   const { data } = useCatalogQuery({ sort: 'popular', ...(collectionId ? { collections: [collectionId] } : {}) });
-  const items = (data?.items ?? []).filter((nft) => !excludeNftIds.includes(nft.id)).slice(0, 5);
+  // Figma mostra 5 cards: se a colecao tiver menos, completa com os mais populares do catalogo.
+  const { data: popular } = useCatalogQuery({ sort: 'popular' });
+  const own = (data?.items ?? []).filter((nft) => !excludeNftIds.includes(nft.id));
+  const filler = (popular?.items ?? []).filter((nft) => !excludeNftIds.includes(nft.id) && !own.some((item) => item.id === nft.id));
+  const items = [...own, ...(collectionId ? filler : [])].slice(0, 5);
   if (items.length === 0) return null;
   return (
     <section aria-label={t(variant)} className="hidden flex-col gap-16 tablet:flex">
