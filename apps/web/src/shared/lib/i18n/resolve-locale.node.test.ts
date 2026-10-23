@@ -37,6 +37,16 @@ describe('resolveLocale', () => {
     expect(resolveLocale({ saved: null, languages })).toBe(expected);
   });
 
+  it.each<[string, string | null, string | null, string[], Locale]>([
+    ['url vence preferencia salva e navegador', 'en', 'pt-BR', ['pt-BR'], 'en'],
+    ['url pt-BR vence salva en', 'pt-BR', 'en', ['en-US'], 'pt-BR'],
+    ['url invalida cai na preferencia salva', 'fr', 'en', ['pt-BR'], 'en'],
+    ['url nula usa o navegador', null, null, ['en-GB'], 'en'],
+    ['sem nada cai em pt-BR', null, null, [], 'pt-BR'],
+  ])('prioridade: %s', (_name, url, saved, languages, expected) => {
+    expect(resolveLocale({ url, saved, languages })).toBe(expected);
+  });
+
   it.each<[string[]]>([[[]], [['fr-FR', 'ja']]])('sem correspondencia %j cai em pt-BR', (languages) => {
     expect(resolveLocale({ saved: null, languages })).toBe('pt-BR');
   });

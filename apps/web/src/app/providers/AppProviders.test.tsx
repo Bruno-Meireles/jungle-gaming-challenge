@@ -46,12 +46,15 @@ function spyLanguages(languages: string[]) {
   vi.spyOn(window.navigator, 'languages', 'get').mockReturnValue(languages);
 }
 
+const ORIGINAL_URL = location.pathname + location.search;
+
 beforeEach(() => {
   localStorage.clear();
   document.documentElement.removeAttribute('lang');
 });
 
 afterEach(() => {
+  history.replaceState(null, '', ORIGINAL_URL);
   vi.restoreAllMocks();
   localStorage.clear();
   document.documentElement.removeAttribute('lang');
@@ -90,6 +93,35 @@ describe('AppProviders', () => {
     );
     await expect.element(page.getByTestId('greeting')).toHaveTextContent('Hello');
     expect(document.documentElement.lang).toBe('en');
+  });
+
+  it.each([
+    ['en', ['pt-BR'], 'pt-BR', 'Hello'],
+    ['pt-BR', ['en-US'], 'en', 'Olá'],
+  ])('?lang=%s vence preferencia salva e navegador', async (lang, languages, saved, text) => {
+    spyLanguages(languages);
+    localStorage.setItem('jg:locale', saved);
+    history.replaceState(null, '', location.pathname + '?lang=' + lang);
+    await render(
+      <AppProviders resources={resources}>
+        <Greeting />
+      </AppProviders>,
+    );
+    await expect.element(page.getByTestId('greeting')).toHaveTextContent(text);
+    expect(document.documentElement.lang).toBe(lang);
+    expect(localStorage.getItem('jg:locale')).toBe(lang);
+  });
+
+  it('?lang= invalido e ignorado e cai na preferencia salva', async () => {
+    spyLanguages(['pt-BR']);
+    localStorage.setItem('jg:locale', 'en');
+    history.replaceState(null, '', ORIGINAL_URL + '?lang=fr');
+    await render(
+      <AppProviders resources={resources}>
+        <Greeting />
+      </AppProviders>,
+    );
+    await expect.element(page.getByTestId('greeting')).toHaveTextContent('Hello');
   });
 
   it('trocar o idioma atualiza texto, lang e preferencia sem remontar os filhos', async () => {

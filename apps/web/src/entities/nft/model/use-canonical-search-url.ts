@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useRouter } from '@tanstack/react-router';
 import { useEffect } from 'react';
 
+import { LANG_PARAM, readLangParam } from '../../../shared/lib/i18n/lang-param';
 import { normalizeCatalogSearch } from './domain/catalog-query';
 
 /*
@@ -17,7 +18,9 @@ export function useCanonicalSearchUrl(): void {
   useEffect(() => {
     // Na troca de rota a Home ainda esta montada por um instante: nao reescreva a URL de outra rota.
     if (pathname !== '/') return;
-    const search = normalizeCatalogSearch(router.options.parseSearch(current));
+    // `lang` e um parametro global (idioma forcado): nao e da Home, mas a normalizacao nao pode apaga-lo.
+    const lang = readLangParam(current);
+    const search = { ...normalizeCatalogSearch(router.options.parseSearch(current)), ...(lang ? { [LANG_PARAM]: lang } : {}) };
     const canonical = router.buildLocation({ to: '/', search }).searchStr;
     if (current !== canonical) void navigate({ to: '/', search, replace: true });
   }, [current, pathname, router, navigate]);
