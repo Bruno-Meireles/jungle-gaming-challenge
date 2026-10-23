@@ -1,4 +1,4 @@
-import { useCatalogSearch } from '../../../entities/nft';
+import { effectiveSort, useCatalogSearch } from '../../../entities/nft';
 import { CatalogSort } from '../../../features/catalog-sort';
 import { CatalogViewTabsList } from '../../../features/catalog-view-tabs';
 
@@ -14,7 +14,7 @@ export function CatalogToolbar() {
         <CatalogViewTabsList />
       </div>
       <div className="hidden shrink-0 desktop:block">
-        <CatalogSort value={search.sort ?? 'recent'} onChange={(sort) => update({ sort })} />
+        <CatalogSort value={effectiveSort(search)} onChange={(sort) => update({ sort })} />
       </div>
     </div>
   );
