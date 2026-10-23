@@ -8,6 +8,8 @@ export default defineConfig({
   testDir: './e2e',
   outputDir: process.env.PW_OUTPUT ?? 'test-results',
   forbidOnly: true,
+  // Baselines versionadas por plataforma/projeto em e2e/<spec>-snapshots; dados dos mocks sao deterministicos.
+  expect: { toHaveScreenshot: { maxDiffPixelRatio: 0.01, animations: 'disabled' } },
   reporter: [['html', { open: 'never' }], ['list']],
   use: {
     baseURL: BASE_URL,
