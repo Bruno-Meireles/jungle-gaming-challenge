@@ -2,11 +2,9 @@
 ## agent requirements
 Não fazer nada caso esses requisitos não sejam validos:
 
-* Todo desenvolvimento deve ser feito utilizando  TDD com as fases TDD red e TDD green.
+* (Atualizado em 2026-10-22, decisão do usuário) TDD e commits RED/GREEN separados NÃO são mais obrigatórios: implemente e depois valide os comportamentos essenciais. Testes existentes não podem ser apagados, enfraquecidos nem ignorados.
 * Esse projeto deve seguir clean arquiteture e  Feature-Sliced Design (FSD) pattern.
-* É necessário um agent de arquitetura um agent de testes e um agent de escrita de código.
-* O agent de arquitetura deve ser o Opus.
-* O agente de teste e de escrita de código deve ser o Sonet.
+* (Atualizado em 2026-10-22) Não há mais exigência de três agentes separados nem de modelos Opus/Sonnet. Limite: no máximo DUAS frentes de implementação simultâneas no total (Claude na apresentação; Copilot na camada de negócio), registradas em docs/agent-communication.md.
 * O desenvolvimento de telas deve utilizar o Playwright.
 * Alem dos testes com Playwright devem ser utilizados testes end to end Playwright deve ser utilizado para mapeamento e validação de UI, para a escrita de testes determinirticos end to end em ferramentas determiniticas referencia de mercado.
 * Para economia de tokens utilize Playwright CLI para economizar tokens de mcp.

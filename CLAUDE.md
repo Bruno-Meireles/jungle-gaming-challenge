@@ -12,9 +12,9 @@ Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado co
 
 ## Regras obrigatórias (de `prompt.md`)
 
-- **TDD** em todo desenvolvimento: fase RED (teste falhando pelo motivo certo) antes da fase GREEN.
+- **TDD não é mais obrigatório (decisão do usuário, 2026-10-22):** implemente e depois valide os comportamentos essenciais; commits RED/GREEN separados deixam de ser exigidos. Nunca apague, enfraqueça ou ignore testes existentes; os requisitos de testes e entrega do enunciado continuam.
 - **Clean Architecture + Feature-Sliced Design**: camadas FSD `app > pages > widgets > features > entities > shared`, imports só para camadas inferiores, acesso a slices via `index.ts`. Domínio/use cases sem dependência de React, Axios, TanStack ou MSW.
-- **Três agentes** em `.claude/agents/`: `architect` (**Opus**), `test-writer` (**Sonnet**, RED), `code-writer` (**Sonnet**, GREEN). Fluxo por feature: architect → test-writer → code-writer.
+- **Sem exigência de modelos nem de três agentes (2026-10-22).** Limite: no máximo **duas frentes de implementação simultâneas** no total (Claude: apresentação, composição de telas, navegação; Copilot: negócio, contratos, mocks MSW, sessão, persistência, tempo real). Antes de iniciar uma frente, registre responsável, tarefa e arquivos em `docs/agent-communication.md`; um único dono por arquivo (router, providers, i18n, exports). `git add` só dos próprios caminhos. Não crie agentes extras por etapa (`.claude/agents/` é opcional).
 - **Telas** são desenvolvidas e validadas com **Playwright**, usando o **Playwright CLI** (não o MCP) para economizar tokens; além disso há E2E determinísticos.
 - **Monorepo** com dois pacotes: o app e o **design system**. Ferramenta: pnpm workspaces + Turborepo (já criada: `apps/web` e `packages/design-system`).
 - **App web** (requisitos adicionais do usuário, valem desde a primeira feature): **i18n desde o momento zero** (pt-BR e inglês, nenhum texto hardcoded; o design system não embute texto de interface) e **melhores práticas de código e componentização**. Detalhes em `.AI/standards/i18n-quality.md`.
@@ -24,7 +24,7 @@ Greenfield: o repositório contém apenas `prompt.md` (requisitos + enunciado co
 
 ## Fluxo por feature
 
-Skills manuais em `.claude/skills/`: `/plan-create <feature>` (architect, grava `.AI/plans/<feature>.md` e espera aprovação) → `/plan-execute <feature>` (TDD RED com test-writer, GREEN com code-writer e validação E2E Playwright) → `/plan-execution-review <feature>` (verificações, aceite, TDD, arquitetura, enunciado, Figma). Referências visuais: `docs/figma/` (gerado por `node --env-file=.env tools/figma-extract.mjs`).
+Skills manuais em `.claude/skills/`: `/plan-create <feature>` (architect, grava `.AI/plans/<feature>.md` e espera aprovação) → `/plan-execute <feature>` (implementa, valida com typecheck/lint/testes relevantes e E2E Playwright; TDD opcional) → `/plan-execution-review <feature>` (verificações, aceite, TDD, arquitetura, enunciado, Figma). Referências visuais: `docs/figma/` (gerado por `node --env-file=.env tools/figma-extract.mjs`).
 
 ## Protótipo de referência
 
@@ -42,4 +42,4 @@ Ainda não existem. Quando o monorepo for criado, documente aqui os comandos rea
 
 ## Padrões compartilhados
 
-`.AI/standards/` é a fonte única dos padrões usados por agentes e skills: `grounding.md` (evidência, lacunas, limites), `architecture.md` (Clean Architecture + FSD, estado, mocks), `testing.md` (TDD e Playwright) e `i18n-quality.md` (i18n e qualidade de código do app). Leia o que a tarefa tocar antes de agir.
+`.AI/standards/` é a fonte única dos padrões usados por agentes e skills: `grounding.md` (evidência, lacunas, limites), `architecture.md` (Clean Architecture + FSD, estado, mocks), `testing.md` (testes e Playwright; TDD opcional) e `i18n-quality.md` (i18n e qualidade de código do app). Leia o que a tarefa tocar antes de agir.

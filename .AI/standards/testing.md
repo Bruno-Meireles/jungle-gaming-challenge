@@ -1,6 +1,8 @@
-# Testes: TDD e Playwright
+# Testes: validação e Playwright
 
-## TDD (red → green → refactor)
+> Atualizado em 2026-10-22 (decisão do usuário): TDD e commits RED/GREEN separados **não são mais obrigatórios**. Implemente e depois valide os comportamentos essenciais. Nunca apague, enfraqueça ou ignore testes existentes. O que segue é prática recomendada, não exigência.
+
+## TDD (opcional: red → green → refactor)
 - **Um comportamento por vez**: um teste vermelho, o mínimo para verde, depois o próximo. Escrever todos os testes antes de qualquer código é o desvio a evitar.
 - **RED vale** quando o teste falha por ausência do comportamento (assert que não se cumpre), não por erro de import, typo ou setup. Cole a saída.
 - **GREEN** é o código mais simples que passa; generalize só quando um segundo teste exigir (triangulação).

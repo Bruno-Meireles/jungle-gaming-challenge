@@ -1,6 +1,6 @@
 ---
 name: plan-execute
-description: Executa um plano aprovado com TDD (RED, GREEN) e validação E2E com Playwright. Uso manual — /plan-execute <feature>.
+description: Executa um plano aprovado (implementação, validação e E2E com Playwright; TDD opcional). Uso manual — /plan-execute <feature>.
 disable-model-invocation: true
 ---
 
@@ -10,7 +10,9 @@ Entrada: `.AI/plans/<feature>.md` aprovado, com lista **Testes RED** que contém
 
 Seja o **verificador**: relatos de subagentes são alegações; você reexecuta os comandos e só registra o que a sua execução mostrou.
 
-## Ciclo por teste (ordem da lista, um completo antes do próximo)
+> Atualizado em 2026-10-22: TDD/RED-GREEN separados e os três agentes deixam de ser obrigatórios. Implemente direto (no máx. duas frentes simultâneas no total, registradas em `docs/agent-communication.md`), depois valide com typecheck, lint, testes relevantes e E2E. Os passos 1 e 2 abaixo valem como fluxo opcional.
+
+## Ciclo por teste (opcional)
 1. **RED.** Despache `test-writer` (Agent com `subagent_type: test-writer`) com: caminho do plano, **apenas este item**, caminhos de `.AI/standards/`, do Figma quando for tela. Reexecute o teste você mesmo. Feito quando ele falha **por ausência do comportamento** (não por import, typo ou setup); cole a falha. Falha pelo motivo errado ou teste verde de primeira volta ao `test-writer`.
 2. **GREEN.** Despache `code-writer` (Agent com `subagent_type: code-writer`) com: plano, item, caminho do teste e a saída vermelha. Reexecute: teste alvo, testes anteriores da feature, typecheck e lint. Feito quando tudo passa; cole comandos e saídas. Confira o diff: nenhum teste alterado, nada fora do slice do plano, sem dependência nova.
 3. **Refactor** (opcional, só no verde), repetindo as verificações do passo 2.

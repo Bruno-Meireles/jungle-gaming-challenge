@@ -19,5 +19,5 @@ Entrada: nome ou descrição da feature. Saída: `.AI/plans/<feature>.md` aprova
    - ETH como string decimal; isolamento de dados por usuário.
 
    Feito quando a lista está resolvida; itens sem resposta voltam ao `architect`.
-5. **Gravação.** Escreva `.AI/plans/<feature>.md` com: Requisitos cobertos, Slice FSD, Contratos, Aceite, Testes RED (numerados, com arquivo, tipo e viewport; cada tela/fluxo com E2E Playwright em 1440 e 390), Fora do escopo, Decisões (para `ARCHITECTURE.md`) e uma seção **Progresso** com uma caixa de marcação por teste.
+5. **Gravação.** Escreva `.AI/plans/<feature>.md` com: Requisitos cobertos, Slice FSD, Contratos, Aceite, Testes (RED opcional; numerados, com arquivo, tipo e viewport; cada tela/fluxo com E2E Playwright em 1440 e 390), Fora do escopo, Decisões (para `ARCHITECTURE.md`) e uma seção **Progresso** com uma caixa de marcação por teste.
 6. **Aprovação.** Mostre o plano e pare. Ajustes pedidos voltam ao `architect` antes de regravar. Feito quando o usuário aprova explicitamente; sem aprovação, `/plan-execute` não inicia.

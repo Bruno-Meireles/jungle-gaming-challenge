@@ -15,9 +15,9 @@ O usuário quer **paralelismo máximo, sem parar até tudo estar pronto**, e se 
 - **Você orquestra sem parar**: quando uma tela termina, dispare planejamento e implementação da próxima automaticamente. Um agente de pipeline por tela, em paralelo; cada um faz plano (`architect`), implementação e commit.
 - **Não replicar trabalho**: cada agente só toca nos seus slices; `git add` só dos seus caminhos (nunca `git add -A`).
 - **Avisar arquivos em edição** no canal antes de editar áreas compartilhadas (ex.: `features/auth/index.ts`, `app/i18n/resources.ts`, `app/router/router.tsx`).
-- **Sem TDD por ora (decisão do usuário, temporária)**: implemente produção direto, sem RED. Registre dívida em `.AI/plans/test-debt.md` (uma linha: caminho + o que testar). Depois que tudo funcionar, **volte ao TDD**: pague a dívida, rode a suíte toda.
+- **TDD não é mais obrigatório (decisão do usuário, 2026-10-22, definitiva)**: implemente e depois valide os comportamentos essenciais; sem commits RED/GREEN separados. Nunca apague/enfraqueça testes existentes. Dívida de testes (`.AI/plans/test-debt.md`): pague o que for essencial para os requisitos do enunciado antes da entrega.
 - **E2E Playwright só no fim**: depois de tudo pronto, um agente mapeia e cobre todas as telas com Playwright **CLI (não o MCP)**, em pt-BR e en, 1440 e 390, com axe. Não use Playwright antes.
-- **Modelos (temporário, decisão do usuário)**: os agentes de `.claude/agents/` (architect, test-writer, code-writer) estão em **Haiku, effort low**. Subagentes avulsos: passe `model: haiku`, `effort: low`. O enunciado pede architect=Opus e os outros Sonnet: **restaurar no fim**.
+- **Agentes/modelos**: sem exigência de Opus/Sonnet nem de três agentes. **Máximo de DUAS frentes simultâneas no total** (Claude, Copilot e subagentes somados); registre responsável/tarefa/arquivos em `docs/agent-communication.md` antes de iniciar; não crie agentes extras por etapa.
 - **Sem Docker, nunca.** **Não leia PNGs do Figma**: use `docs/figma/file.json`/`frames.json` (textos e medidas via node).
 - Responda dúvidas importantes com o subagente certo e **registre a decisão** no canal e em `decisions.md`.
 - Deploy público **só no fim** (F9), por decisão do usuário.
@@ -74,9 +74,9 @@ FSD `app > pages > widgets > features > entities > shared` (import só para baix
 - [ ] Todas as telas (Home, detalhe, carrinho, checkout, recibo, login, cadastro, conta/perfil, conta/carteiras, 404, indisponível) em 1440, 768 e 390, com estados.
 - [ ] Rotas finais e guards; sessão expirada; logout.
 - [ ] Tempo real com `socket.io-client` real + reconciliação + cleanup.
-- [ ] Voltar ao TDD: pagar `.AI/plans/test-debt.md`, suíte toda verde.
+- [ ] Suíte toda verde; pagar a dívida essencial de `.AI/plans/test-debt.md` (TDD não é mais obrigatório).
 - [ ] E2E Playwright CLI de todas as telas (pt-BR/en, 1440/390, axe).
 - [ ] `README.md` (setup, envs, credenciais fictícias, cenários/reset, comandos), `ARCHITECTURE.md` (contratos REST/eventos, sessão, carrinho, cache, reconciliação, desvios do Figma), seção "Comandos" do `CLAUDE.md`.
 - [ ] Scripts: dev com mocks, build, preview, typecheck, lint, Playwright, Lighthouse (3 medições, mediana; Perf ≥90, A11y ≥95, BP ≥95, SEO ≥90).
-- [ ] Restaurar modelos dos agentes (architect Opus; test-writer/code-writer Sonnet) e limpar worktrees antigos.
+- [ ] Limpar worktrees antigos (só ao final; não remover agora).
 - [ ] Deploy público (Vercel/Netlify/Cloudflare Pages) com mocks ativos no build.
