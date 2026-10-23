@@ -18,6 +18,8 @@ export const apiErrorBodySchema = z.object({
   ]),
   fieldErrors: z.record(z.string(), z.literal('invalid')).optional(),
   fields: z.array(z.enum(['email', 'username'])).optional(),
+  /** Quantidade disponivel em conflitos de disponibilidade (availability_conflict). */
+  available: z.number().int().min(0).optional(),
 });
 
 export type ApiErrorBody = z.infer<typeof apiErrorBodySchema>;

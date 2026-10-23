@@ -9,6 +9,23 @@ export const SCENARIO_IDS = [
   'catalog-out-of-order',
   'auth_network_error',
   'auth_server_error',
+  'cart-seeded',
+  'cart-error',
+  'quote-error',
+  'cart-slow',
+  'cart-price-changed',
+  'cart-sold-out',
+  'cart-mutation-error',
+  'cart-availability-conflict',
+  'quote-sold-out',
+  'quote-changed-on-confirm',
+  'order-refused',
+  'order-pending',
+  'order-timeout',
+  'checkout-session-expired',
+  'orders-error',
+  'catalog-repriced',
+  'favorites-error',
 ] as const;
 
 export type ScenarioId = (typeof SCENARIO_IDS)[number];

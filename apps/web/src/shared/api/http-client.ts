@@ -58,6 +58,7 @@ export interface GetJsonRequest<T> {
   schema: ZodType<T>;
   params?: Record<string, unknown>;
   signal?: AbortSignal;
+  headers?: Record<string, string>;
 }
 
 function normalizeResponseError(status: number, data: unknown): ApiError {
@@ -69,6 +70,7 @@ function normalizeResponseError(status: number, data: unknown): ApiError {
       transient: body.data.code === 'service_unavailable' || body.data.code === 'internal_error',
       fieldErrors: body.data.fieldErrors,
       fields: body.data.fields,
+      available: body.data.available,
     });
   }
   if (status >= 500) {
@@ -92,7 +94,7 @@ export function normalizeError(error: unknown): unknown {
 
 async function request<T>(client: HttpClient, req: GetJsonRequest<T>): Promise<AxiosResponse<unknown>> {
   try {
-    return await client.get<unknown>(req.path, { params: req.params, signal: req.signal });
+    return await client.get<unknown>(req.path, { params: req.params, signal: req.signal, headers: req.headers });
   } catch (error) {
     throw normalizeError(error);
   }

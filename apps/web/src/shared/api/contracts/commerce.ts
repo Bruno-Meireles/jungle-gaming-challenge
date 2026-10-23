@@ -3,74 +3,96 @@ import { z } from 'zod';
 import { NETWORK_IDS } from './ids';
 import { ethDecimalSchema } from './nfts';
 
-/** Contratos de comercio: carrinho, cotacao, pedidos e favoritos. Valores ETH sao sempre strings decimais. */
+/*
+ * Contratos de comercio: carrinho, cotacao, pedidos e favoritos.
+ * Valores ETH sao sempre strings decimais; quantidades sao inteiras.
+ * A linha do carrinho e identificada por (nftId, editionId) e tem lineId estavel.
+ */
 
 const nftIdSchema = z.string().regex(/^[a-z0-9-]+$/);
+const editionIdSchema = z.string().regex(/^[a-z0-9-]+$/);
+const lineIdSchema = z.string().min(1);
 const quantitySchema = z.number().int().positive();
 const nonNegativeIntSchema = z.number().int().min(0);
 const networkIdSchema = z.enum(NETWORK_IDS);
+const imageSchema = z.object({
+  src: z.string(),
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+});
 
 // ---------- Carrinho ----------
 export const cartLineDtoSchema = z.object({
+  lineId: lineIdSchema,
   nftId: nftIdSchema,
+  editionId: editionIdSchema,
+  /** Rotulo neutro da edicao (ex.: '1-50', 'open'); o texto traduzido e da UI. */
+  editionLabel: z.string().min(1),
+  /** Tiragem da edicao limitada; null para edicao aberta. */
+  supply: z.number().int().positive().nullable(),
+  tokenId: z.string().regex(/^#\d{4,}$/),
   title: z.string().min(1),
-  image: z.object({ src: z.string(), width: z.number().int().positive(), height: z.number().int().positive() }),
+  image: imageSchema,
   quantity: quantitySchema,
   unitPriceEth: ethDecimalSchema,
-  /** Edicoes ainda disponiveis para este NFT (limite superior da quantidade). */
-  availableEditions: nonNegativeIntSchema,
+  /** Maximo comprável agora: min(restante da edicao, maximo por pedido). 0 = esgotado. */
+  maxQuantity: nonNegativeIntSchema,
 });
 
 export const cartDtoSchema = z.object({
   lines: z.array(cartLineDtoSchema),
   couponCode: z.string().nullable(),
-  /** Incrementa a cada mutacao; base para ignorar respostas antigas. */
+  /** Soma das quantidades. */
+  itemCount: nonNegativeIntSchema,
+  /** Incrementa a cada mutacao; base para descartar respostas antigas. */
   version: nonNegativeIntSchema,
 });
 
-export const addCartLineRequestSchema = z.object({ nftId: nftIdSchema, quantity: quantitySchema });
-export const updateCartLineRequestSchema = z.object({ quantity: quantitySchema });
+export const addCartItemRequestSchema = z.object({
+  nftId: nftIdSchema,
+  editionId: editionIdSchema,
+  quantity: quantitySchema,
+});
+export const updateCartItemRequestSchema = z.object({ quantity: quantitySchema });
 export const applyCouponRequestSchema = z.object({ code: z.string().trim().min(1).max(32) });
 
 // ---------- Cotacao ----------
-export const COUPON_STATUSES = ['applied', 'invalid', 'expired'] as const;
+export const COUPON_STATUSES = ['applied'] as const;
 
 export const quoteCouponSchema = z.object({
   code: z.string(),
   status: z.enum(COUPON_STATUSES),
-  /** Percentual inteiro de desconto quando aplicado. */
-  percent: z.number().int().min(0).max(100).nullable(),
+  percent: z.number().int().min(0).max(100),
 });
 
-export const QUOTE_ISSUE_KINDS = ['sold_out', 'insufficient_editions', 'price_changed'] as const;
+export const QUOTE_LINE_STATUSES = ['ok', 'insufficient', 'sold_out'] as const;
 
-export const quoteIssueSchema = z.object({
-  nftId: nftIdSchema,
-  kind: z.enum(QUOTE_ISSUE_KINDS),
-  availableEditions: nonNegativeIntSchema,
-});
-
-export const quoteLineSchema = z.object({
+export const quoteLineDtoSchema = z.object({
+  lineId: lineIdSchema,
   nftId: nftIdSchema,
   title: z.string(),
   quantity: quantitySchema,
   unitPriceEth: ethDecimalSchema,
   lineTotalEth: ethDecimalSchema,
+  status: z.enum(QUOTE_LINE_STATUSES),
+  /** Quantidade disponivel agora para esta linha. */
+  available: nonNegativeIntSchema,
 });
 
 export const quoteDtoSchema = z.object({
-  /** Hash do conteudo da cotacao; o pedido referencia esta cotacao. Muda se preco, estoque, cupom ou taxa mudarem. */
+  /** Hash do conteudo economico (linhas, precos, cupom, taxa, rede); o pedido referencia esta cotacao. */
   quoteHash: z.string().min(1),
+  cartVersion: nonNegativeIntSchema,
   networkId: networkIdSchema,
-  lines: z.array(quoteLineSchema),
+  lines: z.array(quoteLineDtoSchema),
   subtotalEth: ethDecimalSchema,
   discountEth: ethDecimalSchema,
   networkFeeEth: ethDecimalSchema,
   totalEth: ethDecimalSchema,
   coupon: quoteCouponSchema.nullable(),
-  issues: z.array(quoteIssueSchema),
-  /** false quando ha issues que impedem confirmar. */
+  /** false quando alguma linha esta esgotada ou acima do disponivel. */
   canCheckout: z.boolean(),
+  expiresAt: z.number().int(),
 });
 
 // ---------- Pedidos ----------
@@ -79,19 +101,35 @@ export const orderStatusSchema = z.enum(ORDER_STATUSES);
 
 export const orderItemDtoSchema = z.object({
   nftId: nftIdSchema,
+  editionId: editionIdSchema,
+  editionLabel: z.string(),
+  tokenId: z.string(),
   title: z.string(),
-  image: z.object({ src: z.string(), width: z.number().int().positive(), height: z.number().int().positive() }),
+  image: imageSchema,
   quantity: quantitySchema,
   unitPriceEth: ethDecimalSchema,
   lineTotalEth: ethDecimalSchema,
+});
+
+export const collectorSchema = z.object({
+  displayName: z.string().trim().min(1),
+  email: z.string().trim().min(1),
+  username: z.string().trim().min(1),
+  profileName: z.string().trim().min(1),
+  referralCode: z.string().trim().min(1),
+  ensName: z.string().trim().min(1),
+  secondaryWalletOrEns: z.string().trim().optional(),
+  note: z.string().trim().optional(),
 });
 
 export const createOrderRequestSchema = z.object({
   quoteHash: z.string().min(1),
   networkId: networkIdSchema,
   walletId: z.string().min(1),
-  collector: z.object({ fullName: z.string().trim().min(1), email: z.string().trim().min(1) }),
-  lines: z.array(z.object({ nftId: nftIdSchema, quantity: quantitySchema })).min(1),
+  connectionId: z.string().optional(),
+  walletProvider: z.string().optional(),
+  collector: collectorSchema,
+  lines: z.array(z.object({ lineId: lineIdSchema, quantity: quantitySchema })).min(1),
 });
 
 export const orderDtoSchema = z.object({
@@ -103,7 +141,7 @@ export const orderDtoSchema = z.object({
   updatedAt: z.iso.datetime(),
   networkId: networkIdSchema,
   walletId: z.string(),
-  collector: z.object({ fullName: z.string(), email: z.string() }),
+  collector: collectorSchema,
   couponCode: z.string().nullable(),
   /** Snapshot: nunca muda depois da criacao, mesmo se o catalogo mudar. */
   items: z.array(orderItemDtoSchema),
@@ -127,15 +165,15 @@ export const favoritesDtoSchema = z.object({
 
 export type CartLineDto = z.infer<typeof cartLineDtoSchema>;
 export type CartDto = z.infer<typeof cartDtoSchema>;
-export type AddCartLineRequest = z.infer<typeof addCartLineRequestSchema>;
-export type UpdateCartLineRequest = z.infer<typeof updateCartLineRequestSchema>;
+export type AddCartItemRequest = z.infer<typeof addCartItemRequestSchema>;
+export type UpdateCartItemRequest = z.infer<typeof updateCartItemRequestSchema>;
 export type ApplyCouponRequest = z.infer<typeof applyCouponRequestSchema>;
-export type CouponStatus = (typeof COUPON_STATUSES)[number];
-export type QuoteCouponDto = z.infer<typeof quoteCouponSchema>;
-export type QuoteIssueDto = z.infer<typeof quoteIssueSchema>;
+export type QuoteLineStatus = (typeof QUOTE_LINE_STATUSES)[number];
+export type QuoteLineDto = z.infer<typeof quoteLineDtoSchema>;
 export type QuoteDto = z.infer<typeof quoteDtoSchema>;
 export type OrderStatus = z.infer<typeof orderStatusSchema>;
 export type OrderItemDto = z.infer<typeof orderItemDtoSchema>;
+export type CollectorDto = z.infer<typeof collectorSchema>;
 export type CreateOrderRequest = z.infer<typeof createOrderRequestSchema>;
 export type OrderDto = z.infer<typeof orderDtoSchema>;
 export type FavoritesDto = z.infer<typeof favoritesDtoSchema>;

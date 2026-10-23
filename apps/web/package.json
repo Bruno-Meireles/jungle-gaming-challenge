@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@jg/design-system": "workspace:*",
+    "@mswjs/socket.io-binding": "0.2.0",
     "@tanstack/react-query": "5.104.5",
     "@tanstack/react-router": "1.170.45",
     "axios": "1.20.0",
@@ -21,6 +22,7 @@
     "react": "19.3.1",
     "react-dom": "19.3.1",
     "react-i18next": "17.0.20",
+    "socket.io-client": "4.8.4",
     "zod": "4.6.7"
   },
   "devDependencies": {

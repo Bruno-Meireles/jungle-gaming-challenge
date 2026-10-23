@@ -1,12 +1,20 @@
-export type { Cart, CartLine, CouponStatus, Quote, QuoteIssue, QuoteLine } from './model/domain/cart';
-export { clampQuantity, diffQuotes, type QuoteChange } from './model/domain/quote';
+export type {
+  Cart,
+  CartFailure,
+  CartLine,
+  CartQuote,
+  CouponFailure,
+  LineNotice,
+  QuoteLine,
+} from './model/domain/cart';
+export { clampQuantity, diffQuotes } from './model/domain/quote';
 export { cartKeys } from './model/cart-keys';
-export { useCart } from './model/use-cart';
+export { cartQueryOptions, useCart, useCartItemCount } from './model/use-cart';
+export { useCartQuote, useRevalidateQuote } from './model/use-cart-quote';
 export {
   useAddToCart,
   useApplyCoupon,
+  useRemoveCartLine,
   useRemoveCoupon,
-  useRemoveLine,
-  useUpdateLine,
+  useUpdateCartLine,
 } from './model/use-cart-mutations';
-export { useQuote } from './model/use-quote';

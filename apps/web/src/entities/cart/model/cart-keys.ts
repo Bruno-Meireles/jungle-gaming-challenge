@@ -1,6 +1,6 @@
 import type { NetworkId } from '../../../shared/api/contracts/ids';
 
-/** Raiz privada: removida do cache no logout/troca de usuario (clearPrivateSessionState). */
+/** Raiz privada ao viewer: removida do cache no logout/troca de usuario. */
 export const cartKeys = {
   all: ['cart'] as const,
   current: () => ['cart', 'current'] as const,
