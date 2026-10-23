@@ -33,7 +33,7 @@ export function OrderReceipt({ view }: { view: ReceiptView }) {
         <SummaryCell label={t('wallet')} value={view.wallet} />
       </div>
       <div className="flex flex-col gap-16 tablet:px-4">
-        <h3 className="text-body-15-bold-lh-16 text-text-secondary">{t('itemsHeading')}</h3>
+        <h2 className="text-body-15-bold-lh-16 text-text-secondary">{t('itemsHeading')}</h2>
         <div className="flex flex-col gap-8">
           <div className="grid grid-cols-[1fr_auto_auto] gap-24 text-body-15-bold-lh-16 text-text-secondary tablet:grid-cols-[1fr_96px_120px]" aria-hidden="true">
             <span>{t('columnNfts')}</span>

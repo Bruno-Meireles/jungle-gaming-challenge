@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 
 import type { CartSummaryViewModel } from '../model/types';
 
-function Row({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {
+function Row({ label, value, strong = false, caption }: { label: string; value: string; strong?: boolean; caption?: string }) {
   return (
-    <div className="flex items-baseline justify-between gap-16">
+    <div className="flex flex-wrap items-baseline justify-between gap-x-16 gap-y-4">
       <dt className={strong ? 'text-body-large-16-bold-lh-16' : 'text-body-15-regular-lh-16'}>{label}</dt>
-      <dd className={strong ? 'm-0 text-body-large-18-bold-lh-16' : 'm-0 text-body-large-16-regular-lh-16 tablet:text-body-large-18-regular'}>{value}</dd>
+      <dd className={strong ? 'm-0 text-body-large-18-bold-lh-16 text-text-accent' : 'm-0 text-body-large-16-regular-lh-16 tablet:text-body-large-18-regular'}>{value}</dd>
+      {caption ? <dd className="m-0 basis-full text-right text-caption-12-regular-lh-16 text-text-accent">{caption}</dd> : null}
     </div>
   );
 }
@@ -42,10 +43,7 @@ export function CartSummary({ summary, onRetry }: { summary: CartSummaryViewMode
           <dl aria-busy={summary.busy} className="m-0 flex flex-col gap-12">
             <Row label={t('subtotal')} value={summary.subtotal} />
             <Row label={t('discount')} value={summary.discount} />
-            <div className="flex flex-col gap-4">
-              <Row label={t('networkFee')} value={summary.networkFee} />
-              <p className="text-right text-caption-12-regular-lh-16 text-text-accent">{t('estimatedFee')}</p>
-            </div>
+            <Row label={t('networkFee')} value={summary.networkFee} caption={t('estimatedFee')} />
             <Row label={t('total')} value={summary.total} strong />
           </dl>
           <LiveRegion>

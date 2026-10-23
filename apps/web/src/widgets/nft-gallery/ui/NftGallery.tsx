@@ -14,7 +14,8 @@ export function NftGallery({ title, images }: NftGalleryProps) {
   const main = images[current] ?? images[0];
   if (!main) return null;
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-16 desktop:flex-row-reverse desktop:items-start">
+      <div className="desktop:flex-1 desktop:rounded-8 desktop:bg-surface-card desktop:p-20">
       <img
         src={main.src}
         width={main.width}
@@ -23,8 +24,9 @@ export function NftGallery({ title, images }: NftGalleryProps) {
         fetchPriority="high"
         className="aspect-square h-auto w-full rounded-22 object-cover"
       />
+      </div>
       {images.length > 1 ? (
-        <ul className="flex flex-wrap gap-12">
+        <ul className="flex flex-wrap gap-12 desktop:flex-col desktop:flex-nowrap">
           {images.map((image, index) => (
             <li key={image.src}>
               <button
@@ -34,7 +36,7 @@ export function NftGallery({ title, images }: NftGalleryProps) {
                 onClick={() => setCurrent(index)}
                 className="block cursor-pointer rounded-8 border-2 border-transparent p-0 aria-pressed:border-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-focus"
               >
-                <img src={image.src} alt="" width={image.width} height={image.height} loading="lazy" className="size-72 rounded-6 object-cover" />
+                <img src={image.src} alt="" width={image.width} height={image.height} loading="lazy" className="size-72 rounded-6 object-cover desktop:size-100" />
               </button>
             </li>
           ))}

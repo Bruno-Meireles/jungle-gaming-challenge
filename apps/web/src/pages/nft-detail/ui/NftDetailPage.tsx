@@ -85,7 +85,7 @@ function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps 
       <div className="flex flex-col gap-24">
         <header className="flex flex-col gap-8">
           <div className="flex items-center justify-between gap-12">
-            <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-heading-24-bold">{nft.title}</h1>
+            <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-heading-24-bold desktop:text-heading-28-bold">{nft.title}</h1>
             <span
               role="img"
               aria-label={t('ratingLabel', { average })}
@@ -97,7 +97,10 @@ function DetailView({ nft, props }: { nft: NftDetail; props: NftDetailPageProps 
             </span>
           </div>
           <p className="text-body-14-regular-lh-16 text-text-secondary">{nft.tokenId}</p>
-          <Rating className="hidden tablet:inline-flex" value={nft.rating.average} max={5} label={t('ratingLabel', { average })} />
+          <div className="hidden items-center gap-12 tablet:flex">
+            <Rating value={nft.rating.average} max={5} label={t('ratingLabel', { average })} />
+            <span className="text-body-14-regular-lh-16 text-text-secondary">{t('pageNftDetail:reviewsLabel', { count: nft.rating.count })}</span>
+          </div>
         </header>
         <NftPurchasePanel
           nftId={nft.id}

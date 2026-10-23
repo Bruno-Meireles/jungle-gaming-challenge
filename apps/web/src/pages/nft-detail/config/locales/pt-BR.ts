@@ -10,4 +10,5 @@ export const ptBR = {
   back: 'Voltar',
   breadcrumb: 'Trilha de navegação',
   crumbHome: 'Início',
+  reviewsLabel: '{{count}} avaliações de colecionadores',
 };
