@@ -68,7 +68,7 @@ export function WalletNetworkPicker(props: WalletNetworkPickerProps) {
           id={selectId}
           value={networkId}
           onChange={(e) => onNetworkChange(e.target.value)}
-          className="h-45 rounded-5 border border-input-border bg-transparent px-16 text-foreground"
+          className="h-50 rounded-10 border border-input-border bg-transparent px-16 text-foreground tablet:h-45 tablet:rounded-5"
         >
           {networks.map((n) => (
             <option key={n.id} value={n.id} className="bg-surface-card">
@@ -88,10 +88,17 @@ export function WalletNetworkPicker(props: WalletNetworkPickerProps) {
         <>
           <RadioGroup aria-label={t('wallets')} value={walletId ?? ''} onValueChange={onWalletSelect}>
             {visible.map((w) => (
-              <RadioGroupItem key={w.id} variant="card" value={w.id}>
-                <span>{t(`kind.${w.kind}`)}</span>
-                <span>{shortenAddress(w.address)}</span>
-                {w.nickname ? <span className="text-secondary">{w.nickname}</span> : null}
+              <RadioGroupItem
+                key={w.id}
+                variant="card"
+                value={w.id}
+                className="h-auto items-start rounded-14 border-transparent bg-surface-card px-16 py-16 tablet:h-45 tablet:items-center tablet:rounded-3 tablet:border-border tablet:bg-transparent tablet:py-0"
+              >
+                <span className="flex min-w-0 flex-col items-start gap-4 tablet:flex-row tablet:items-center tablet:gap-10">
+                  <span className="text-body-large-16-bold-lh-16 tablet:text-body-14-regular-lh-16">{t(`kind.${w.kind}`)}</span>
+                  <span className="text-body-14-regular-lh-16 text-text-secondary tablet:text-foreground">{shortenAddress(w.address)}</span>
+                  {w.nickname ? <span className="text-body-14-regular-lh-16 text-secondary">{w.nickname}</span> : null}
+                </span>
               </RadioGroupItem>
             ))}
           </RadioGroup>

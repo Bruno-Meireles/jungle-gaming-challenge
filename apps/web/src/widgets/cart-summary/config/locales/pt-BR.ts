@@ -5,6 +5,7 @@ export const ptBR = {
   discount: 'Desconto',
   discountValue: '(-) {{amount}} ETH',
   networkFee: 'Taxa de rede',
+  estimatedFee: 'Taxa estimada',
   total: 'Total',
   couponApplied: 'Cupom {{code}} aplicado',
   error: 'Não foi possível calcular o resumo. Tente novamente.',

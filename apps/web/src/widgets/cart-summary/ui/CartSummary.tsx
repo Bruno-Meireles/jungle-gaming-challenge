@@ -42,7 +42,10 @@ export function CartSummary({ summary, onRetry }: { summary: CartSummaryViewMode
           <dl aria-busy={summary.busy} className="m-0 flex flex-col gap-12">
             <Row label={t('subtotal')} value={summary.subtotal} />
             <Row label={t('discount')} value={summary.discount} />
-            <Row label={t('networkFee')} value={summary.networkFee} />
+            <div className="flex flex-col gap-4">
+              <Row label={t('networkFee')} value={summary.networkFee} />
+              <p className="text-right text-caption-12-regular-lh-16 text-text-accent">{t('estimatedFee')}</p>
+            </div>
             <Row label={t('total')} value={summary.total} strong />
           </dl>
           <LiveRegion>
