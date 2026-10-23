@@ -39,11 +39,11 @@ export function CartLineItem({ line, pending = false, onQuantityChange, onRemove
   return (
     <li className="flex flex-col gap-12 border-b border-solid border-primary py-16" aria-busy={pending}>
       <div className="flex gap-16">
-        <Link to="/nfts/$nftId" params={{ nftId }} search={{ tab: 'details' }} className="shrink-0 focus-visible:outline-2 focus-visible:outline-focus">
+        <Link to="/nfts/$nftId" params={{ nftId }} className="shrink-0 focus-visible:outline-2 focus-visible:outline-focus">
           <img src={line.image.src} alt={line.image.alt} width={96} height={96} className="size-96 rounded-8 object-cover" />
         </Link>
         <div className="flex min-w-0 flex-1 flex-col gap-4">
-          <Link to="/nfts/$nftId" params={{ nftId }} search={{ tab: 'details' }} className="text-body-15-bold-lh-16 text-foreground focus-visible:outline-2 focus-visible:outline-focus">
+          <Link to="/nfts/$nftId" params={{ nftId }} className="text-body-15-bold-lh-16 text-foreground focus-visible:outline-2 focus-visible:outline-focus">
             {line.title}
           </Link>
           <p className="text-body-14-regular-lh-16 text-secondary">

@@ -81,9 +81,14 @@ const cartRoute = createRoute({ getParentRoute: () => rootRoute, path: '/cart', 
 const nftRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/nfts/$nftId',
-  validateSearch: nftDetailSearchSchema,
+  // URL canonica: a aba padrao ('details') nao aparece na barra de enderecos.
+  validateSearch: (raw: Record<string, unknown>) => {
+    const { tab, edition } = nftDetailSearchSchema(raw);
+    return { ...(tab === 'details' ? {} : { tab }), ...(edition === undefined ? {} : { edition }) };
+  },
   component: function NftRoute() {
-    return <NftDetailRoute nftId={nftRoute.useParams().nftId} search={nftRoute.useSearch()} />;
+    const search = nftRoute.useSearch();
+    return <NftDetailRoute nftId={nftRoute.useParams().nftId} search={nftDetailSearchSchema(search)} />;
   },
 });
 const checkoutRoute = createRoute({ getParentRoute: () => rootRoute, path: '/checkout', beforeLoad: requireAuth, component: CheckoutRoute });

@@ -19,7 +19,7 @@ export function FeaturedNft() {
         <Link
           to="/nfts/$nftId"
           params={{ nftId: nft.id }}
-          search={{ tab: 'details' }}
+         
           className="mt-16 block focus-visible:outline-2 focus-visible:outline-focus"
         >
           <img

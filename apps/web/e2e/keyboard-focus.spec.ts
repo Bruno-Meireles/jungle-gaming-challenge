@@ -1,11 +1,16 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type TestInfo } from '@playwright/test';
 import { loginToHome } from './support/session';
 
 /* Plano de testes §9 item 11: teclado, foco de dialogos e validacao de formularios. */
 
+/** Cenario so existe >= 768 px: registra a anotacao e encerra sem asserir (nao e um skip silencioso). */
+function onlyWide(testInfo: TestInfo, reason: string): void {
+  testInfo.annotations.push({ type: 'somente-desktop', description: reason });
+}
+
 test.describe('teclado e foco', () => {
-  test('dialogo de login (desktop): foco entra, fica preso e Esc fecha voltando a pagina anterior', async ({ page }) => {
-    test.skip((page.viewportSize()?.width ?? 0) < 768, 'em mobile login e pagina, nao dialogo');
+  test('dialogo de login (desktop): foco entra, fica preso e Esc fecha voltando a pagina anterior', async ({ page }, testInfo) => {
+    if ((page.viewportSize()?.width ?? 0) < 768) return onlyWide(testInfo, 'em mobile o login e pagina, nao dialogo');
     await page.goto('/');
     await page.getByRole('link', { name: 'Entrar' }).click();
     const dialog = page.getByRole('dialog');
@@ -20,8 +25,8 @@ test.describe('teclado e foco', () => {
     await expect(page).toHaveURL(/\/$/);
   });
 
-  test('recibo (desktop) abre como dialogo com foco e fecha com Esc', async ({ page }) => {
-    test.skip((page.viewportSize()?.width ?? 0) < 768, 'recibo mobile e pagina');
+  test('recibo (desktop) abre como dialogo com foco e fecha com Esc', async ({ page }, testInfo) => {
+    if ((page.viewportSize()?.width ?? 0) < 768) return onlyWide(testInfo, 'em mobile o recibo e pagina, nao dialogo');
     await loginToHome(page);
     await page.goto('/orders/ord-ana-0001');
     const dialog = page.getByRole('dialog');

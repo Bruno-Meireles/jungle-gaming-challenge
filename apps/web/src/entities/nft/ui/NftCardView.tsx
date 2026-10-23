@@ -21,7 +21,7 @@ export function NftCardView({ nft }: { nft: NftSummary }) {
       priceLabel={vm.priceLabel}
       image={vm.image}
       badge={vm.isRare ? <Badge variant="label">{t('nft:badge.rare')}</Badge> : undefined}
-      link={<Link to="/nfts/$nftId" params={{ nftId: vm.id }} search={{ tab: 'details' }} />}
+      link={<Link to="/nfts/$nftId" params={{ nftId: vm.id }} />}
     />
   );
 }

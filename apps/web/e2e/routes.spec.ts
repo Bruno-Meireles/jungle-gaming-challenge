@@ -53,19 +53,14 @@ test.describe('rotas em pt-BR', () => {
     });
   }
 
-  for (const [path, nome] of [
-    ['/login', 'Entrar'],
-    ['/cart', 'Carrinho'],
-    ['/nfts/emerald-ape-042', 'Detalhe do NFT'],
-  ] as const) {
-    test(`${path} não redireciona e mostra "Ainda não disponível" citando "${nome}"`, async ({ page }) => {
+  // As rotas deixaram de ser stubs: /login, /cart e /nfts/:id renderizam a propria tela (cobertas em purchase-flow e guest-cart).
+  for (const path of ['/login', '/cart', '/nfts/emerald-ape-042']) {
+    test(`${path} abre a propria tela (nao a pagina de indisponivel) sem redirecionar`, async ({ page }) => {
       await page.goto(path);
 
       await expect(page).toHaveURL(new RegExp(`${path.replace(/\//g, '\\/')}$`));
-      await expect(page.getByRole('heading', { level: 1, name: 'Ainda não disponível' })).toBeVisible();
-      await expect(page.getByRole('main').getByText(nome)).toBeVisible();
-      await expectBackLink(page, 'Voltar para o início');
-      await expectNoActions(page);
+      await expect(page.getByRole('heading', { name: 'Ainda não disponível' })).toHaveCount(0);
+      await expect(page.getByRole('main')).toBeVisible();
     });
   }
 });

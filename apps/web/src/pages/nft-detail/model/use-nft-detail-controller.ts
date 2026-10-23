@@ -50,8 +50,15 @@ export function useNftDetailController(nftId: string, search: NftDetailSearch) {
       toggle.mutate({ nftId, favorite: !(favorites.data?.nftIds.includes(nftId) ?? false) }),
   };
 
-  const setSearch = (patch: Partial<NftDetailSearch>) =>
-    void navigate({ to: '.', search: { ...search, ...patch }, replace: true });
+  const setSearch = (patch: Partial<NftDetailSearch>) => {
+    const next = { ...search, ...patch };
+    void navigate({
+      to: '/nfts/$nftId',
+      params: { nftId },
+      search: { ...(next.tab === 'details' ? {} : { tab: next.tab }), ...(next.edition === undefined ? {} : { edition: next.edition }) },
+      replace: true,
+    });
+  };
 
   return {
     result,
