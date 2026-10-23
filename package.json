@@ -15,6 +15,7 @@
     "storybook": "turbo run storybook --filter=@jg/design-system",
     "storybook:build": "turbo run storybook:build",
     "test:visual": "turbo run test:visual",
+    "lighthouse": "node tools/lighthouse.mjs",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "verify": "turbo run lint typecheck test build test:e2e"
@@ -22,9 +23,11 @@
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/node": "24.19.2",
+    "chrome-launcher": "1.2.2",
     "eslint": "10.13.0",
     "eslint-plugin-react-hooks": "7.1.1",
     "eslint-plugin-storybook": "10.6.3",
+    "lighthouse": "13.5.0",
     "prettier": "3.9.10",
     "sharp": "0.34.5",
     "turbo": "2.11.10",

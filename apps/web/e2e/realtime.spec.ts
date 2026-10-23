@@ -1,8 +1,10 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page, type Request } from '@playwright/test';
 
 const ANA = { email: 'ana@example.test', password: 'JungleDemo-Ana-2026!' };
 const NFT_ID = 'emerald-ape-042';
 const EDITION_ID = '1-50';
+type TrackedSocket = { url: string; closed: boolean; messages: string[]; close: () => void };
+type TrackedRealtimeWindow = Window & { __trackedRealtimeSockets?: TrackedSocket[] };
 
 async function startScenario(page: Page, scenario = 'default') {
   await page.goto(`/login?mockReset=1&mockScenario=${scenario}`, { waitUntil: 'domcontentloaded' });
@@ -20,20 +22,19 @@ async function login(page: Page) {
 
 async function trackRealtimeSocketLifecycle(page: Page) {
   await page.addInitScript(() => {
-    type TrackedSocket = { url: string; closed: boolean; messages: string[] };
     const trackedSockets: TrackedSocket[] = [];
     Object.defineProperty(window, '__trackedRealtimeSockets', { value: trackedSockets });
     const trackedBySocket = new WeakMap<EventTarget, TrackedSocket>();
     const dispatchEvent = EventTarget.prototype.dispatchEvent;
     EventTarget.prototype.dispatchEvent = function (this: EventTarget, event: Event) {
-      const socket = this as EventTarget & { url?: string };
+      const socket = this as WebSocket;
       let tracked = trackedBySocket.get(this);
       if (
         !tracked &&
         (event.type === 'open' || event.type === 'message') &&
         socket.url?.includes('realtime.jungle.test')
       ) {
-        tracked = { url: socket.url, closed: false, messages: [] };
+        tracked = { url: socket.url, closed: false, messages: [], close: () => socket.close() };
         trackedBySocket.set(this, tracked);
         trackedSockets.push(tracked);
       }
@@ -48,20 +49,31 @@ async function trackRealtimeSocketLifecycle(page: Page) {
   });
 }
 
+async function interruptRealtimeSocket(page: Page) {
+  const interrupted = await page.evaluate(() => {
+    const sockets = (window as TrackedRealtimeWindow).__trackedRealtimeSockets;
+    const socket = sockets?.find((candidate) => !candidate.closed);
+    if (!socket) return false;
+    socket.close();
+    return true;
+  });
+  expect(interrupted).toBe(true);
+  await expect
+    .poll(() =>
+      page.evaluate(() => {
+        const sockets = (window as TrackedRealtimeWindow).__trackedRealtimeSockets;
+        return Boolean(sockets?.some((socket) => socket.closed));
+      }),
+    )
+    .toBe(true);
+}
+
 async function waitForRealtimeSocket(page: Page) {
   await expect
     .poll(() =>
       page.evaluate(
         () => {
-          const sockets = (
-            window as Window & {
-              __trackedRealtimeSockets?: {
-                url: string;
-                closed: boolean;
-                messages: string[];
-              }[];
-            }
-          ).__trackedRealtimeSockets;
+          const sockets = (window as TrackedRealtimeWindow).__trackedRealtimeSockets;
           return Boolean(sockets?.some((socket) => socket.messages.some((message) => message.startsWith('40'))));
         },
       ),
@@ -74,15 +86,7 @@ async function expectRealtimeEventFrames(page: Page, eventId: string, count: num
     .poll(() =>
       page.evaluate(
         ({ eventId }) => {
-          const sockets = (
-            window as Window & {
-              __trackedRealtimeSockets?: {
-                url: string;
-                closed: boolean;
-                messages: string[];
-              }[];
-            }
-          ).__trackedRealtimeSockets;
+          const sockets = (window as TrackedRealtimeWindow).__trackedRealtimeSockets;
           return (
             sockets?.flatMap((socket) => socket.messages).filter((message) => message.includes(eventId))
               .length ?? 0
@@ -107,6 +111,43 @@ async function mockNftPrice(page: Page, priceEth: string) {
     { nftId: NFT_ID, editionId: EDITION_ID, priceEth },
   );
   expect(status).toBe(200);
+}
+
+async function broadcastOrderEvent(
+  page: Page,
+  event: {
+    eventId: string;
+    version: number;
+    orderId: string;
+    userId: string;
+    status: 'confirmed' | 'refused';
+    transactionRef: string | null;
+  },
+) {
+  const status = await page.evaluate(
+    async ({ eventId, version, orderId, userId, status, transactionRef, nftId, editionId }) => {
+      const response = await fetch('/api/__mock/nft', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          nftId,
+          editionId,
+          replayEvent: {
+            eventId,
+            version,
+            occurredAt: new Date().toISOString(),
+            type: 'order.updated',
+            resource: { type: 'order', id: orderId },
+            userId,
+            data: { status, transactionRef },
+          },
+        }),
+      });
+      return { status: response.status, body: await response.text() };
+    },
+    { ...event, nftId: NFT_ID, editionId: EDITION_ID },
+  );
+  expect(status).toEqual({ status: 200, body: '{"accepted":true}' });
 }
 
 async function broadcastNftEvent(
@@ -142,13 +183,25 @@ async function broadcastNftEvent(
   expect(status).toEqual({ status: 200, body: '{"accepted":true}' });
 }
 
-async function completeCheckout(page: Page) {
+function trackOrderPosts(page: Page): Request[] {
+  const posts: Request[] = [];
+  page.on('request', (request) => {
+    if (request.method() === 'POST' && /\/api\/orders$/.test(request.url())) posts.push(request);
+  });
+  return posts;
+}
+
+async function prepareCheckout(page: Page) {
   await page.getByLabel('Nome do perfil').fill('Ana Collector');
   await page.getByLabel('Código de indicação').fill('JUNGLE2026');
   await page.getByLabel('Nome ENS').fill('ana-collector');
   await page.getByRole('radio').first().click();
   await page.getByRole('button', { name: 'Conectar carteira' }).click();
   await expect(page.getByText('Carteira conectada').first()).toBeVisible();
+}
+
+async function completeCheckout(page: Page) {
+  await prepareCheckout(page);
   await page.getByRole('button', { name: 'Confirmar compra' }).click();
   await expect(page).toHaveURL(/\/orders\/[\w-]+$/);
 }
@@ -175,6 +228,27 @@ test.describe('sincronização realtime (mocks MSW)', () => {
     await expect(summary).toContainText('5,5 ETH');
   });
 
+  test('preco atualizado no checkout impede confirmacao com a cotacao antiga', async ({ page }) => {
+    const posts = trackOrderPosts(page);
+    await trackRealtimeSocketLifecycle(page);
+    await startScenario(page);
+    await login(page);
+    await waitForRealtimeSocket(page);
+    await page.goto('/cart');
+    await page.getByRole('link', { name: 'Finalizar compra' }).click();
+    await expect(page).toHaveURL(/\/checkout$/);
+    await prepareCheckout(page);
+
+    await mockNftPrice(page, '2.50');
+    await page.getByRole('button', { name: 'Confirmar compra' }).click();
+    await expect(page.getByText('A cotação mudou. Revise os valores e confirme novamente.')).toBeVisible();
+    expect(posts).toHaveLength(0);
+
+    await page.getByRole('button', { name: 'Confirmar compra' }).click();
+    await expect(page).toHaveURL(/\/orders\/[\w-]+$/);
+    expect(posts).toHaveLength(1);
+  });
+
   test('atualiza o recibo pendente com order.updated sem esperar o polling', async ({ page }) => {
     await trackRealtimeSocketLifecycle(page);
     await startScenario(page, 'order-pending');
@@ -199,6 +273,49 @@ test.describe('sincronização realtime (mocks MSW)', () => {
     expect(status).toBe(200);
     await expect(page.getByText('Pagamento aprovado')).toBeVisible();
     await expect(page.getByText('ID da transação')).toBeVisible();
+  });
+
+  test('recupera o pedido pendente por REST apos interrupcao do socket e reload', async ({ page }) => {
+    const posts = trackOrderPosts(page);
+    await trackRealtimeSocketLifecycle(page);
+    await startScenario(page, 'order-pending');
+    await login(page);
+    await waitForRealtimeSocket(page);
+    await page.goto('/cart');
+    await page.getByRole('link', { name: 'Finalizar compra' }).click();
+    await expect(page).toHaveURL(/\/checkout$/);
+    await completeCheckout(page);
+    await expect(page.getByText('Aguardando a confirmação do pagamento')).toBeVisible();
+
+    const orderId = new URL(page.url()).pathname.split('/').at(-1);
+    if (!orderId) throw new Error('Expected the checkout to create an order');
+    await interruptRealtimeSocket(page);
+    const countBeforeReload = await page.evaluate(async (id) => {
+      const token = localStorage.getItem('jg.session.token');
+      const response = await fetch('/api/orders', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!response.ok) throw new Error(`Orders request failed with ${response.status}`);
+      const body = await response.json();
+      return body.orders.filter((order: { id: string }) => order.id === id).length;
+    }, orderId);
+    expect(countBeforeReload).toBe(1);
+
+    await page.reload();
+    await expect(page).toHaveURL(new RegExp(`/orders/${orderId}$`));
+    await expect(page.getByText('Aguardando a confirmação do pagamento')).toBeVisible();
+    const countAfterReload = await page.evaluate(async (id) => {
+      const token = localStorage.getItem('jg.session.token');
+      const response = await fetch('/api/orders', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      if (!response.ok) throw new Error(`Orders request failed with ${response.status}`);
+      const body = await response.json();
+      return body.orders.filter((order: { id: string }) => order.id === id).length;
+    }, orderId);
+
+    expect(countAfterReload).toBe(1);
+    expect(posts).toHaveLength(1);
   });
 
   test('ignora eventos duplicados e versões antigas do mesmo NFT', async ({ page }) => {
@@ -235,6 +352,42 @@ test.describe('sincronização realtime (mocks MSW)', () => {
     await expect(currentPrice).toBeVisible();
   });
 
+  test('nao aplica evento de pedido de outro usuario ao pedido atual', async ({ page }) => {
+    await trackRealtimeSocketLifecycle(page);
+    await startScenario(page, 'order-pending');
+    await login(page);
+    await waitForRealtimeSocket(page);
+    await page.goto('/cart');
+    await page.getByRole('link', { name: 'Finalizar compra' }).click();
+    await expect(page).toHaveURL(/\/checkout$/);
+    await completeCheckout(page);
+    await expect(page.getByText('Aguardando a confirmação do pagamento')).toBeVisible();
+
+    const orderId = new URL(page.url()).pathname.split('/').at(-1);
+    if (!orderId) throw new Error('Expected the checkout to create an order');
+    await broadcastOrderEvent(page, {
+      eventId: 'e2e-foreign-order-v2',
+      version: 2,
+      orderId,
+      userId: 'user-bruno',
+      status: 'confirmed',
+      transactionRef: '0xforeign',
+    });
+    await expect(page.getByText('Aguardando a confirmação do pagamento')).toBeVisible();
+
+    await broadcastOrderEvent(page, {
+      eventId: 'e2e-owner-order-v2',
+      version: 2,
+      orderId,
+      userId: 'user-ana',
+      status: 'refused',
+      transactionRef: null,
+    });
+    await expectRealtimeEventFrames(page, 'e2e-owner-order-v2', 1);
+    await expectRealtimeEventFrames(page, 'e2e-foreign-order-v2', 0);
+    await expect(page.getByText('Pagamento recusado')).toBeVisible();
+  });
+
   test('logout fecha a conexão Socket.IO', async ({ page }) => {
     await trackRealtimeSocketLifecycle(page);
     await startScenario(page);
@@ -245,15 +398,7 @@ test.describe('sincronização realtime (mocks MSW)', () => {
     await expect
       .poll(() =>
         page.evaluate(() => {
-          const sockets = (
-            window as Window & {
-              __trackedRealtimeSockets?: {
-                url: string;
-                closed: boolean;
-                messages: string[];
-              }[];
-            }
-          ).__trackedRealtimeSockets;
+          const sockets = (window as TrackedRealtimeWindow).__trackedRealtimeSockets;
           return Boolean(sockets?.length && sockets.every((socket) => socket.closed));
         }),
       )

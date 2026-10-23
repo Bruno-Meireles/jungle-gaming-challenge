@@ -1,0 +1,1288 @@
+{
+  "auditVersion": 1,
+  "generatedAt": "2026-10-23T05:53:57.208Z",
+  "status": "complete",
+  "configuration": {
+    "buildCommand": "pnpm build",
+    "previewCommand": "vite preview --host 127.0.0.1 --port 4173 --strictPort",
+    "previewUrl": "http://127.0.0.1:4173",
+    "mockScenario": "default (reset before each run)",
+    "runsPerCombination": 3,
+    "categories": {
+      "performance": 90,
+      "accessibility": 95,
+      "best-practices": 95,
+      "seo": 90
+    },
+    "profiles": [
+      {
+        "id": "mobile",
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "width": 390,
+          "height": 844,
+          "deviceScaleFactor": 1,
+          "mobile": true
+        }
+      },
+      {
+        "id": "desktop",
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "width": 1440,
+          "height": 900,
+          "deviceScaleFactor": 1,
+          "mobile": false
+        }
+      }
+    ],
+    "routes": [
+      {
+        "id": "home",
+        "path": "/"
+      },
+      {
+        "id": "nft-detail",
+        "path": "/nfts/emerald-ape-042"
+      }
+    ],
+    "throttlingMethod": "simulate"
+  },
+  "environment": {
+    "node": "v24.19.0",
+    "packageManager": "pnpm@12.14.0",
+    "lighthouse": "13.5.0",
+    "platform": "Windows_NT 10.0.26200",
+    "architecture": "x64",
+    "cpu": "AMD Ryzen 7 5700U with Radeon Graphics         ",
+    "cpuCount": 16,
+    "totalMemoryBytes": 16486035456,
+    "chromeExecutable": "C:\\Users\\opera\\AppData\\Local\\ms-playwright\\chromium-1248\\chrome-win64\\chrome.exe"
+  },
+  "auditCount": 12,
+  "combinations": [
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 45,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 5662.129500000001,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 1294.0265
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.19,
+            "displayValue": "1,240 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.3,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.76,
+            "displayValue": "4.3 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.18,
+            "displayValue": "1,290 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.3,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.3 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.16,
+            "displayValue": "1,380 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "5.7 s",
+            "weight": 25
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 28,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 5778.020125000001,
+        "cls": 0.001618286652303273,
+        "tbtMs": 1594.3911249999996
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,600 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.14,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,590 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.14,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,500 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.8 s",
+            "weight": 25
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 55,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 5442.74375,
+        "cls": 0.02058157947934683,
+        "tbtMs": 605.5
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.52,
+            "displayValue": "560 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.2,
+            "displayValue": "5.4 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.28,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.4 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.49,
+            "displayValue": "610 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.2,
+            "displayValue": "5.4 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.27,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.4 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.44,
+            "displayValue": "680 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.18,
+            "displayValue": "5.6 s",
+            "weight": 25
+          }
+        ]
+      },
+      "passed": false
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "sampleCount": 3,
+      "failures": [],
+      "medians": {
+        "performance": 31,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "vitals": {
+        "lcpMs": 5640.723750000001,
+        "cls": 0.047161251675729286,
+        "tbtMs": 780.6447500000004
+      },
+      "targets": {
+        "performance": 90,
+        "accessibility": 95,
+        "best-practices": 95,
+        "seo": 90
+      },
+      "belowTargets": [
+        "performance"
+      ],
+      "likelyCauses": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.1,
+            "displayValue": "810 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.15,
+            "displayValue": "690 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.6 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          }
+        ]
+      },
+      "passed": false
+    }
+  ],
+  "results": [
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "run": 1,
+      "url": "http://127.0.0.1:4173/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 46,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5674.1842,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 1244.3538000000003
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.19,
+            "displayValue": "1,240 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.3,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.76,
+            "displayValue": "4.3 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-mobile-1.html",
+        "json": "home-mobile-1.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "run": 2,
+      "url": "http://127.0.0.1:4173/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 45,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5650.7384999999995,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 1294.0265
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.18,
+            "displayValue": "1,290 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.3,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.3 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-mobile-2.html",
+        "json": "home-mobile-2.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "mobile",
+      "run": 3,
+      "url": "http://127.0.0.1:4173/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 45,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5662.129500000001,
+        "cls": 0.0005482545123116778,
+        "tbtMs": 1382.1254999999992
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.16,
+            "displayValue": "1,380 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.17,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.3,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.4 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-mobile-3.html",
+        "json": "home-mobile-3.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "run": 1,
+      "url": "http://127.0.0.1:4173/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 28,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5801.860000000001,
+        "cls": 0.001618286652303273,
+        "tbtMs": 1598.5399999999995
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,600 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.14,
+            "displayValue": "3.7 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-desktop-1.html",
+        "json": "home-desktop-1.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "run": 2,
+      "url": "http://127.0.0.1:4173/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 28,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5778.020125000001,
+        "cls": 0.001618286652303273,
+        "tbtMs": 1594.3911249999996
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,590 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.14,
+            "displayValue": "3.7 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-desktop-2.html",
+        "json": "home-desktop-2.json"
+      }
+    },
+    {
+      "route": "home",
+      "path": "/",
+      "profile": "desktop",
+      "run": 3,
+      "url": "http://127.0.0.1:4173/?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 28,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5773.332500000001,
+        "cls": 0.001618286652303273,
+        "tbtMs": 1495.592500000001
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.01,
+            "displayValue": "1,500 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.8 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.7 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.14,
+            "displayValue": "3.7 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "home-desktop-3.html",
+        "json": "home-desktop-3.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "run": 1,
+      "url": "http://127.0.0.1:4173/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 56,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5384.955,
+        "cls": 0.02058157947934683,
+        "tbtMs": 564.7909999999997
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.52,
+            "displayValue": "560 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.2,
+            "displayValue": "5.4 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.28,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.4 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-mobile-1.html",
+        "json": "nft-detail-mobile-1.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "run": 2,
+      "url": "http://127.0.0.1:4173/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 55,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5442.74375,
+        "cls": 0.02058157947934683,
+        "tbtMs": 605.5
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.49,
+            "displayValue": "610 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.2,
+            "displayValue": "5.4 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.27,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.75,
+            "displayValue": "4.4 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-mobile-2.html",
+        "json": "nft-detail-mobile-2.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "mobile",
+      "run": 3,
+      "url": "http://127.0.0.1:4173/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 52,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5575.594999999999,
+        "cls": 0.02058157947934683,
+        "tbtMs": 678.9189999999999
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.44,
+            "displayValue": "680 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.18,
+            "displayValue": "5.6 s",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.26,
+            "displayValue": "3.9 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.71,
+            "displayValue": "4.6 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-mobile-3.html",
+        "json": "nft-detail-mobile-3.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "run": 1,
+      "url": "http://127.0.0.1:4173/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 30,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5681.352000000001,
+        "cls": 0.047161251675729286,
+        "tbtMs": 813.4704000000002
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.1,
+            "displayValue": "810 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.7 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-desktop-1.html",
+        "json": "nft-detail-desktop-1.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "run": 2,
+      "url": "http://127.0.0.1:4173/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 32,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5617.727249999999,
+        "cls": 0.047161251675729286,
+        "tbtMs": 689.0454499999996
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.15,
+            "displayValue": "690 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.6 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-desktop-2.html",
+        "json": "nft-detail-desktop-2.json"
+      }
+    },
+    {
+      "route": "nft-detail",
+      "path": "/nfts/emerald-ape-042",
+      "profile": "desktop",
+      "run": 3,
+      "url": "http://127.0.0.1:4173/nfts/emerald-ape-042?mockReset=1&mockScenario=default",
+      "chromeVersion": "156.0.0.0",
+      "categories": {
+        "performance": 31,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 92
+      },
+      "metrics": {
+        "lcpMs": 5640.723750000001,
+        "cls": 0.047161251675729286,
+        "tbtMs": 780.6447500000004
+      },
+      "diagnostics": {
+        "performance": [
+          {
+            "id": "total-blocking-time",
+            "title": "Total Blocking Time",
+            "score": 0.11,
+            "displayValue": "780 ms",
+            "weight": 30
+          },
+          {
+            "id": "largest-contentful-paint",
+            "title": "Largest Contentful Paint",
+            "score": 0.05,
+            "displayValue": "5.6 s",
+            "weight": 25
+          },
+          {
+            "id": "cumulative-layout-shift",
+            "title": "Cumulative Layout Shift",
+            "score": 0.99,
+            "displayValue": "0.047",
+            "weight": 25
+          },
+          {
+            "id": "first-contentful-paint",
+            "title": "First Contentful Paint",
+            "score": 0.02,
+            "displayValue": "3.8 s",
+            "weight": 10
+          },
+          {
+            "id": "speed-index",
+            "title": "Speed Index",
+            "score": 0.12,
+            "displayValue": "3.8 s",
+            "weight": 10
+          }
+        ],
+        "accessibility": [],
+        "best-practices": [],
+        "seo": [
+          {
+            "id": "robots-txt",
+            "title": "robots.txt is not valid",
+            "score": 0,
+            "displayValue": "22 errors found",
+            "weight": 1
+          }
+        ]
+      },
+      "reports": {
+        "html": "nft-detail-desktop-3.html",
+        "json": "nft-detail-desktop-3.json"
+      }
+    }
+  ]
+}
