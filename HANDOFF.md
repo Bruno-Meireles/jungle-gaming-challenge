@@ -7,7 +7,7 @@ Branch `feat/design-system`. Idioma de trabalho: português. Leia nesta ordem: e
 - **Máximo de duas frentes simultâneas no total** (Claude: UI/E2E de apresentação/deploy; Copilot: negócio/mocks/realtime/docs). Cada arquivo tem um dono; `git add` só dos próprios caminhos; nada de reset/stash/clean.
 - Sem Docker. Não abrir PNGs do Figma (medidas por `docs/figma/file.json`). Playwright via CLI.
 - O Copilot só lê o canal enquanto está em execução: dê-lhe uma ordem única ("leia docs/copilot-queue.md e execute em ordem sem parar").
-- Único desvio visual consciente a registrar: seletor de idioma pt-BR/en no header (não existe no Figma).
+- Seletor de idioma pt-BR/en removido a pedido do usuário; o idioma é resolvido pela preferência já salva, `navigator.languages` e fallback pt-BR.
 - Worktrees antigos em `.claude/worktrees/` **não** foram removidos (limpar só no fim).
 
 ## Pronto e verificado (execução real)

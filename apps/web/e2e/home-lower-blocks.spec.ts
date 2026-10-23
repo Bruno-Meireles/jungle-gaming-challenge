@@ -53,8 +53,22 @@ test.describe('home: banners, diario e rodape', () => {
   test('newsletter valida o e-mail e nao aparenta sucesso', async ({ page }) => {
     await openHome(page);
     const footer = page.getByRole('contentinfo', { name: 'Rodapé do site' });
-    await footer.getByRole('button', { name: 'Enviar' }).click();
+    await footer.scrollIntoViewIfNeeded();
+    const input = footer.getByLabel('E-mail para receber novidades');
+    const submit = footer.getByRole('button', { name: 'Enviar' });
+    const expectSubmitAligned = async () => {
+      const inputTop = await input.evaluate(
+        (element) => element.closest('[data-slot="input"]')?.getBoundingClientRect().top ?? null,
+      );
+      const submitTop = await submit.evaluate((element) => element.getBoundingClientRect().top);
+      if (inputTop === null) throw new Error('newsletter input container not found');
+      expect(Math.abs(submitTop - inputTop)).toBeLessThanOrEqual(1);
+    };
+    await expectSubmitAligned();
+
+    await submit.click();
     await expect(footer.getByText('Informe seu e-mail.')).toBeVisible();
+    await expectSubmitAligned();
     await footer.getByLabel('E-mail para receber novidades').fill('invalido');
     await footer.getByRole('button', { name: 'Enviar' }).click();
     await expect(footer.getByText('Informe um e-mail válido.')).toBeVisible();

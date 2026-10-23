@@ -117,15 +117,13 @@ sequenceDiagram
 
 ```mermaid
 flowchart LR
-  A["start do app"] --> B{"idioma salvo?"}
+  A["start do app"] --> B{"jg:locale salvo?"}
   B -->|sim| D["usa o salvo"]
-  B -->|não| C{"navigator.language suportado?"}
+  B -->|não| C{"navigator.languages suportado?"}
   C -->|sim| D
   C -->|não| E["pt-BR"]
   D --> F["carrega recursos do idioma"]
   E --> F
   F --> G["define html lang e title"]
-  G --> H["render"]
-  H --> I["seletor de idioma"]
-  I -->|troca| J["persiste, atualiza html lang e re-renderiza sem recarregar"]
+  G --> H["renderiza no idioma resolvido"]
 ```

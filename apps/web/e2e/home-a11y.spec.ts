@@ -3,7 +3,7 @@ import { cards, grid, isMobile } from './support/home';
 
 /*
  * Plano M6, item 36. Roda em desktop-1440 e mobile-390. Observado no DOM atual (nao inventado):
- * - Ordem do DOM em 1440: skip link, banner (marca, nav Principal, botao Buscar, combobox Idioma, Carrinho, Entrar),
+ * - Ordem do DOM em 1440: skip link, banner (marca, nav Principal, botao Buscar, Carrinho, Entrar),
  *   main (hero, sidebar "Filtros", destaque, Resultados: abas, "Ordenar por", cards, Paginacao), contentinfo.
  * - Em 390: skip link, banner, searchbox "Buscar", botao "Filtros", hero, abas, cards, Paginacao. Ordenacao e
  *   filtros ficam no Sheet.

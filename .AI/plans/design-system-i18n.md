@@ -42,7 +42,7 @@ O trabalho já feito (G1, T1–T6) segue a abordagem pedida e é preservado sem 
 
 O DS não converte, não formata e não escolhe idioma. `number` só entra como **controle** (`value`, `min`, `max`, `page`, `pageCount`), nunca como texto a exibir.
 
-**Fica só no app (`apps/web`):** biblioteca de i18n e providers; dicionários (`config/locales/<idioma>` por slice), chaves tipadas e teste de paridade; detecção, persistência e seletor de idioma; `<html lang>` e `<title>`; formatação com `Intl` (datas, números, plurais; separador do ETH por manipulação de string, sem `Number`); tradução dos códigos de erro/validação da API; wrappers em `shared/ui` que injetam `t()` nas props do DS (F0b).
+**Fica só no app (`apps/web`):** biblioteca de i18n e providers; dicionários (`config/locales/<idioma>` por slice), chaves tipadas e teste de paridade; detecção e persistência da preferência de idioma (sem seletor na interface, por decisão do usuário em 2026-10-23); `<html lang>` e `<title>`; formatação com `Intl` (datas, números, plurais; separador do ETH por manipulação de string, sem `Number`); tradução dos códigos de erro/validação da API; wrappers em `shared/ui` que injetam `t()` nas props do DS (F0b).
 
 | # | Regra | Guarda |
 |---|---|---|
@@ -161,7 +161,7 @@ Ordem: G1 primeiro (fica vermelho até T6); depois T1–T3 (só mudam tipo, do m
 
 ## 7. Fora do escopo
 
-Biblioteca de i18n, providers, chaves e locales, seletor de idioma, `<html lang>`, lint `jsx-no-literals` e lint de `Intl` do app (F0b); mudar `RangeSlider` (L1); trocar as props numéricas de `QuantityStepper`/`Pagination` por string (R5); formatação de números e datas no DS; rótulos de página da Pagination e botão "Anterior"; alvos de toque menores que 24×24; textos do app (smoke I1); reescrever evidências históricas; baselines por idioma (telas do app).
+Biblioteca de i18n, providers, chaves e locales, `<html lang>`, lint `jsx-no-literals` e lint de `Intl` do app (F0b); mudar `RangeSlider` (L1); trocar as props numéricas de `QuantityStepper`/`Pagination` por string (R5); formatação de números e datas no DS; rótulos de página da Pagination e botão "Anterior"; alvos de toque menores que 24×24; textos do app (smoke I1); reescrever evidências históricas; baselines por idioma (telas do app).
 
 ## 8. Decisões para ARCHITECTURE.md
 

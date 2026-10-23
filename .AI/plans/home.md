@@ -85,21 +85,20 @@ apps/web/src
     unavailable/     index.ts → { UnavailablePage, unavailableSearchSchema }  (whitelist de feature ids)
     not-found/       index.ts → { NotFoundPage }
   widgets/
-    header/          logo, nav (Início/Mercado → '/', Criadores/Aprenda → /unavailable), busca (feature), carrinho (sem contador), Entrar → /login, seletor de idioma
+    header/          logo, nav (Início/Mercado → '/', Criadores/Aprenda → /unavailable), busca (feature), carrinho (sem contador), Entrar → /login
     hero/            carrossel manual de 3 destaques (pontos = botões), CTA Explorar → #catalog
     filter-panel/    sidebar ≥1440; Sheet (DS) <1440 com botão de filtros; compõe catalog-filters (+ catalog-sort no Sheet)
     catalog/         toolbar (catalog-view-tabs + catalog-sort), resultados (união loading|empty|error|success), grade, paginação, aria-busy, anúncio de contagem
     featured-nft/    "NFT em destaque / Oferta limitada" (dados de highlights)
     promo-banners/   2 banners com Explorar
     journal/         "Diário da Cunhagem" (texto i18n; "Ler mais" → /unavailable?feature=journal)
-    footer/          pilares, newsletter (não funcional), contatos, links → /unavailable, carteiras compatíveis, seletor de idioma
+    footer/          pilares, newsletter (não funcional), contatos, links → /unavailable, carteiras compatíveis
     bottom-nav/      só <768
   features/
     catalog-search/      formulário role=search; desktop: botão de ícone com aria-expanded abre o campo
     catalog-filters/     coleções e redes (Checkbox + contagem da faceta), faixa de preço (RangeSlider em passos inteiros + Aplicar)
     catalog-sort/        Select (recent|price-asc|price-desc|popular)
     catalog-view-tabs/   Tabs (all|new|trending)
-    language-switch/     troca o idioma, persiste, atualiza <html lang> sem reload
   entities/
     nft/       index.ts → tipos de domínio, normalizeCatalogSearch, withFilterChange, nftKeys, useCatalogQuery, useHighlightsQuery, NftCardView
                model/domain/* (puro), api/fetch-catalog-page.ts, api/fetch-highlights.ts (DTO → domínio), config/locales; network ids em model/domain/network.ts
@@ -354,7 +353,7 @@ Login, cadastro, sessão e interceptors (F2); detalhe, favoritos (F4); carrinho 
 
 **ADR-24 Build de demonstração com mocks e SPA fallback.** `.env.production` com `VITE_ENABLE_MOCKS=true`; `vercel.json` com rewrite para `/index.html`; E2E sobre o build de preview. Descartado: mocks só em dev (viola §6/§12). Consequência: o deploy público exibe os mocks e as rotas diretas funcionam.
 
-**Desvios do Figma a registrar:** separador decimal (Q3), seletor de idioma (Q8), skip link, preço riscado omitido, card sem título não replicado, contagens ilustrativas, cópia do hero por breakpoint (Q9), layout tablet derivado (Q11), mobile sem frame abaixo da dobra (Q12).
+**Desvios do Figma a registrar:** separador decimal (Q3), skip link, preço riscado omitido, card sem título não replicado, contagens ilustrativas, cópia do hero por breakpoint (Q9), layout tablet derivado (Q11), mobile sem frame abaixo da dobra (Q12). A interface não oferece seletor de idioma por decisão posterior do usuário (2026-10-23).
 
 ## Progresso
 
@@ -454,8 +453,10 @@ Desvios do plano no M1:
 
 Entregue: `entities/nft` (`fetchHighlights`, `useHighlightsQuery`, `nftKeys.highlights`, `toNftSummary` extraído), `features/language-switch` (Select do DS, namespace `language`), `widgets/header` (marca, nav "Principal", carrinho sem contador, Entrar), `widgets/hero` (carrossel manual, pontos com `aria-current`, sem autoplay nem transição), `widgets/featured-nft` (só ≥1440), `pages/home` com `#catalog` (`tabIndex=-1`) e `PageContainer`/ícones em `shared/ui`. Capturas: `scratchpad/home2-1440.png` e `home2-390.png`.
 
+Decisão posterior (2026-10-23): a pedido do usuário, o `features/language-switch` foi removido da interface e do app. A aplicação continua pt-BR/en, escolhendo `jg:locale` já salvo, depois `navigator.languages` e pt-BR como fallback.
+
 Desvios e lacunas (Figma x implementado):
-- **Mobile:** o frame não tem header; foi mantido um header compacto (marca, carrinho, Entrar) porque o spec exige a marca no banner. Sem nav abaixo de 768 e sem seletor de idioma abaixo de 1440 (idioma só no header ≥1440 até o rodapé existir, Q8). Busca (ícone no header desktop; campo no mobile) e barra inferior ficam para o item 27 e o M6.
+- **Mobile:** o frame não tem header; foi mantido um header compacto (marca, carrinho, Entrar) porque o spec exige a marca no banner. Sem nav abaixo de 768. O seletor de idioma foi removido por decisão posterior do usuário; o idioma é resolvido pela preferência salva ou navegador. Busca (ícone no header desktop; campo no mobile) e barra inferior ficam para o item 27 e o M6.
 - **Hero mobile:** a imagem secundária sobreposta (58x58) e o fundo (círculos/gradiente do grupo 14:5290) não foram replicados; gradiente aproximado por `primary/20 -> primary/5` (stops do Figma não mapeados em tokens). Desktop: o vetor 2:104 não tem fill, então sem fundo.
 - **Pontos:** áreas de toque de 24 px (WCAG 2.5.8) com marca de 8 px; passo de 24 px no lugar de 16 px do Figma. Posição dos pontos em tablet (768) derivada.
 - **Tablet (768-1439):** hero com imagem 300 px e título 28 px, derivados (sem frame, Q11).

@@ -15,7 +15,6 @@ import { searchLocales } from '../../features/catalog-search';
 import { sortLocales } from '../../features/catalog-sort';
 import { viewTabsLocales } from '../../features/catalog-view-tabs';
 import { filtersLocales } from '../../features/catalog-filters';
-import { languageLocales } from '../../features/language-switch';
 import { authLocales } from '../../features/auth';
 import { catalogLocales } from '../../widgets/catalog';
 import { featuredLocales } from '../../widgets/featured-nft';
@@ -58,7 +57,6 @@ export const ptBRResources = {
   footer: footerLocales['pt-BR'],
   hero: heroLocales['pt-BR'],
   featured: featuredLocales['pt-BR'],
-  language: languageLocales['pt-BR'],
   auth: authLocales['pt-BR'],
   filters: filtersLocales['pt-BR'],
   sort: sortLocales['pt-BR'],
@@ -108,7 +106,6 @@ const enResources = {
   footer: footerLocales.en,
   hero: heroLocales.en,
   featured: featuredLocales.en,
-  language: languageLocales.en,
   auth: authLocales.en,
   filters: filtersLocales.en,
   sort: sortLocales.en,

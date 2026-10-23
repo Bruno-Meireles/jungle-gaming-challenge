@@ -145,9 +145,9 @@ Com MSW ativo, `app/bootstrap/mock-controls.ts` interpreta `?mockReset=1&mockSce
 
 O deploy Vercel está configurado em `vercel.json`: instala com `pnpm install --frozen-lockfile`, builda `@jg/web` pelo Turbo, publica `apps/web/dist` e reescreve rotas SPA para `/index.html`. `apps/web/.env.production` define `VITE_ENABLE_MOCKS=true`, portanto os mocks MSW são incluídos/ativados no build público de demonstração.
 
-### Desvio visual consciente em relação ao Figma
+### Desvios visuais conscientes em relação ao Figma
 
-- O seletor de idioma pt-BR/en no header não aparece no Figma; foi acrescentado para cumprir o requisito de i18n do app. Fica visível a partir de 1440 px, inclusive ao lado/sobre o modal desktop de login. Abaixo desse breakpoint, o idioma continua respeitando a preferência `jg:locale` e `navigator.languages`.
+- O seletor de idioma pt-BR/en que havia sido acrescentado ao header foi removido em 2026-10-23 a pedido do usuário, pois não aparece no Figma. O app continua resolvendo o idioma pela preferência `jg:locale` já persistida, depois por `navigator.languages` e, por fim, pt-BR.
 
 ### Decisões de fluxo e contrato
 

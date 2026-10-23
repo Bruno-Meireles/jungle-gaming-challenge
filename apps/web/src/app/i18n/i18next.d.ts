@@ -11,7 +11,6 @@ declare module 'i18next' {
       'footer',
       'hero',
       'featured',
-      'language',
       'auth',
       'filters',
       'sort',

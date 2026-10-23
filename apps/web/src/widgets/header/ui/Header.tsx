@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 
 import { useCatalogSearch } from '../../../entities/nft';
 import { SearchToggle } from '../../../features/catalog-search';
-import { LanguageSwitch } from '../../../features/language-switch';
 import { PageContainer } from '../../../shared/ui';
 import { CartLink } from './CartLink';
 import { HeaderNav } from './HeaderNav';
@@ -25,9 +24,6 @@ export function Header() {
           <HeaderNav />
           <div className="flex items-start gap-16 pb-8 desktop:gap-28">
             <SearchToggle value={search.q} onSubmit={(q) => update({ q })} />
-            <div className="hidden desktop:block">
-              <LanguageSwitch />
-            </div>
             <CartLink />
             <HeaderSession />
           </div>

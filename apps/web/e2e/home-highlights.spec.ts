@@ -7,7 +7,7 @@ import { expect, test } from '@playwright/test';
  * - "Explorar" (hero) leva o foco ao elemento #catalog.
  * - Destaque lateral (1440): region "NFT em destaque" com link para /nfts/cosmic-bloom-118.
  * - Header: banner com a marca "Kurio"; navigation "Principal" com links
- *   Inicio, Mercado, Criadores, Aprenda; seletor de idioma = combobox "Idioma" no banner (1440).
+ *   Início, Mercado, Criadores e Aprenda. O idioma segue a preferência salva ou o idioma do navegador.
  */
 
 const viewports = [
@@ -78,7 +78,7 @@ test.describe('home: destaques so no desktop (1440)', () => {
     await expect(featured.getByRole('link')).toHaveAttribute('href', '/nfts/cosmic-bloom-118');
   });
 
-  test('o header tem navigation "Principal" com 4 links e o seletor de idioma', async ({ page }) => {
+  test('o header tem navigation "Principal" com 4 links e sem seletor de idioma', async ({ page }) => {
     await page.goto('/');
     const header = page.getByRole('banner');
     const nav = header.getByRole('navigation', { name: 'Principal' });
@@ -86,6 +86,7 @@ test.describe('home: destaques so no desktop (1440)', () => {
     for (const label of ['Início', 'Mercado', 'Criadores', 'Aprenda']) {
       await expect(nav.getByRole('link', { name: label })).toBeVisible();
     }
-    await expect(header.getByRole('combobox', { name: 'Idioma' })).toBeVisible();
+    await expect(header.getByRole('combobox', { name: 'Idioma' })).toHaveCount(0);
+    await expect(header.getByRole('combobox', { name: 'Language' })).toHaveCount(0);
   });
 });

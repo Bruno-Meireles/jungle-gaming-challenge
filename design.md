@@ -118,7 +118,7 @@ Fonte normativa: `.AI/standards/i18n-quality.md` (agentes e skills a leem antes 
 - **Propriedade das mensagens por slice** (`config/locales/pt-BR` e `en` em cada slice; compartilhadas em `shared`); `app` registra os recursos e o idioma. Teste de paridade garante as mesmas chaves e placeholders nos dois idiomas.
 - **API devolve códigos** (erro e `fieldErrors`), a UI traduz; o mock MSW não tem texto de interface. Conteúdo do catálogo (título, descrição) é dado do mock; **[decidir]** se é localizado pelo servidor via `Accept-Language` ou único (pt-BR) por ser conteúdo editorial.
 - **Formatação**: `Intl` para datas, plurais e números comuns. **ETH segue string decimal**: a formatação por idioma (`1.19` vs `1,19`) troca só o separador por manipulação de string testada, sem `Number`.
-- **Idioma ativo**: escolha persistida, depois `navigator.language`, depois pt-BR (cópia do Figma); atualiza `<html lang>`; seletor de idioma acessível no cabeçalho/rodapé. **[decidir]** na etapa de rotas: idioma só em estado (recomendado, sem duplicar rotas) ou prefixo na URL (`/en/...`).
+- **Idioma ativo**: preferência `jg:locale` já persistida, depois `navigator.languages`, depois pt-BR (cópia do Figma); atualiza `<html lang>`. Por decisão do usuário em 2026-10-23, não exibir seletor de idioma na interface. **[decidir]** na etapa de rotas: idioma só em estado (recomendado, sem duplicar rotas) ou prefixo na URL (`/en/...`).
 - **Testes**: unitários e E2E nos dois idiomas nos fluxos principais; Playwright define `locale` do contexto; baselines visuais por idioma onde o texto altera o layout (a regressão visual de início, detalhe, carrinho e pagamento passa a ter variante en).
 - **Lighthouse/SEO**: `lang` correto e `<title>` traduzido por rota.
 
@@ -186,7 +186,7 @@ Produzidos depois desta proposta: `docs/discovery.md` (matriz requisito→featur
 | # | Feature | Entrega principal | Depende de |
 |---|---|---|---|
 | F0a | `design-system-i18n` | DS sem texto de interface embutido (rótulos como props), guarda por teste, stories/testes atualizados, baselines inalteradas | DS |
-| F0b + F3 | `home` (plano único, ADR-15/16) | app-shell mínimo (providers Query/Router/**i18n**, router base, regras FSD **e de qualidade/i18n** no lint, seletor de idioma), Axios mínimo, mock MSW do catálogo e a Início responsiva (busca, filtros, ordenação, paginação na URL, skeleton); build de demonstração com mocks | F0a |
+| F0b + F3 | `home` (plano único, ADR-15/16) | app-shell mínimo (providers Query/Router/**i18n**, router base, regras FSD **e de qualidade/i18n** no lint), Axios mínimo, mock MSW do catálogo e a Início responsiva (busca, filtros, ordenação, paginação na URL, skeleton); build de demonstração com mocks | F0a |
 | F1 | `mock-platform` | amplia os mocks da Home: erros por código, demais cenários do enunciado §6, persistência/reset, ≥ 2 usuários, **spike do Socket.IO** | home |
 | F2 | `session-auth` | erro padrão e interceptors, login/cadastro/logout/expiração, guards (o Axios e o `shared/api` nascem na Home) | F1 |
 | F4 | `nft-detail` + `favorites` | Detalhe, galeria, edição, quantidade, favorito otimista | F3 |

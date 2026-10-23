@@ -9,7 +9,7 @@ Requisitos do usuário para o app (`apps/web`), válidos desde a primeira featur
 - Cada slice FSD é dono das suas mensagens (`config/locales/<idioma>`); mensagens compartilhadas ficam em `shared`. A camada `app` registra os recursos e o idioma ativo.
 - Plurais, datas, números e moeda via `Intl`/API do i18n, nunca concatenação de strings. **ETH continua string decimal**: formatação por idioma só troca separadores por manipulação de string testada, nunca passa por `Number`.
 - A API devolve **códigos** de erro e de validação; a UI os traduz (o mock não contém texto de interface). Conteúdo editorial do catálogo (título, descrição) é dado, não mensagem de interface.
-- Idioma ativo: escolha persistida do usuário, depois `navigator.language`, depois pt-BR; atualiza `<html lang>`. Há um seletor de idioma acessível.
+- Idioma ativo: preferência `jg:locale` já persistida, depois `navigator.languages`, depois pt-BR; atualiza `<html lang>`. Não há seletor manual de idioma na interface.
 - O **design system não tem texto de interface embutido**: todo rótulo é prop (sem default em idioma específico). O app passa o texto traduzido e os valores já formatados; o DS não usa `Intl` nem lib de i18n (ADR-14).
 - Lint no app contra literais de texto em JSX (ex.: `eslint-plugin-i18next`/`react/jsx-no-literals`), com exceções explícitas e justificadas.
 - Testes: unitários e E2E cobrem os dois idiomas nos fluxos principais (troca de idioma, validação, recibo); Playwright define o `locale` do contexto.

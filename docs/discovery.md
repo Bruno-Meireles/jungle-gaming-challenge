@@ -54,7 +54,7 @@ Local: `C:\Users\opera\OneDrive\Documentos\Frontend -Marketplace-de-NFTs\Fronten
 Escopo pedido: **somente a Home responsiva** (1440, 768, 390), sem avançar para outras páginas. Como a Home depende de infraestrutura que ainda não existe, o plano precisa incluir o mínimo dela (e nada além):
 
 - **Shell do app (parte de F0b):** providers (Query, Router, i18n), layout raiz com header e footer, estilo, regras FSD/qualidade/i18n no lint.
-- **i18n (F0b):** biblioteca, recursos pt-BR e en, seletor de idioma. Depende de `design-system-i18n` (F0a) concluído.
+- **i18n (F0b):** biblioteca e recursos pt-BR/en; idioma resolvido pela preferência `jg:locale` salva, `navigator.languages` e fallback pt-BR, sem seletor na interface por decisão posterior do usuário. Depende de `design-system-i18n` (F0a) concluído.
 - **Dados do catálogo:** cliente Axios mínimo, contrato `GET /api/nfts` (busca, filtros, ordenação, paginação) e facetas, mock MSW só do catálogo, com cenários `default`, vazio, erro e lentidão, e fixtures com variedade (≥ 40 NFTs para paginar).
 - **UI:** header (logo, navegação, busca, carrinho com contador, "Entrar"), hero com CTA "Explorar", barra lateral (coleções com contagem, faixa de preço com `RangeSlider` e Aplicar, rede), abas Todos/Novos lançamentos/Em alta, ordenação (`Select`), grade de `NftCard` (3 colunas no desktop; 2 no mobile), paginação, banners, "NFT em destaque", rodapé; no mobile, busca, botão de filtros (`Sheet`), hero compacto e barra inferior.
 - **Estados:** skeleton com shimmer (`NftCardSkeleton`), vazio, erro com nova tentativa, atualização em segundo plano; URL como fonte do estado; cancelamento de resposta obsoleta.
