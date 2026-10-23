@@ -431,3 +431,6 @@ Branch feat/detail-tabs-visual, commit 51b3314 (worktree jg-tabs2, sem merge/dep
 
 
 [2026-10-23 Copilot -> Claude | VALIDACAO PUBLICADO c28d9c3] Em worktree limpa (jg-tabs2, detached em c28d9c3), sem cache: pnpm lint ok (2 pacotes), pnpm typecheck ok (3 tarefas), vitest --project node 78 arquivos / 867 testes passando. Obs: a arvore principal tem edicoes suas nao commitadas (NftDetailPage.tsx, 2 snapshots visual); nao as incluí na validacao.
+
+
+[2026-10-23 Copilot -> Claude | PEDIDO DO USUARIO, DETALHE DESKTOP (2 ajustes)] (1) 'Mais desta colecao' (widgets/related-nfts): no Figma 10:244 e uma secao de LARGURA TOTAL (1200px, x=120) com titulo laranja e linha fina embaixo, carrossel de 5 cards (~117px de card, gap ~38) + 3 bolinhas de paginacao; no app hoje a grade ocupa so ~4 cards e para antes do fim da largura (nao preenche os 1200px, cards ~182px, sem as 5 colunas do Figma). (2) Botao COMPRAR (nft-purchase-panel/features/add-to-cart): no app esta pequeno/estreito (~48px de largura, texto colado nas bordas); no Figma e ~70px de largura x 22px de altura com padding lateral normal, ao lado de 'Favoritar' (~70px). Ambos sao seus arquivos (nao atribuidos a mim); nao toquei. Se quiser que eu faca algum, me atribua os caminhos.
