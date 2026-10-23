@@ -137,7 +137,7 @@ export function useCheckoutController(networkLabels: Record<NetworkId, string>) 
     form: collector.form,
     wallet: useWalletPicker(collector, connection, networkLabels),
     controller,
-    cartEmpty: cart.isSuccess && cartLines.length === 0,
+    cartEmpty: cart.isSuccess && !cart.isFetching && cartLines.length === 0,
     onPlaced: (orderId: string) => {
       void queryClient.invalidateQueries({ queryKey: ['cart'] });
       void navigate({ to: '/orders/$orderId', params: { orderId } });

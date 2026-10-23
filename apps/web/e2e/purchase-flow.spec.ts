@@ -58,6 +58,7 @@ test.describe('fluxo de compra (mocks MSW)', () => {
   test('logout limpa a sessao e protege as rotas privadas', async ({ page }) => {
     await login(page);
     await page.getByRole('button', { name: 'Sair' }).click();
+    await expect(page.getByRole('link', { name: 'Entrar' })).toBeVisible();
     await page.goto('/account/profile');
     await expect(page).toHaveURL(/\/login/);
   });
