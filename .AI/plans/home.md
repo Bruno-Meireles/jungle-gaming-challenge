@@ -309,7 +309,7 @@ Pronto: testes verdes em todos os projetos; relatório da captura pelo CLI anexa
 | 39 | Medidas (ADR-08) de header, hero, sidebar, toolbar, grade (gaps) e barra inferior, com o valor lido do nó em `docs/figma/file.json` (`2:2`/`14:5226`) e citação de `arquivo:linha`; valor ausente vira Lacuna, não palpite | `src/widgets/*/ui/*.measure.test.tsx` | integração (Vitest browser) | 1440 / 390 | ✔ |
 | 40 | **Opcional, só a pedido do usuário** (imagens custam tokens; a fidelidade vem do item 39, determinístico). Inspeção, não é teste: `pnpm --filter @jg/web exec playwright screenshot --viewport-size=1440,900 --full-page http://localhost:5173/ <scratchpad>/home-1440.png` (e `390,844`, `768,1024`; conferir flags com `--help`); comparar com `docs/figma/screens/2-2_*.png` e `14-5226_*.png`; cada desvio vira item (elemento, esperado, observado) | — | CLI | 1440, 768, 390 | ✘ |
 
-### M7: build de demonstração e deploy (§12)
+### M7: build de demonstração e deploy (§12) — ADIADO PARA F9 (decisão do usuário, 2026-10-22: deploy só com o projeto inteiro finalizado; o enunciado segue exigindo o deploy público no fechamento)
 Pronto: `build` com mocks ativos; acesso direto e refresh funcionam no preview; pronto para publicar. A **publicação** exige a conta do usuário (Vercel recomendada pelo enunciado) e fica para o fechamento (F9) ou quando o usuário a fizer.
 
 | # | Teste | Arquivo | Tipo | VP | V |
