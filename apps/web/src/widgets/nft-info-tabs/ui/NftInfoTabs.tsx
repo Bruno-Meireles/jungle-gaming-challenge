@@ -15,7 +15,7 @@ export type NftInfoTabsProps = {
 
 const TABS: readonly InfoTab[] = ['details', 'reviews'];
 const TERM = 'mt-12 text-foreground first:mt-0';
-const LIST = 'desktop:gap-32 desktop:border-b desktop:border-primary/30';
+const LIST = 'max-w-full flex-wrap gap-x-16 desktop:flex-nowrap desktop:gap-32 desktop:border-b desktop:border-primary/30';
 const TRIGGER =
   'desktop:h-28 desktop:text-body-large-17-regular-lh-16 desktop:data-[state=active]:text-body-large-17-bold desktop:after:top-27 desktop:after:h-3';
 
