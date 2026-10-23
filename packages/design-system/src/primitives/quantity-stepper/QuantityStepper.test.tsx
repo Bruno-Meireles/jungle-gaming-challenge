@@ -73,24 +73,24 @@ describe('QuantityStepper - comportamento', () => {
     expect(calls).toEqual([]);
   });
 
-  it('o valor aparece em <output> com aria-live=polite', async () => {
+  it('o valor aparece num <input inputmode=numeric> nomeado (substitui o antigo <output>, plano cart C4)', async () => {
     await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={3} min={1} max={5} onValueChange={() => {}} />);
-    const out = page.getByRole('status');
-    await expect.element(out).toHaveTextContent('3');
+    const out = page.getByRole('textbox', { name: 'Quantidade' });
+    await expect.element(out).toHaveValue('3');
     const el = out.element();
-    expect(el.tagName).toBe('OUTPUT');
-    expect(el.getAttribute('aria-live')).toBe('polite');
+    expect(el.tagName).toBe('INPUT');
+    expect(el.getAttribute('inputmode')).toBe('numeric');
   });
 
   it('modo controlado: o valor exibido acompanha o pai e para nos limites', async () => {
     await render(<Controlled min={1} max={3} start={2} />);
-    const out = page.getByRole('status');
+    const out = page.getByRole('textbox', { name: 'Quantidade' });
     await page.getByRole('button', { name: 'Aumentar' }).click();
-    await expect.element(out).toHaveTextContent('3');
+    await expect.element(out).toHaveValue('3');
     await expect.element(page.getByRole('button', { name: 'Aumentar' })).toBeDisabled();
     await page.getByRole('button', { name: 'Diminuir' }).click();
     await page.getByRole('button', { name: 'Diminuir' }).click();
-    await expect.element(out).toHaveTextContent('1');
+    await expect.element(out).toHaveValue('1');
     await expect.element(page.getByRole('button', { name: 'Diminuir' })).toBeDisabled();
   });
 
@@ -99,11 +99,14 @@ describe('QuantityStepper - comportamento', () => {
     await userEvent.tab();
     expect(document.activeElement).toBe(page.getByRole('button', { name: 'Diminuir' }).element());
     await userEvent.keyboard('{Enter}');
-    await expect.element(page.getByRole('status')).toHaveTextContent('1');
+    await expect.element(page.getByRole('textbox', { name: 'Quantidade' })).toHaveValue('1');
+    await userEvent.tab();
+    // O campo numerico fica entre os dois botoes na ordem de tabulacao.
+    expect(document.activeElement).toBe(page.getByRole('textbox', { name: 'Quantidade' }).element());
     await userEvent.tab();
     expect(document.activeElement).toBe(page.getByRole('button', { name: 'Aumentar' }).element());
     await userEvent.keyboard(' ');
-    await expect.element(page.getByRole('status')).toHaveTextContent('2');
+    await expect.element(page.getByRole('textbox', { name: 'Quantidade' })).toHaveValue('2');
   });
 });
 
@@ -157,7 +160,7 @@ describe('QuantityStepper - medidas, estados e a11y', () => {
 
   it('valor em 20/28 regular foreground e gap 12 entre os itens', async () => {
     await render(<QuantityStepper label="Quantidade" decrementLabel="Diminuir" incrementLabel="Aumentar" value={2} min={1} max={5} onValueChange={() => {}} />);
-    const out = page.getByRole('status');
+    const out = page.getByRole('textbox', { name: 'Quantidade' });
     await expect.element(out).toBeInTheDocument();
     const cs = getComputedStyle(out.element());
     expect(cs.fontSize).toBe('20px');
