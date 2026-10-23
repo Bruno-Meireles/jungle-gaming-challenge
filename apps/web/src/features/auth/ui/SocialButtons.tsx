@@ -14,7 +14,7 @@ export function SocialButtons() {
         <span className="text-body-14-regular-lh-16 text-secondary">{t('social.divider')}</span>
         <Separator className="flex-1" />
       </div>
-      <div className="flex gap-12">
+      <div className="flex flex-col gap-16 tablet:flex-row tablet:gap-12">
         {PROVIDERS.map((provider) => (
           <Button
             key={provider}
@@ -22,9 +22,10 @@ export function SocialButtons() {
             aria-disabled="true"
             aria-describedby={noteId}
             onClick={(event) => event.preventDefault()}
-            className="flex-1"
+            className="h-40 w-full rounded-5 tablet:flex-1 text-caption-13-medium tablet:rounded-6 tablet:text-body-14-medium-lh-20"
           >
-            {provider}
+            <span className="tablet:hidden">{t('social.continueWith', { provider })}</span>
+            <span className="hidden tablet:inline">{provider}</span>
           </Button>
         ))}
       </div>

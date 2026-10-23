@@ -47,13 +47,14 @@ export function SignupForm({ onSubmit, pending, failure, fieldErrors = {}, onRet
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-16">
       <FormField label={t('fields.username')} error={usernameError}>
-        <Input autoComplete="username" value={values.username} onChange={set('username')} />
+        <Input className="h-50 rounded-10 tablet:h-40 tablet:rounded-5" autoComplete="username" value={values.username} onChange={set('username')} />
       </FormField>
       <FormField label={t('fields.email')} error={emailError}>
-        <Input type="email" autoComplete="email" value={values.email} onChange={set('email')} />
+        <Input className="h-50 rounded-10 tablet:h-40 tablet:rounded-5" type="email" autoComplete="email" value={values.email} onChange={set('email')} />
       </FormField>
       <FormField label={t('fields.password')} error={error(fieldErrors.password)}>
         <PasswordInput
+          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5"
           autoComplete="new-password"
           showLabel={t('actions.showPassword')}
           hideLabel={t('actions.hidePassword')}
@@ -63,6 +64,7 @@ export function SignupForm({ onSubmit, pending, failure, fieldErrors = {}, onRet
       </FormField>
       <FormField label={t('fields.confirmPassword')} error={error(fieldErrors.confirmPassword)}>
         <PasswordInput
+          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5"
           autoComplete="new-password"
           showLabel={t('actions.showPassword')}
           hideLabel={t('actions.hidePassword')}
@@ -71,7 +73,7 @@ export function SignupForm({ onSubmit, pending, failure, fieldErrors = {}, onRet
         />
       </FormField>
       {showAlert ? <FailureAlert message={failure.kind} onRetry={onRetry} /> : null}
-      <Button type="submit" size="block" loading={pending}>
+      <Button type="submit" size="block" loading={pending} className="h-60 rounded-10 text-body-large-16-bold-lh-20 tablet:h-40 tablet:rounded-3 tablet:text-body-15-bold-lh-16">
         {t('actions.signup')}
       </Button>
     </form>

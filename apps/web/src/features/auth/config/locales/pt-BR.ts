@@ -14,6 +14,7 @@ export const ptBR = {
     hidePassword: 'Ocultar senha',
   },
   social: {
+    continueWith: 'Continuar com {{provider}}',
     divider: 'Ou continue com',
     unavailable: 'Login social indisponível nesta demonstração',
   },

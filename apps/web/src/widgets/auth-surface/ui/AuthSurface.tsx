@@ -40,7 +40,7 @@ export function AuthSurface({ title, subtitle, onDismiss, footer, children }: Au
   return (
     <section className="flex flex-col gap-24 p-16">
       <div className="flex flex-col gap-8">
-        <h1 className="text-title-20-medium text-foreground">{title}</h1>
+        <h1 className="text-title-20-bold-lh-16 text-foreground tablet:text-title-20-medium">{title}</h1>
         <p className="text-caption-13-regular-lh-16 text-foreground">{subtitle}</p>
       </div>
       {children}
