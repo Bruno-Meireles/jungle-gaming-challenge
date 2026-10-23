@@ -13,6 +13,7 @@ Atualizado em 2026-10-22. Leia isto primeiro, depois `CLAUDE.md` e `prompt.md` (
 
 ## Exceção temporária do usuário (2026-10-22): SEM TDD por ora
 O usuário suspendeu TDD para terminar tudo rápido. Produção direta, sem RED. A dívida de testes está em `.AI/plans/test-debt.md`. Depois de tudo funcionando, voltar ao TDD: pagar a dívida, restaurar testes vermelhos e rodar a suíte inteira.
+Modelos: por decisão temporária do usuário, os três agentes de `.claude/agents/` (architect, test-writer, code-writer) rodam em **Haiku, effort low** (o enunciado pede architect=Opus e os outros Sonnet: restaurar no fim). Subagentes avulsos: passar `model: haiku`, `effort: low`.
 Também pedido: **E2E Playwright (CLI, não MCP) só no fim**, mapeando todas as telas quando tudo estiver pronto.
 
 ## Canal Claude ↔ Copilot
