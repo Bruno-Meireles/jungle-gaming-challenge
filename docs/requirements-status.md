@@ -74,6 +74,16 @@ Evidencia: `docs/lighthouse/summary.json` e relatorios HTML/JSON, `pnpm lighthou
 | Deploy público (Vercel) | X | `vercel.json` pronto; CLI logada; deploy sera feito apos o merge na main e a validacao manual do usuario |
 | Checkout limpo | P | fila do Copilot item 6 |
 
+### Lighthouse local contra a URL publicada (Copilot, commit 81dba21; 2026-10-23 11:53-11:58, producao em c660eee, Chromium local, mediana de 3)
+| Combinacao | Performance | A11y | BP | SEO | LCP | TBT |
+|---|---|---|---|---|---|---|
+| Home mobile | 53 | 100 | 100 | 92 | 3,8-4,2 s | 2124 ms |
+| Home desktop | 32 | 100 | 100 | 92 | | 2587 ms |
+| Detalhe mobile | 66 | 100 | 100 | 92 | | 585 ms |
+| Detalhe desktop | 32 | 100 | 100 | 92 | | 1131 ms |
+
+Evidencia: `docs/lighthouse/summary-deploy.json` e relatorios `*-deploy-N`. SEO 92 vem so de `robots.txt` invalido (a Vercel devolvia o index.html no fallback SPA); corrigido com `apps/web/public/robots.txt`, **ainda nao publicado nem re-medido**. Performance < 90 nas 4 combinacoes no Lighthouse local (TBT de boot); o PageSpeed do usuario (abaixo) deu 98/86.
+
 ### PageSpeed Insights na URL publicada (informado pelo usuario, 1 execucao, pagina inicial; nao e a mediana de 3 do enunciado)
 | Perfil | Performance | A11y | BP | SEO |
 |---|---|---|---|---|
