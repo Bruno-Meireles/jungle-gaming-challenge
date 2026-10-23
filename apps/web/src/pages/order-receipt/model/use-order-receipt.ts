@@ -32,6 +32,7 @@ export function useOrderReceipt(orderId: string): { state: ReceiptState; retry: 
           quantity: i.quantity,
           unitPriceEth: i.unitPrice,
           lineTotalEth: i.lineTotal,
+          imageSrc: i.image.src,
         })),
         subtotalEth: o.subtotal,
         discountEth: o.discount,

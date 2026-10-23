@@ -1,4 +1,11 @@
 export const ptBR = {
+  itemsHeading: 'Detalhes da transação',
+  columnNfts: 'NFTs',
+  columnEditions: 'Edições',
+  columnSubtotal: 'Subtotal',
+  tokenId: 'ID do token: {{tokenId}}',
+  confirmedMessage: 'Seus NFTs agora estão na sua carteira',
+  confirmedNote: 'Transação confirmada na {{network}}. A propriedade foi transferida para sua carteira conectada e registrada na rede.',
   transactionId: 'ID da transação',
   date: 'Data',
   wallet: 'Carteira',
