@@ -20,7 +20,7 @@ export function AddToCartButton({ nftId, editionId, quantity, controller, disabl
     <div className="flex min-w-0 flex-1 flex-col gap-12 tablet:flex-none">
       <Button
         size="block"
-        className={MOBILE_PILL_CTA + ' text-body-large-16-bold-lh-20 tablet:text-body-14-bold-lh-16 tablet:uppercase'}
+        className={MOBILE_PILL_CTA + ' text-body-large-16-bold-lh-20 tablet:w-auto tablet:px-24 tablet:text-body-14-bold-lh-16 tablet:uppercase'}
         disabled={disabled}
         loading={controller.pending}
         onClick={() => controller.submit({ nftId, editionId, quantity })}
