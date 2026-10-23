@@ -1,6 +1,8 @@
 import { Button } from '@jg/design-system';
 import { useTranslation } from 'react-i18next';
 
+import { ArrowRightIcon } from '../../../shared/ui';
+
 // Duas copias fieis ao Figma (desktop e mobile); a oculta sai da arvore de acessibilidade (display: none).
 export function HeroCopy({ onExplore }: { onExplore: () => void }) {
   const { t } = useTranslation('hero');
@@ -19,7 +21,16 @@ export function HeroCopy({ onExplore }: { onExplore: () => void }) {
           <span className="hidden tablet:inline">{t('text.long')}</span>
         </p>
       </div>
-      <Button size="md" onClick={onExplore} className="rounded-6 px-36 tablet:min-w-[140px] tablet:px-24 text-body-large-16-bold-lh-20 uppercase">
+      {/* Mobile (Figma Frame 56): link de texto 12/700 com seta; alvo de toque de 24px de altura (WCAG 2.5.8). Desktop: botao. */}
+      <button
+        type="button"
+        onClick={onExplore}
+        className="inline-flex h-24 cursor-pointer items-center gap-8 border-0 bg-transparent p-0 text-caption-12-bold uppercase text-text-accent focus-visible:outline-2 focus-visible:outline-focus tablet:hidden"
+      >
+        {t('explore')}
+        <ArrowRightIcon />
+      </button>
+      <Button size="md" onClick={onExplore} className="hidden rounded-6 px-24 text-body-large-16-bold-lh-20 uppercase tablet:inline-flex tablet:min-w-[140px]">
         {t('explore')}
       </Button>
     </div>

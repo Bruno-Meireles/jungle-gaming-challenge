@@ -1,5 +1,10 @@
 export const ptBR = {
   summary: 'Resumo do pedido',
+  yourNfts: 'Seus NFTs',
+  columnNfts: 'NFTs',
+  promoHint: 'Tem um código promocional?',
+  promoLink: 'Aplique aqui',
+  estimatedFee: 'Taxa estimada',
   tokenId: 'ID do token',
   quantity: '(x {{quantity}})',
   subtotal: 'Subtotal',

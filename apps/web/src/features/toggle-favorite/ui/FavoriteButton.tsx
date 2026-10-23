@@ -20,9 +20,14 @@ export function FavoriteButton({ favorited, authenticated, redirectTo, onToggle 
     else void navigate({ to: '/login', search: { redirect: redirectTo } });
   };
   return (
-    <Button variant="outline" aria-pressed={favorited} onClick={handleClick}>
+    <Button
+      variant="outline"
+      aria-pressed={favorited}
+      onClick={handleClick}
+      className="size-60 rounded-40 px-0 tablet:h-40 tablet:w-auto tablet:rounded-6 tablet:px-13"
+    >
       <HeartIcon />
-      {t('label')}
+      <span className="sr-only tablet:not-sr-only">{t('label')}</span>
     </Button>
   );
 }

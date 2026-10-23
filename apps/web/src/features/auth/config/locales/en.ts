@@ -16,6 +16,7 @@ export const en = {
     hidePassword: 'Hide password',
   },
   social: {
+    continueWith: 'Continue with {{provider}}',
     divider: 'Or continue with',
     unavailable: 'Social sign-in is unavailable in this demo',
   },

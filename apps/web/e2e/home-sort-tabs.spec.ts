@@ -55,9 +55,9 @@ test.describe('home: abas', () => {
 
     await expect(trending).toHaveAttribute('aria-selected', 'true');
     await expect(page).toHaveURL((url) => url.searchParams.get('tab') === 'trending');
-    await expect(count(page, '10 NFTs')).toBeVisible();
+    await expect(count(page, '45 NFTs')).toBeVisible();
     await expect(cards(page)).toHaveCount(9);
-    await expect(cards(page).first()).toContainText('Neon Vessel #552');
+    await expect(cards(page).first()).toContainText('Mint Cipher #308');
 
     await page.keyboard.press('ArrowLeft');
     await page.keyboard.press('ArrowLeft');

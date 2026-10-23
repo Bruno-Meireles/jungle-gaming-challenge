@@ -1,4 +1,5 @@
 import { Alert } from '@jg/design-system';
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { CheckoutNotice, ConfirmPurchaseButton, type ConfirmPhase } from '../../../features/place-order';
@@ -10,6 +11,8 @@ export type CheckoutViewProps = {
   controller: CheckoutController;
   onPlaced: (orderId: string) => void;
   onSessionExpired: () => void;
+  /** Bloco exibido entre o resumo e o botao de confirmar (Figma: "Carteira e rede" na coluna do resumo). */
+  beforeConfirm?: ReactNode;
 };
 
 function phaseOf(kind: string): ConfirmPhase {
@@ -17,12 +20,12 @@ function phaseOf(kind: string): ConfirmPhase {
   return 'idle';
 }
 
-export function CheckoutView({ controller, onPlaced, onSessionExpired }: CheckoutViewProps) {
+export function CheckoutView({ controller, onPlaced, onSessionExpired, beforeConfirm }: CheckoutViewProps) {
   const { t } = useTranslation('checkout');
   const flow = useCheckoutFlow(controller, { onPlaced, onSessionExpired });
   const { state, quote } = { state: flow.state, quote: controller.quote };
   return (
-    <div className="flex flex-col gap-16">
+    <div className="flex flex-col gap-24">
       {quote.status === 'ready' ? <OrderSummary quote={quote.quote} /> : null}
       {quote.status === 'loading' ? (
         <Alert tone="info" toneLabel={t('toneInfo')}>
@@ -34,6 +37,7 @@ export function CheckoutView({ controller, onPlaced, onSessionExpired }: Checkou
           {t('quoteError')}
         </Alert>
       ) : null}
+      {beforeConfirm}
       <CheckoutNotice notice={state.kind === 'review' ? state.notice : null} />
       {state.kind === 'submitting' && state.recovering ? (
         <Alert tone="info" toneLabel={t('toneInfo')}>

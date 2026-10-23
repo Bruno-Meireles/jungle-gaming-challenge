@@ -28,9 +28,11 @@ export function LoginForm({ onSubmit, pending, failure, fieldErrors = {}, onRetr
   };
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-16">
+    <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-16 [&_label]:sr-only tablet:[&_label]:not-sr-only">
       <FormField label={t('fields.email')} error={error(fieldErrors.email)}>
         <Input
+          placeholder={t('fields.email')}
+          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5 tablet:[&_input::placeholder]:text-transparent"
           type="email"
           autoComplete="email"
           value={values.email}
@@ -39,6 +41,8 @@ export function LoginForm({ onSubmit, pending, failure, fieldErrors = {}, onRetr
       </FormField>
       <FormField label={t('fields.password')} error={error(fieldErrors.password)}>
         <PasswordInput
+          placeholder={t('fields.password')}
+          className="h-50 rounded-10 tablet:h-40 tablet:rounded-5 tablet:[&_input::placeholder]:text-transparent"
           autoComplete="current-password"
           showLabel={t('actions.showPassword')}
           hideLabel={t('actions.hidePassword')}
@@ -49,14 +53,14 @@ export function LoginForm({ onSubmit, pending, failure, fieldErrors = {}, onRetr
       <Link
         to="/unavailable"
         search={{ feature: 'forgot-password' }}
-        className="self-start text-body-14-regular-lh-16 text-text-accent"
+        className="self-end text-body-14-regular-lh-16 text-text-accent tablet:self-start"
       >
         {t('actions.forgot')}
       </Link>
       {failure && failure.kind !== 'account_conflict' ? (
         <FailureAlert message={failure.kind} onRetry={onRetry} />
       ) : null}
-      <Button type="submit" size="block" loading={pending}>
+      <Button type="submit" size="block" loading={pending} className="h-60 rounded-10 text-body-large-16-bold-lh-20 tablet:h-40 tablet:rounded-3 tablet:text-body-15-bold-lh-16">
         {t('actions.login')}
       </Button>
       <SocialButtons />

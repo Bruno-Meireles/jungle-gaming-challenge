@@ -6,6 +6,8 @@ import { extendTailwindMerge } from 'tailwind-merge';
 const twMerge = extendTailwindMerge({
   extend: {
     classGroups: {
+      // Raios numericos da escala do projeto (rounded-5, rounded-10...): sem isto o merge nao resolve conflitos entre eles.
+      rounded: [{ rounded: [(value: string) => /^\d+(\.\d+)?$/.test(value)] }],
       'font-size': [
         { text: [(value: string) => /^(body|body-large|tiny|display|caption|heading|title)-\d/.test(value)] },
       ],

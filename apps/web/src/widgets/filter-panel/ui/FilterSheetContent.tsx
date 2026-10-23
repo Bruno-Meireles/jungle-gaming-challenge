@@ -2,7 +2,7 @@ import { Button, SheetClose, SheetTitle } from '@jg/design-system';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useCatalogQuery, useCatalogSearch } from '../../../entities/nft';
+import { effectiveSort, useCatalogQuery, useCatalogSearch } from '../../../entities/nft';
 import { CatalogFilters, type FilterValue } from '../../../features/catalog-filters';
 import { CatalogSort } from '../../../features/catalog-sort';
 import type { SortId } from '../../../shared/api/contracts/ids';
@@ -18,7 +18,7 @@ export function FilterSheetContent({ onClose }: { onClose: () => void }) {
     min: search.min,
     max: search.max,
   });
-  const [sort, setSort] = useState<SortId>(search.sort ?? 'recent');
+  const [sort, setSort] = useState<SortId>(effectiveSort(search));
   const apply = (): void => {
     update({ ...draft, sort });
     onClose();

@@ -6,13 +6,15 @@ import { useRealtimeSync } from '../../entities/realtime';
 import type { RealtimeEvent } from '../../shared/api/contracts/realtime';
 import { applyRealtimeEvent, reconcileRealtimeQueries } from './query-sync';
 
+const sessionHash = JSON.stringify(sessionKeys.current());
+
 export function RealtimeSessionBridge() {
   const queryClient = useQueryClient();
   const subscribe = useCallback(
     (onStoreChange: () => void) =>
       queryClient.getQueryCache().subscribe((event) => {
-        // observerAdded/Removed disparam durante a renderizacao de outros componentes; so mudancas de dado importam.
-        if (event.type === 'updated' || event.type === 'removed' || event.type === 'added') onStoreChange();
+        // So a query da sessao importa; observerAdded/Removed e queries novas disparam durante o render de outros componentes.
+        if ((event.type === 'updated' || event.type === 'removed') && event.query.queryHash === sessionHash) onStoreChange();
       }),
     [queryClient],
   );

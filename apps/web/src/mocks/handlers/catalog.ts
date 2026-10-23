@@ -5,10 +5,10 @@ import {
   NETWORK_IDS,
   SORT_IDS,
   VIEW_IDS,
+  defaultSortForView,
 } from '../../shared/api/contracts/ids';
 import { isEthDecimal } from '../../shared/lib/eth/eth';
 import { queryCatalog, type CatalogQuery } from '../catalog/query-catalog';
-import { MOCK_NOW } from '../clock';
 import { NFT_FIXTURES } from '../fixtures/nfts';
 import { livePrice } from '../commerce/market';
 import { readScenario } from '../scenario';
@@ -36,10 +36,11 @@ function parseQuery(params: URLSearchParams): CatalogQuery {
   const minPriceEth = optionalPrice(params.get('minPriceEth'));
   const maxPriceEth = optionalPrice(params.get('maxPriceEth'));
   const page = Number.parseInt(params.get('page') ?? '1', 10);
+  const view = pick(VIEW_IDS, params.get('view'), 'all');
   return {
     ...(search === undefined ? {} : { search }),
-    view: pick(VIEW_IDS, params.get('view'), 'all'),
-    sort: pick(SORT_IDS, params.get('sort'), 'recent'),
+    view,
+    sort: pick(SORT_IDS, params.get('sort'), defaultSortForView(view)),
     collections: pickAll(COLLECTION_IDS, params.getAll('collections')),
     networks: pickAll(NETWORK_IDS, params.getAll('networks')),
     ...(minPriceEth === undefined ? {} : { minPriceEth }),
@@ -76,7 +77,7 @@ export function createCatalogHandler() {
           if (priceEth === undefined) throw new Error(`mercado ausente para NFT ${nft.id}`);
           return { ...nft, priceEth };
         });
-    const body = queryCatalog(source, parseQuery(new URL(request.url).searchParams), MOCK_NOW);
+    const body = queryCatalog(source, parseQuery(new URL(request.url).searchParams));
     return HttpResponse.json(body);
   });
 }

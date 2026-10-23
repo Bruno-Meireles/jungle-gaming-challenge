@@ -63,14 +63,16 @@ function PurchaseSection({
           {t('shared:eth.amount', { amount: formatEthFixed(total, locale, 2) })}
         </span>
       </p>
-      <AddToCartButton
-        nftId={nftId}
-        editionId={edition.id}
-        quantity={quantity}
-        controller={addToCart}
-        disabled={max === 0}
-      />
-      <FavoriteButton {...favorite} />
+      <div className="flex items-start gap-12 tablet:flex-col tablet:items-stretch tablet:gap-24">
+        <AddToCartButton
+          nftId={nftId}
+          editionId={edition.id}
+          quantity={quantity}
+          controller={addToCart}
+          disabled={max === 0}
+        />
+        <FavoriteButton {...favorite} />
+      </div>
     </section>
   );
 }

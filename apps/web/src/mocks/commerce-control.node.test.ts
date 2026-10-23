@@ -45,6 +45,30 @@ async function catalog(query = '') {
   return catalogPageDtoSchema.parse(await response.json());
 }
 
+describe('GET /api/nfts/:id (conteudo de demonstracao do Figma)', () => {
+  const detail = async (id: string) => nftDetailDtoSchema.parse(await (await fetch(`${base}/nfts/${id}`)).json());
+
+  it('emerald-ape-042 traz nota 4.8 (19), descricao editorial e atributos Oculos/Esmeralda/Raro', async () => {
+    const emerald = await detail('emerald-ape-042');
+
+    expect(emerald.rating).toEqual({ average: 4.8, count: 19 });
+    expect(emerald.description['pt-BR']).toBe(
+      'Um colecionável digital 1/50 finalizado à mão da coleção Kurio Editions, verificado na Ethereum.',
+    );
+    expect(emerald.description.en).toMatch(/Kurio Editions/);
+    expect(emerald.attributes.map((a) => a.value['pt-BR'])).toEqual(['Óculos', 'Esmeralda', 'Raro']);
+    expect(emerald.attributes.map((a) => a.value.en)).toEqual(['Glasses', 'Emerald', 'Rare']);
+    expect(emerald.attributes.every((a) => a.name['pt-BR'] !== '' && a.name.en !== '')).toBe(true);
+  });
+
+  it('os demais NFTs seguem com conteudo gerado (colecao, rede, raridade)', async () => {
+    const other = await detail('violet-nomad-314');
+
+    expect(other.attributes.map((a) => a.name.en)).toEqual(['Collection', 'Network', 'Rarity']);
+    expect(other.rating).not.toEqual({ average: 4.8, count: 19 });
+  });
+});
+
 describe('GET /api/nfts (catalogo)', () => {
   it('pagina de 9 em 9 sem repetir itens entre paginas e com contagens coerentes', async () => {
     const first = await catalog();
@@ -89,6 +113,25 @@ describe('GET /api/nfts (catalogo)', () => {
     const searched = await catalog(`?collections=${collection}&search=${term}`);
     expect(searched.items.length).toBeGreaterThan(0);
     expect(searched.items.every((nft) => nft.title.toLowerCase().includes(term) || nft.collectionId.includes(term))).toBe(true);
+  });
+
+  it('as abas listam o mesmo conjunto: new ordena por data e trending por popularidade', async () => {
+    const all = await catalog();
+    const novos = await catalog('?view=new');
+    const emAlta = await catalog('?view=trending');
+
+    expect(novos.totalItems).toBe(all.totalItems);
+    expect(emAlta.totalItems).toBe(all.totalItems);
+    const listed = novos.items.map((nft) => Date.parse(nft.listedAt));
+    expect(listed).toEqual([...listed].sort((a, b) => b - a));
+    const popularity = emAlta.items.map((nft) => nft.popularity);
+    expect(popularity).toEqual([...popularity].sort((a, b) => b - a));
+    expect(emAlta.items.map((nft) => nft.id)).not.toEqual(novos.items.map((nft) => nft.id));
+  });
+
+  it('sort explicito vence a ordem padrao da aba', async () => {
+    const asc = (await catalog('?view=trending&sort=price-asc')).items.map((nft) => Number(nft.priceEth));
+    expect(asc).toEqual([...asc].sort((a, b) => a - b));
   });
 
   it('ignora parametros invalidos em vez de falhar', async () => {

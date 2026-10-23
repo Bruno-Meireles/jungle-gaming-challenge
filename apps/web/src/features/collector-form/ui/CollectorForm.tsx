@@ -2,6 +2,8 @@ import { FormField, Input, Textarea } from '@jg/design-system';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { MOBILE_FIELD } from '../../../shared/ui';
+
 import type { CollectorErrors, CollectorField, CollectorValues } from '../model/collector-schema';
 
 export type CollectorFormProps = {
@@ -10,6 +12,9 @@ export type CollectorFormProps = {
   focusField: CollectorField | null;
   onChange: (field: CollectorField, value: string) => void;
 };
+
+/* Asterisco visual dos campos obrigatorios (Figma): pseudo-elemento, para o texto do rotulo seguir exato. */
+const REQUIRED_LABEL = '[&_[data-slot=form-field]:has(input[required])>label]:after:ml-2 [&_[data-slot=form-field]:has(input[required])>label]:after:text-title-22-regular [&_[data-slot=form-field]:has(input[required])>label]:after:text-text-coral [&_[data-slot=form-field]:has(input[required])>label]:after:content-["*"]';
 
 const TEXT_FIELDS: { field: CollectorField; required: boolean; type?: 'email'; autoComplete?: string }[] = [
   { field: 'displayName', required: true, autoComplete: 'name' },
@@ -36,10 +41,11 @@ export function CollectorForm({ values, errors, focusField, onChange }: Collecto
   }, [focusField]);
 
   return (
-    <form ref={formRef} noValidate onSubmit={(e) => e.preventDefault()} className="flex flex-col gap-16">
+    <form ref={formRef} noValidate onSubmit={(e) => e.preventDefault()} className={'flex flex-col gap-16 desktop:grid desktop:grid-cols-2 desktop:gap-x-24 ' + REQUIRED_LABEL}>
       {TEXT_FIELDS.map(({ field, required, type, autoComplete }) => (
         <FormField key={field} label={t(`fields.${field}`)} error={errorOf(field)}>
           <Input
+            className={MOBILE_FIELD}
             name={field}
             type={type ?? 'text'}
             autoComplete={autoComplete}

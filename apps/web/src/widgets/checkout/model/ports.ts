@@ -3,6 +3,7 @@
 export type QuoteLineView = {
   tokenId: string;
   title: string;
+  imageSrc?: string;
   quantity: number;
   unitPriceEth: string;
   lineTotalEth: string;

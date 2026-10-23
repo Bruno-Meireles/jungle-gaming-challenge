@@ -30,7 +30,7 @@ function EditionOption({ edition }: { edition: Edition }) {
       disabled={soldOut}
       aria-labelledby={labelId}
       aria-describedby={soldOut ? `${priceId} ${soldId}` : priceId}
-      className="gap-8"
+      className="h-28 gap-8 rounded-full px-12 tablet:h-40 tablet:rounded-3 tablet:px-16"
     >
       <span id={labelId}>{text}</span>
       <span id={priceId}>{price}</span>

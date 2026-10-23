@@ -5,9 +5,9 @@ import type { CartSummaryViewModel } from '../model/types';
 
 function Row({ label, value, strong = false }: { label: string; value: string; strong?: boolean }) {
   return (
-    <div className={strong ? 'flex justify-between gap-16 text-body-15-bold-lh-16' : 'flex justify-between gap-16 text-body-14-regular-lh-16'}>
-      <dt>{label}</dt>
-      <dd className="m-0">{value}</dd>
+    <div className="flex items-baseline justify-between gap-16">
+      <dt className={strong ? 'text-body-large-16-bold-lh-16' : 'text-body-15-regular-lh-16'}>{label}</dt>
+      <dd className={strong ? 'm-0 text-body-large-18-bold-lh-16' : 'm-0 text-body-large-16-regular-lh-16 tablet:text-body-large-18-regular'}>{value}</dd>
     </div>
   );
 }
@@ -16,7 +16,7 @@ export function CartSummary({ summary, onRetry }: { summary: CartSummaryViewMode
   const { t } = useTranslation('cartSummary');
   return (
     <section aria-label={t('title')} className="flex flex-col gap-16">
-      <h2 className="text-heading-20-bold text-foreground">{t('title')}</h2>
+      <h2 className="text-body-large-18-bold-lh-24 text-foreground">{t('title')}</h2>
       {summary.status === 'loading' ? (
         <div role="status" aria-label={t('loading')} className="flex flex-col gap-12">
           <Skeleton className="h-16 w-full" />

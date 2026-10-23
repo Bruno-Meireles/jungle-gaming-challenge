@@ -30,6 +30,8 @@ const orderPosts = (page: Page) => {
 
 test.describe('favoritos', () => {
   test('favoritar persiste apos refresh e visitante e levado ao login', async ({ page }) => {
+    // Fluxo longo (login + 3 navegacoes + refresh): estoura 30s so em maquina carregada.
+    test.slow();
     await page.goto('/nfts/emerald-ape-042');
     await page.getByRole('button', { name: 'Favoritar' }).click();
     await expect(page).toHaveURL(/\/login\?redirect=/);

@@ -162,7 +162,7 @@ test.describe('home: atualizacao em segundo plano (catalog-slow)', () => {
     await expect(cards(page).first().getByRole('link')).toHaveText(before);
 
     await expect(resultsRegion(page)).toHaveAttribute('aria-busy', 'false');
-    await expect(count(page, '10 NFTs')).toBeVisible();
+    await expect(count(page, '45 NFTs')).toBeVisible();
     await expect(page.locator(SKELETON)).toHaveCount(0);
   });
 });

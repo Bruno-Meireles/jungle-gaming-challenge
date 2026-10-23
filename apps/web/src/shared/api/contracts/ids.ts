@@ -17,3 +17,8 @@ export type CollectionId = (typeof COLLECTION_IDS)[number];
 export type NetworkId = (typeof NETWORK_IDS)[number];
 export type ViewId = (typeof VIEW_IDS)[number];
 export type SortId = (typeof SORT_IDS)[number];
+
+// "Novos lancamentos" ordena por data e "Em alta" por popularidade; as abas nao filtram o catalogo.
+export function defaultSortForView(view: ViewId): SortId {
+  return view === 'trending' ? 'popular' : 'recent';
+}

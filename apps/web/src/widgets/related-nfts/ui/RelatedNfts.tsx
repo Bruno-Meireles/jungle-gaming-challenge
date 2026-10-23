@@ -17,7 +17,7 @@ export function RelatedNfts({ variant = 'popular', excludeNftIds = [], collectio
   if (items.length === 0) return null;
   return (
     <section aria-label={t(variant)} className="hidden flex-col gap-16 tablet:flex">
-      <h2 className="text-heading-20-bold text-foreground">{t(variant)}</h2>
+      <h2 className="text-body-large-17-bold text-foreground">{t(variant)}</h2>
       <ul className="m-0 grid list-none grid-cols-3 gap-16 p-0 desktop:grid-cols-5">
         {items.map((nft) => (
           <li key={nft.id}>
