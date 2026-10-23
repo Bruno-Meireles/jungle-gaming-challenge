@@ -20,6 +20,9 @@ declare module 'i18next' {
       'pageHome',
       'pageUnavailable',
       'pageNotFound',
+      'pageLogin',
+      'pageSignup',
+      'authSurface',
     ];
     resources: typeof ptBRResources;
   }

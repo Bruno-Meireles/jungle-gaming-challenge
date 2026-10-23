@@ -1,6 +1,9 @@
 import type { Messages } from '../../shared/lib/i18n/locale-parity';
 import { nftLocales } from '../../entities/nft';
 import { pageHomeLocales } from '../../pages/home';
+import { pageLoginLocales } from '../../pages/login';
+import { pageSignupLocales } from '../../pages/signup';
+import { authSurfaceLocales } from '../../widgets/auth-surface';
 import { pageNotFoundLocales } from '../../pages/not-found';
 import { pageUnavailableLocales } from '../../pages/unavailable';
 import { sharedLocales } from '../../shared/config';
@@ -37,6 +40,9 @@ export const ptBRResources = {
   pageHome: pageHomeLocales['pt-BR'],
   pageUnavailable: pageUnavailableLocales['pt-BR'],
   pageNotFound: pageNotFoundLocales['pt-BR'],
+  pageLogin: pageLoginLocales['pt-BR'],
+  pageSignup: pageSignupLocales['pt-BR'],
+  authSurface: authSurfaceLocales['pt-BR'],
 };
 
 const enResources = {
@@ -57,6 +63,9 @@ const enResources = {
   pageHome: pageHomeLocales.en,
   pageUnavailable: pageUnavailableLocales.en,
   pageNotFound: pageNotFoundLocales.en,
+  pageLogin: pageLoginLocales.en,
+  pageSignup: pageSignupLocales.en,
+  authSurface: authSurfaceLocales.en,
 } satisfies typeof ptBRResources;
 
 export const resources: Resources = { 'pt-BR': ptBRResources, en: enResources };
