@@ -410,7 +410,7 @@ M6
 - [x] 36 teclado e foco E2E
 - [x] 37 layout responsivo E2E
 - [x] 38 axe E2E
-- [ ] 39 medidas do Figma
+- [x] 39 medidas do Figma: GREEN (22 correções no código, 6 desvios documentados na seção Execução; measure 68 passed/8 todo; app 469 passed; DS 991 passed; E2E 138 passed + 1 falha de partida a frio em shell.spec mobile que passou ao reexecutar, 8/8)
 - [ ] 40 inspeção por captura do CLI (relatório de desvios)
 
 M7
@@ -509,3 +509,26 @@ Mudanças e desvios:
 - **Barra inferior (37):** novo `widgets/bottom-nav` (`navigation` "Navegação inferior"/"Bottom navigation", só < 768, fixa, com espaçador). Itens do Figma 14:5226 (Tab Bar 70395:245): Início `/`, Favoritos e Escanear (central, 65 px elevado) em `/unavailable?feature=...`, Compras `/cart`, Perfil `/login`. Rótulo "Compras"/"Shop" (e não "Carrinho") para não duplicar o nome do link do cabeçalho (o spec 36 usa `getByRole('link', { name: 'Carrinho' })`). Sem rótulos visíveis (Figma só tem ícones; nome por `aria-label`). Entalhe do vetor 15:5504 não replicado (topo arredondado). Ícones novos em `shared/ui/icons` desenhados à mão (vetores do Figma não extraídos). Namespace `bottomNav` com paridade pt-BR/en.
 - **320 px (37):** `min-w-0` no campo de busca e a lista de abas dentro de contêiner com `overflow-x-auto` (rola na horizontal dentro da toolbar, sem esconder conteúdo).
 - **axe (38):** `CatalogViewTabs` virou raiz do `Tabs` com `CatalogViewTabsList` e `CatalogViewPanel` (`TabsContent`, `tabIndex={-1}`), e o `Catalog` põe resultados e paginação no painel: o `aria-controls` da aba ativa aponta para um `tabpanel` real (o Radix 1.x sempre emite `aria-controls`). Headings: sidebar ganhou `h2` sr-only "Filtros"; o título do estado vazio passou de `h2` para `h3`.
+
+### Item 39 (GREEN: medidas do Figma, ADR-08)
+28 testes `*.measure.test.tsx` estavam vermelhos por divergência real; 22 foram corrigidos no código (commits `feat(green): home 39 ...`), 6 viraram **desvio documentado** com o teste ajustado em commit `test:` próprio. Resultado de `pnpm exec vitest run --project unit measure` em `apps/web`: 6 arquivos, 68 passed, 8 todo.
+
+Correções no código (valor do Figma atingido):
+- **Header:** item ativo com peso 700 (a classe `regular` vencia a `bold` na ordem do CSS; agora `activeProps`/`inactiveProps` excludentes), line-height 21,1 nos itens, sublinhado 3 px, divisor na cor primária.
+- **Hero 1440:** `pt-43` com `items-start` (cópia a 43 do topo), eyebrow-título 8 (`mb-4` sobre o gap 4), botão Explorar `min-w 140` e line-height 20, pontos a `bottom-35`/`left-592` (primeiro ponto a 600 e 43 da base). **Hero 390:** margem 8 extra (banner a 24), gap 8, line-heights 16/29/18; o título usa `leading-[29px]` com reset em `tablet:` (`--tw-leading` do Tailwind 4 vence o token do breakpoint).
+- **Filtros:** rótulo da faixa 15 px; Aplicar 92x36, raio 6, 16 px bold (`PriceFilter`, também no Sheet); botão de filtros mobile com raio 14.
+- **Toolbar:** abas 15 px medium no desktop (14 no mobile, como já estava), gap 16 no mobile (20 no desktop), 16 até a grade no mobile.
+- **Grade:** colunas `repeat(3, minmax(0, 258px))`, gaps 32/72 no desktop; mobile com a coluna direita 32 abaixo (`translate-y-32` nos pares + `pb-32` para não invadir a paginação). Sem alterar os E2E de layout (ver verificação final).
+- **Barra inferior:** ícones 20 px, ícone de scan 26,8x24, ícone de início a 36 da borda (`px-24`).
+
+Desvios documentados (elemento, esperado, observado, motivo); testes marcados "desvio documentado" no commit `test:`:
+| Elemento | Esperado (Figma) | Observado | Motivo |
+|---|---|---|---|
+| Divisor do header (`header.divider.w`, 70504:3016, file.json:3737) | 0,3 px | 1 px computado | Chrome arredonda bordas menores que 1 px para 1 px de dispositivo; `border-width: 0.3px` computa 1px (testado). Cor primária aplicada. |
+| Raio da sidebar (`side.radius`, 70485:382, file.json:5563) | 0 | 8 | O nó não define raio (0 é inferência); mantido o raio 8 decidido antes (consistência com os cards). |
+| Passo dos pontos do hero (`hero.dot.pitch`, 3:128, file.json:4849) | 16 | 24 | Cada ponto é botão de 24x24 (WCAG 2.5.8); o primeiro ponto está em 600/43 como no Figma. |
+| Altura do hero mobile (`heroM.h`, 70395:240, file.json:276628) | 190 | 254 (390 px) | Quadro do Figma tem 414 (coluna de texto de 188); em 390 a coluna tem 164, o texto quebra em mais linhas, e o Explorar é Button (40 px) e não link de 14 px. O teste exige altura mínima 190. |
+| Explorar mobile (`heroM.explore.fs/fill`, 15:5294, file.json:277516) | link de texto 12 px, cor `#e89b55`, sem fundo | Button do DS 16 px, fundo primário | Decisão registrada de manter o Button do DS (alvo de toque, WCAG 2.5.8). Peso 700 confere. |
+| Ícone de scan (`tabbar.scan.fill`, 15:5530, file.json:288736) | `#f5f1eb` | `#140d0a` (ink) | Sobre o gradiente primário o claro dá contraste ~2,6:1 (< 3:1, WCAG 1.4.11); o ink mantém o contraste. Tamanho 26,8x24 conferido. |
+
+Verificação final do item 39 (local, sem Docker): `pnpm lint` e `pnpm typecheck` em `apps/web` limpos; vitest app (node+unit) 30 arquivos, 469 passed, 8 todo; DS 73 arquivos, 991 passed (DS não foi alterado); `playwright test --workers=1`: 138 passed e 1 falha em `e2e/shell.spec.ts:4` (mobile-390, banner não encontrado na primeira navegação, partida a frio do servidor); reexecução de `shell.spec.ts`: 8 passed. Os E2E de layout (home-layout: 3 colunas, sem overflow) permaneceram verdes com a grade nova.
